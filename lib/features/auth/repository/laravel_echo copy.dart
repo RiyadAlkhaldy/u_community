@@ -17,9 +17,9 @@ class LaravelEcho2 {
   factory LaravelEcho2.init({
     required String token,
   }) {
-    // if (_singleton == null || token != _singleton?.token) {
-    //   _singleton = LaravelEcho._(token: token);
-    // }
+    if (_singleton == null || token != _singleton?.token) {
+      _singleton = LaravelEcho2._(token: token);
+    }
     _singleton = LaravelEcho2._(token: token);
 
     return _singleton!;

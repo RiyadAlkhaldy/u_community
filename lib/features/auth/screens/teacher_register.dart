@@ -33,15 +33,15 @@ class _AdminRegisterState extends ConsumerState<TeacherRegister> {
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
           name: nameController.text.trim(),
-          IDNumber: IDNUmber.text.trim(),
+          iDNumber: IDNUmber.text.trim(),
           collogeId: _selectedVal.toString(),
           type: 2,
           context: _);
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        MobileLayoutScreen.routeName,
-        (route) => true,
-      );
+      // Navigator.pushNamedAndRemoveUntil(
+      //   context,
+      //   MobileLayoutScreen.routeName,
+      //   (route) => true,
+      // );
     }
     print('no auth');
     isGoing = false;

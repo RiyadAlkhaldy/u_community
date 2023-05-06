@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:u_community/features/auth/repository/auth_repository.dart';
 import 'package:u_community/features/setting/screens/user_accounnt.dart';
-import '../../../main.dart';
 import '../widgets/build_dark_mode.dart';
 import '../widgets/icon_widget.dart';
 import 'account_setting_screen.dart';
@@ -24,19 +22,19 @@ class _SettingScreenState extends State<SettingScreen> {
     return SafeArea(
       child: ListView(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 22,
           ),
-          UserAccount(),
-          AccountSettingScreen(),
-          SizedBox(
+          const UserAccount(),
+          const AccountSettingScreen(),
+          const SizedBox(
             height: 32,
           ),
           SettingsGroup(title: "GENERAL", children: [
             buildLogout(context),
             buildDeleteAccount(),
           ]),
-          SizedBox(
+          const SizedBox(
             height: 32,
           ),
           SettingsGroup(title: "Feedback", children: [
@@ -52,7 +50,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
 Widget buildLogout(context) => SimpleSettingsTile(
       title: "Logout",
-      leading: IconWidget(icon: Icons.logout, color: Color(0xFF642ef3)),
+      leading: const IconWidget(icon: Icons.logout, color: Color(0xFF642ef3)),
       onTap: () async {
         showModalBottomAcceptLogout(context);
       },
@@ -75,7 +73,7 @@ Future<dynamic> showModalBottomAcceptLogout(BuildContext context) {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ButtonLogoutOurCancel(
+                buttonLogoutOurCancel(
                   'Cancel',
                   () {
                     Navigator.pop(context);
@@ -87,7 +85,7 @@ Future<dynamic> showModalBottomAcceptLogout(BuildContext context) {
                 Consumer(
                   builder: (context, ref, child) {
                     return StatefulBuilder(
-                      builder: (context, setState) => ButtonLogoutOurCancel(
+                      builder: (context, setState) => buttonLogoutOurCancel(
                         'OK',
                         () async {
                           await ref.read(authProvider).logout(context: context);
@@ -103,7 +101,7 @@ Future<dynamic> showModalBottomAcceptLogout(BuildContext context) {
       });
 }
 
-InkWell ButtonLogoutOurCancel(String text, void Function()? onTap) {
+InkWell buttonLogoutOurCancel(String text, void Function()? onTap) {
   return InkWell(
     onTap: onTap,
     child: Container(

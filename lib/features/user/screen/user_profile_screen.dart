@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_community/features/auth/models/user_response.dart';
-import 'package:u_community/features/auth/repository/auth_repository.dart';
 import '../../../core/error/error.dart';
 import '../../../core/utils/loader.dart';
 import '../../posts/repository/repository_posts.dart';
@@ -11,6 +10,8 @@ import '../../posts/widgets/build_post.dart';
 import '../models/user_post_model.dart';
 import '../repository/repository_user_posts.dart';
 import '../widgets/profile_image_widget.dart';
+
+final getProfile = StateProvider<User?>((ref) => null);
 
 class UserProfileScreen extends ConsumerStatefulWidget {
   const UserProfileScreen({Key? key}) : super(key: key);
@@ -26,15 +27,15 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     if (inital == true) {
-      ref.watch(userPostsProvider.notifier).getAllPosts.then((value) {
+      ref.watch(userPostsProvider.notifier).getAllPosts.then((value) async {
         setState(() {
           dataLoaded = true;
           inital = false;
+          print('eqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq');
         });
       });
     }
-    final listPostMode = ref.watch(listUserPostsModelFututre);
-    final user = ref.watch(getUserProvider);
+ 
     final height = MediaQuery.of(context).size.height / 3;
     print(MediaQuery.of(context).size);
     print('height' + height.toString());
@@ -48,14 +49,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           SliverAppBarCustom(
             height: height,
             context: context,
+            // user: data!,
           ),
 
-          // user.when(
-          //   data: (data) => SliverAppBarCustom(
-          //       height: height, context: context, data: data),
-          //   error: (error, stackTrace) => Text('error'),
-          //   loading: () => Loader(),
-          // ),
           SliverList(
             delegate: SliverChildListDelegate([
               // PostHeader(),
@@ -68,7 +64,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 ),
               ), //
 
-              dataLoaded == true
+              dataLoaded
                   ? Column(
                       children: ref
                           .watch(postsProvider)
@@ -81,7 +77,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
 
                       // childCount: data.length,
                       )
-                  : Loader(),
+                  : const Loader(),
               // postss.when
             ]),
           )
@@ -91,39 +87,39 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   }
 }
 
-class SliverListt extends StatelessWidget {
-  const SliverListt({
-    Key? key,
-    required this.listPostMode,
-  }) : super(key: key);
+// class SliverListt extends StatelessWidget {
+//   const SliverListt({
+//     Key? key,
+//     required this.listPostMode,
+//   }) : super(key: key);
 
-  final AsyncValue<List<UserPostModel>> listPostMode;
+//   final AsyncValue<List<UserPostModel>> listPostMode;
 
-  @override
-  Widget build(BuildContext context) {
-    return SliverList(
-      delegate: listPostMode.when(
-        data: (data) {
-          return SliverChildBuilderDelegate(
-            (context, index) {
-              return index % 2 == 0
-                  ? buildPost(index: 1, contextl: context)
-                  :
-                  // height: 100,
+//   @override
+//   Widget build(BuildContext context) {
+//     return SliverList(
+//       delegate: listPostMode.when(
+//         data: (data) {
+//           return SliverChildBuilderDelegate(
+//             (context, index) {
+//               return index % 2 == 0
+//                   ? buildPost(index: 1, contextl: context)
+//                   :
+//                   // height: 100,
 
-                  buildPost(index: 0, contextl: context);
-            },
-            childCount: data.length,
-          );
-        },
-        error: (error, stackTrace) {
-          return SliverChildListDelegate([ErrorScreen(error: "error")]);
-        },
-        loading: () => SliverChildListDelegate([Loader()]),
-      ),
-    );
-  }
-}
+//                   buildPost(index: 0, contextl: context);
+//             },
+//             childCount: data.length,
+//           );
+//         },
+//         error: (error, stackTrace) {
+//           return SliverChildListDelegate([ErrorScreen(error: "error")]);
+//         },
+//         loading: () => SliverChildListDelegate([Loader()]),
+//       ),
+//     );
+//   }
+// }
 
 class ProfileDetials extends StatelessWidget {
   final User data;
@@ -230,6 +226,7 @@ class ProfileDetials extends StatelessWidget {
 Widget SliverAppBarCustom({
   required double height,
   required BuildContext context,
+  // User? user,
 }) {
   final String imageUrl =
       "https://img.freepik.com/free-photo/female-student-with-books-paperworks_1258-48204.jpg?w=1380&t=st=1671753820~exp=1671754420~hmac=5846bac8c4fd4ebceecca71a8eda1cd494b92c9aba4c07ea4a78d88de7abc454";

@@ -84,9 +84,9 @@ class User {
     required this.email,
     this.emailVerifiedAt,
     this.img,
-    required this.status,
+    this.status,
     this.universityId,
-    required this.idNumber,
+    this.idNumber,
     this.description,
     required this.createdAt,
     required this.updatedAt,
@@ -94,7 +94,7 @@ class User {
     required this.collogeId,
     this.level,
     this.type,
-    required this.colloge,
+    this.colloge,
     this.section,
   });
 
@@ -103,9 +103,9 @@ class User {
   final String email;
   final String? emailVerifiedAt;
   final String? img;
-  final int status;
+  final int? status;
   final int? universityId;
-  final int idNumber;
+  int? idNumber;
   final String? description;
   final String createdAt;
   final String updatedAt;
@@ -113,7 +113,7 @@ class User {
   final int collogeId;
   final int? level;
   final int? type;
-  final Colloge colloge;
+  final Colloge? colloge;
   final Section? section;
   User copyWith({
     int? id,
@@ -182,20 +182,20 @@ class User {
       id: map['id'],
       name: map['name'] as String,
       email: map['email'] as String,
-      emailVerifiedAt: map['emailVerified_at'] ?? '',
-      img: map['img'] ?? '',
+      emailVerifiedAt: map['emailVerified_at'],
+      img: map['img'],
       status: map['status'],
       universityId: map['university_id'],
       idNumber: map['id_number'],
-      description: map['description'] ?? '',
+      description: map['description'],
       createdAt: map['created_at'] as String,
       updatedAt: map['updated_at'] as String,
       sectionId: map['section_id'],
       collogeId: map['colloge_id'],
-      level: map['level'] ?? 0,
-      type: map['type'] ?? 0,
-      colloge: map['colloge'],
-      section: map['section'],
+      level: map['level'],
+      type: map['type'],
+      colloge: Colloge.fromMap(map['colloge']),
+      section: map['section'] == null ? null : Section.fromMap(map['section']),
     );
   }
 
@@ -252,6 +252,8 @@ class User {
         colloge.hashCode ^
         section.hashCode;
   }
+
+  initi() {}
 }
 
 class Authorisation {

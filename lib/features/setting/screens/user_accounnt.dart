@@ -1,10 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:u_community/core/enums/user_enum.dart';
 import 'package:u_community/core/utils/loader.dart';
-import 'package:u_community/features/auth/repository/auth_repository.dart';
 
+import '../../auth/models/user_response.dart';
+import '../../user/repository/repository_user.dart';
 import '../../user/screen/user_profile_screen.dart';
 import '../widgets/icon_widget.dart';
 
@@ -17,21 +19,25 @@ class UserAccount extends ConsumerStatefulWidget {
 
 class _UserAccountState extends ConsumerState<UserAccount> {
   bool initail = true;
-  Map<String, dynamic>? user;
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(getUserProvider).then((value) async {
-      user = value;
-      initail = false;
-      setState(() {});
-      // print(value);
-    });
-    print(user);
-    return initail == true
-        ? const Loader()
-        : SimpleSettingsTile(
-            title: user![UserEnum.name.type],
+    // ref.watch(getUserDetailes).when((value) {
+    //   user = value;
+    //   print('mmmmmmmmmmmmmmmmmmmmmm uuuuuuuuuuuser $user');
+
+    //   initail = false;
+    //   setState(() {});
+    //   // print(value);
+    // });
+
+    return ref.watch(getUserProviderProfile).when(
+        data: (data) {
+          var name = data!.name;
+          print(name);
+
+          return SimpleSettingsTile(
+            title: data.name,
             subtitle: 'Your Profile',
             leading: IconWidget(
               icon: Icons.person,
@@ -42,6 +48,10 @@ class _UserAccountState extends ConsumerState<UserAccount> {
             },
             child: UserProfileScreen(),
           );
+        },
+        error: (error, stackTrace) => Text('error $error'),
+        loading: () => const Loader());
+
     const Placeholder();
   }
 }

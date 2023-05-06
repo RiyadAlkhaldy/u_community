@@ -43,7 +43,9 @@ class UploadFileReposetitory {
 
       final p = _file!.path;
       final file = File(p.toString());
-      print('this is the file $file');
+      if (kDebugMode) {
+        print('this is the file $file');
+      }
       return file;
     }
     return null;
@@ -84,7 +86,8 @@ class UploadFileReposetitory {
       String? content,
       int? type,
       BuildContext? context,
-      String urlCompelete = 'v1/file_upload'}) async {
+      String urlCompelete = 'v1/file_upload',
+      String? colloge_id}) async {
     if (path != null) {
       final prefs = await _prefs;
 
@@ -107,18 +110,37 @@ class UploadFileReposetitory {
         ),
       );
       try {
-        var data = {
-          'content': content,
-          'type': type,
-          'user_id': prefs.getString('id'),
-          // 'section_id': prefs.getString('section_id') ?? 0,
-          'colloge_id': prefs.getString('colloge_id'),
-        };
+        String? sectionId = prefs.getString('section_id');
+        Map<String, dynamic> data;
+        // print(sectionId! != null);
+        if (sectionId != null && sectionId.length <= 2) {
+          data = {
+            'content': content,
+            'type': type,
+            'user_id': prefs.getString('id'),
+            'section_id': sectionId,
+            'colloge_id': int.parse(prefs.getString('type')!) == 3
+                ? colloge_id
+                : prefs.getString('colloge_id'),
+          };
+        } else {
+          data = {
+            'content': content,
+            'type': type,
+            'user_id': prefs.getString('id'),
+            'colloge_id': int.parse(prefs.getString('type')!) == 3
+                ? colloge_id
+                : prefs.getString('colloge_id'),
+          };
+        }
+        if (kDebugMode) {
+          print(data);
+        }
         Response? response = await chunkedUploader.upload(
           fileKey: "file",
           method: "POST",
           fileName: _path,
-          maxChunkSize: 5000000,
+          maxChunkSize: 50000000,
           path: url,
           fileSize: path!.size,
           // fileDataStream: paths!.single.readStream!,

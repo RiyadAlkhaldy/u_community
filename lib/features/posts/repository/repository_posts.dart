@@ -5,14 +5,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constant.dart';
 import '../../../core/enums/user_enum.dart';
 import '../models/post_model.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 
 final postsProvider =
     StateNotifierProvider<RepositoryPosts, List<Posts>>((ref) {
   // final myreq = ref.watch(myrequest);
   return RepositoryPosts();
 });
-final AllPostsProvider = FutureProvider<List<Posts>>((ref) async {
+final allPostsProvider = FutureProvider<List<Posts>>((ref) async {
   List<Posts> posts = [];
   await ref.watch(postsProvider.notifier).getAllPosts.then((value) {
     posts = ref.watch(postsProvider.notifier).state;
@@ -93,7 +93,7 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
     state.forEach((post) {
       if (post.id == currentPost.id)
         post = currentPost.copyWith(
-             commentCount: currentPost.commentCount + value);
+            commentCount: currentPost.commentCount + value);
       posts.add(post);
     });
     state = [...posts];

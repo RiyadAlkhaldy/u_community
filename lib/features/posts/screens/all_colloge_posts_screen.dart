@@ -39,13 +39,13 @@ class _PostScreenState extends ConsumerState<AllCollogePostsScreen> {
         ),
         SliverList(
           delegate: SliverChildListDelegate([
-            PostHeader(),
-            Container(
-              width: double.infinity,
-              height: 100.0,
-              child: ListView(
-                  scrollDirection: Axis.horizontal, children: [NewWidget()]),
-            ),
+            // PostHeader(),
+            // Container(
+            //   width: double.infinity,
+            //   height: 100.0,
+            //   child: ListView(
+            //       scrollDirection: Axis.horizontal, children: [NewWidget()]),
+            // ),
             dataLoaded == true
                 ? Column(
                     children: ref
@@ -115,11 +115,9 @@ class NewWidget extends ConsumerStatefulWidget {
   ConsumerState<NewWidget> createState() => _NewWidgetState();
 }
 
-
 class _NewWidgetState extends ConsumerState<NewWidget> {
-  
-bool initail = true;
-Map<String, dynamic>? user;
+  bool initail = true;
+  Map<String, dynamic>? user;
   @override
   Widget build(BuildContext context) {
     return Column(

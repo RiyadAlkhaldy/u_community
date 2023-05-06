@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'core/error/error.dart';
 import 'features/auth/Screens/login.dart';
 import 'features/auth/Screens/registration.dart';
+import 'features/auth/screens/message_to_teacher_temp_screen.dart';
 import 'features/auth/screens/student_register.dart';
 import 'features/posts/screens/upload_file_screen.dart';
 import 'features/posts/screens/upload_text_screen copy.dart';
@@ -15,7 +16,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case UserProfileScreen.routeName:
       return MaterialPageRoute(
-        builder: (context) =>const UserProfileScreen(),
+        builder: (context) => const UserProfileScreen(),
       );
     case Login.routeName:
       return MaterialPageRoute(
@@ -32,7 +33,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case MobileLayoutScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => MobileLayoutScreen(),
-        
       );
     case UploadFileScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
@@ -48,9 +48,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => MyApp(),
       );
-       case TeacherRegisterations.routeName:
+    case TeacherRegisterations.routeName:
       return MaterialPageRoute(
-        builder: (context) =>const TeacherRegisterations(),
+        builder: (context) => const TeacherRegisterations(),
+      );
+    case MessageToTeacherTempScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const MessageToTeacherTempScreen(),
       );
     // case MobileChatScreen.routeName:
     //   final arguments = settings.arguments as Map<String, dynamic>;

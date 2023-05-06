@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // import '../controller/posts_controlller.dart';
 import '../../../core/utils/loader.dart';
@@ -49,13 +49,13 @@ class _PostScreenState extends ConsumerState<AllPostScreen> {
         ),
         SliverList(
           delegate: SliverChildListDelegate([
-            PostHeader(),
-            Container(
-              width: double.infinity,
-              height: 100.0,
-              child: ListView(
-                  scrollDirection: Axis.horizontal, children: [NewWidget()]),
-            ), //
+            // PostHeader(),
+            // Container(
+            //   width: double.infinity,
+            //   height: 100.0,
+            //   child: ListView(
+            //       scrollDirection: Axis.horizontal, children: [NewWidget()]),
+            // ), //
             // ref.watch(getAllPostsProvider).when(
             // for(var post in postss)
             dataLoaded == true

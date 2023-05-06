@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/utils/loader.dart';
 import '../models/post_model.dart';
 import '../repository/repository_section_posts.dart';
@@ -36,13 +36,13 @@ class _PostScreenState extends ConsumerState<AllSectionPostsScreen> {
         ),
         SliverList(
           delegate: SliverChildListDelegate([
-            PostHeader(),
-            Container(
-              width: double.infinity,
-              height: 100.0,
-              child: ListView(
-                  scrollDirection: Axis.horizontal, children: [NewWidget()]),
-            ),
+            // PostHeader(),
+            // Container(
+            //   width: double.infinity,
+            //   height: 100.0,
+            //   child: ListView(
+            //       scrollDirection: Axis.horizontal, children: [NewWidget()]),
+            // ),
             dataLoaded == true
                 ? Column(
                     children: ref

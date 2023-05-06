@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
         print(UserEnum.token.type);
         print(token);
         print('tttttttttttttttt ${await value.getString(UserEnum.name.type)}');
-        print('tttttttttttttttt ${value.getString(UserEnum.email.type)}');
+        print('tttttttttttttttt ${value.getString(UserEnum.id.type)}');
         initial = false;
         setState(() {});
       });

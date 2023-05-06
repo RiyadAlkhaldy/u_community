@@ -2,9 +2,11 @@ import 'package:laravel_echo/laravel_echo.dart';
 import 'package:pusher_client/pusher_client.dart';
 
 import '../../../core/constant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LaravelEcho {
-  static LaravelEcho? _singleton;
+  // static LaravelEcho? _singleton;
+  static late final LaravelEcho? _singleton;
   static late Echo _echo;
   final String token;
   // static PusherEvent? pusherEvent;
@@ -17,11 +19,11 @@ class LaravelEcho {
   factory LaravelEcho.init({
     required String token,
   }) {
-    // if (_singleton == null || token != _singleton?.token) {
-    //   _singleton = LaravelEcho._(token: token);
-    // }
-    _singleton = LaravelEcho._(token: token);
-
+    if (_singleton == null || token != _singleton?.token) {
+      _singleton = LaravelEcho._(token: token);
+    }
+    // _singleton = LaravelEcho._(token: token);
+    // identical(token, _singleton!.token);
     return _singleton!;
   }
 
@@ -89,3 +91,11 @@ Echo createLaravelEcho(String token) {
     broadcaster: EchoBroadcasterType.Pusher,
   );
 }
+
+// void main() async {
+//   Future<SharedPreferences> pref = SharedPreferences.getInstance();
+//   final p = await pref;
+//   final token = 'hi';
+//   print(token);
+//   // LaravelEcho ob = LaravelEcho._(token: token!);
+// }

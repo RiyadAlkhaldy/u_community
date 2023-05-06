@@ -56,7 +56,7 @@ class BottomNavigationBarr extends StatelessWidget {
                 onPressed: () {
                   if (kDebugMode) print('Upload photo');
 
-                  showModalBottomSheetCustom(context);
+                  showModalBottomSheetStudent(context);
                 },
                 child: Icon(
                   Icons.add,
@@ -89,7 +89,7 @@ class BottomNavigationBarr extends StatelessWidget {
   }
 }
 
-Future<dynamic> showModalBottomSheetCustom(BuildContext context) {
+Future<dynamic> showModalBottomSheetStudent(BuildContext context) {
   return showModalBottomSheet(
       backgroundColor: Colors.transparent,
       barrierColor: Colors.transparent,
@@ -150,3 +150,65 @@ Future<dynamic> showModalBottomSheetCustom(BuildContext context) {
         );
       });
 }
+
+// Future<dynamic> showModalBottomSheetAdmin(BuildContext context) {
+//   return showModalBottomSheet(
+//       backgroundColor: Colors.transparent,
+//       barrierColor: Colors.transparent,
+//       context: context,
+//       builder: (_) {
+//         return Container(
+//           height: 250,
+//           decoration: BoxDecoration(
+//               color: const Color(0xFF2e3253).withOpacity(0.4),
+//               borderRadius: const BorderRadius.only(
+//                   topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+//           child: Padding(
+//             padding: const EdgeInsets.only(left: 20, right: 20),
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 ButtonWidget(
+//                   backgroundcolor: Colors.blue,
+//                   // AppColors.mainColor,
+//                   text: "Video",
+//                   textColor: Colors.white,
+//                   onTap: () {
+//                     Navigator.pushNamed(context, UploadFileScreen.routeName,
+//                         arguments: {"type": FileType.video});
+//                   },
+//                 ),
+//                 SizedBox(
+//                   height: 20,
+//                 ),
+//                 ButtonWidget(
+//                   backgroundcolor: Colors.blue,
+//                   // AppColors.mainColor,
+//                   text: "Photo",
+//                   textColor: Colors.white,
+//                   onTap: () {
+//                     Navigator.pushNamed(context, UploadFileScreen.routeName,
+//                         arguments: {"type": FileType.image});
+//                   },
+//                 ),
+//                 SizedBox(
+//                   height: 20,
+//                 ),
+//                 ButtonWidget(
+//                   backgroundcolor: Colors.blue,
+//                   // AppColors.mainColor,
+//                   text: "text",
+//                   textColor: Colors.white,
+//                   onTap: () {
+//                     Navigator.pushNamed(
+//                       context,
+//                       UploadTextScreen.routeName,
+//                     );
+//                   },
+//                 )
+//               ],
+//             ),
+//           ),
+//         );
+//       });
+// }

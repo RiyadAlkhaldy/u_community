@@ -84,9 +84,9 @@ class UploadProfileImageReposetitory {
       String? content,
       int? type,
       BuildContext? context,
-      String urlCompelete = 'v1/file_upload'}) async {
+      String? urlCompelete}) async {
     if (path != null) {
-      final prefs = await _prefs;
+      final SharedPreferences prefs = await _prefs;
 
       var _path = path!.path;
       if (kDebugMode) print('path $_path');
@@ -107,13 +107,12 @@ class UploadProfileImageReposetitory {
         ),
       );
       try {
-        var data = {
-          'content': content,
-          'type': type,
+        Map<String, dynamic> data;
+        // print(sectionId! != null);
+        data = {
           'user_id': prefs.getString('id'),
-          // 'section_id': prefs.getString('section_id') ?? 0,
-          'colloge_id': prefs.getString('colloge_id'),
         };
+
         Response? response = await chunkedUploader.upload(
           fileKey: "file",
           method: "POST",

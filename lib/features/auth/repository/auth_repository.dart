@@ -14,6 +14,7 @@ import '../../../main.dart';
 import '../../../mobile_layout_screen.dart';
 import '../models/models_with_freeze/colloge_model.dart';
 import '../models/user_response.dart';
+import '../screens/message_to_teacher_temp_screen.dart';
 
 final authProvider = StateProvider((ref) => AuthRepository());
 final getUserProvider = StateProvider((ref) async {
@@ -124,7 +125,7 @@ class AuthRepository {
       {required String email,
       required String name,
       required final String password,
-      required String IDNumber,
+      required String iDNumber,
       required String collogeId,
       int type = 2,
       required BuildContext context}) async {
@@ -132,7 +133,7 @@ class AuthRepository {
       'email': email,
       'name': name,
       'password': password,
-      'id_number': IDNumber,
+      'id_number': iDNumber,
       'colloge_id': collogeId,
       'type': type,
     };
@@ -142,6 +143,7 @@ class AuthRepository {
         '${ApiUrl}auth-temp/create-teacher-temp/',
         queryParameters: data,
       );
+      // ignore: use_build_context_synchronously
       if (_checkIfUserRegsterBefore(response, context)) {
         if (kDebugMode) print('It is regisger before');
       }
@@ -151,38 +153,21 @@ class AuthRepository {
           print(response.data);
         }
         userResponseLogin = UserResponseLogin.fromMap(response.data);
-        print(userResponseLogin.authorisation);
-        await SharedPreferences.getInstance().then((prefs) async {
-          await prefs.setString(
-              UserEnum.token.type, userResponseLogin.authorisation.token);
-          await prefs.setString(
-              UserEnum.name.type, userResponseLogin.user.name);
-          await prefs.setString(
-              UserEnum.email.type, userResponseLogin.user.email);
-          await prefs.setString(UserEnum.sectionId.type,
-              userResponseLogin.user.sectionId.toString());
-          await prefs.setString(UserEnum.collogeId.type,
-              userResponseLogin.user.collogeId.toString());
-          await prefs.setString(
-              UserEnum.id.type, userResponseLogin.user.id.toString());
-          await prefs.setString(
-              UserEnum.img.type, userResponseLogin.user.img.toString());
-          await prefs.setString(
-              UserEnum.typeUser.type, userResponseLogin.user.type.toString());
-        });
-        print(userResponseLogin);
-        // Navigator.pushNamedAndRemoveUntil(
-        //   context,
-        //   MobileLayoutScreen.routeName,
-        //   (route) => true,
-        // );
+        if (kDebugMode) {
+          print(userResponseLogin.authorisation);
+          print(userResponseLogin);
+        }
       }
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(
+        context,
+        MessageToTeacherTempScreen.routeName,
+      );
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
       if (kDebugMode) print(e.toString());
     }
-    // ignore: use_build_context_synchronously
   }
 
   bool _checkIfUserRegsterBefore([Response? response, BuildContext? context]) {
@@ -199,7 +184,7 @@ class AuthRepository {
       {required String email,
       required final String password,
       required final String name,
-      required String IDNumber,
+      required String iDNumber,
       int type = 3,
       required String collogeId,
       required BuildContext context}) async {
@@ -207,7 +192,7 @@ class AuthRepository {
       'name': name,
       'email': email,
       'password': password,
-      'id_number': IDNumber,
+      'id_number': iDNumber,
       'type': type,
       'colloge_id': collogeId,
     };
@@ -226,8 +211,10 @@ class AuthRepository {
           print(response.data);
         }
         userResponseLogin = UserResponseLogin.fromMap(response.data);
-        print(
-            'tokennnnnnnnnnnnnnnnnnnnnnnnnnnnn${userResponseLogin.authorisation.token}');
+        if (kDebugMode) {
+          print(
+              'tokennnnnnnnnnnnnnnnnnnnnnnnnnnnn${userResponseLogin.authorisation.token}');
+        }
         await SharedPreferences.getInstance().then((prefs) async {
           await prefs.setString('token', userResponseLogin.authorisation.token);
           await prefs.setString(
@@ -245,9 +232,11 @@ class AuthRepository {
           await prefs.setString(
               UserEnum.typeUser.type, userResponseLogin.user.type.toString());
         });
-        print(
-            'tokennnnnnnnnnnnnnnnnnnnnnnnnnnnn${userResponseLogin.authorisation.token}');
-        print(userResponseLogin);
+        if (kDebugMode) {
+          print(
+              'tokennnnnnnnnnnnnnnnnnnnnnnnnnnnn${userResponseLogin.authorisation.token}');
+          print(userResponseLogin);
+        }
         // Navigator.pushNamedAndRemoveUntil(
         //   context,
         //   MobileLayoutScreen.routeName,

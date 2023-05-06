@@ -36,7 +36,7 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
             email: emailController.text.trim(),
             password: passwordController.text.trim(),
             name: nameController.text.trim(),
-            IDNumber: IDNUmber.text.trim(),
+            iDNumber: IDNUmber.text.trim(),
             collogeId: _selectedVal.toString(),
             type: 3,
             context: context);

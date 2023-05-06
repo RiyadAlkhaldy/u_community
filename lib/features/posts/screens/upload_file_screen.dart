@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../auth/models/models_with_freeze/colloge_model.dart';
+import '../../auth/repository/auth_repository.dart';
 import '../../video/orientation/portrait_player_widget.dart';
 import '../controller/upload_file.dart';
 import 'upload_text_screen copy.dart';
@@ -25,8 +27,32 @@ class UploadFileScreen extends ConsumerStatefulWidget {
 TextEditingController contentController = TextEditingController();
 
 class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
+  List<Colloge> colloges = [];
+
+  var _selectedVal;
+
+  // String? _data;
+  bool initial = true;
+  bool allows = false;
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
+    ref.read(authProvider).getAllColloges(context).then((value) async {
+      await ref.watch(getUserProvider).then((map) async {
+        if (int.parse(map['type']) == 3) {
+          // allows = true;
+          ref.read(allwoProvidr.notifier).state = true;
+        }
+      });
+
+      // setState(() {
+      colloges = value!.toList();
+
+      // _selectedVal = colloges.first.id;
+      ref.read(selectedVal.notifier).state = colloges.first.id!;
+      initial = false;
+      // });
+    });
+
     // final upload = ref.watch(uploadFileProvider);
     @override
     void initState() {
@@ -66,6 +92,13 @@ class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
                               fit: BoxFit.contain),
                     ),
                   InputStyle(context: context, controller: contentController),
+                  if (ref.watch(allwoProvidr))
+                    Consumer(
+                      builder: (_, WidgetRef rf, __) {
+                        return dropDownListColloges(rf);
+                      },
+                    ),
+                  const SizedBox(height: 20),
                   UploadButtonWidget(
                     backgroundcolor: Colors.blue.withOpacity(0.5),
                     text: "Select a file",
@@ -90,7 +123,8 @@ class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
                           context: context,
                           content: contentController.text.trim().isNotEmpty
                               ? contentController.text.trim()
-                              : '');
+                              : '',
+                          colloge_id: ref.watch(selectedVal).toString());
                       // ref.read(uploadFileProvider).path!.bytes!.clear();
                     },
                   ),
@@ -100,6 +134,39 @@ class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Container dropDownListColloges(rf) {
+    return Container(
+      alignment: Alignment.center,
+      width: double.maxFinite,
+      decoration: BoxDecoration(
+          color: Colors.blue, borderRadius: BorderRadius.circular(15)),
+      child: DropdownButton(
+          alignment: Alignment.center,
+          icon: Icon(Icons.person),
+          borderRadius: BorderRadius.circular(10),
+          dropdownColor: Color.fromARGB(255, 175, 213, 240),
+          items: colloges.map((val) {
+            return DropdownMenuItem(
+              alignment: Alignment.center,
+              value: val.id,
+              child: Text(
+                val.name.toString(),
+                textAlign: TextAlign.center,
+              ),
+            );
+          }).toList(),
+          value: rf.watch(selectedVal),
+          onChanged: (value) {
+            // setState(() {
+            // _selectedVal = value;
+            rf.read(selectedVal.notifier).state = value!;
+            // collogeIdcontroller.text. = value;
+            print(value);
+            // });
+          }),
     );
   }
 }

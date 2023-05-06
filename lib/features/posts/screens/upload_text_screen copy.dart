@@ -1,14 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../controller/text_post.dart'; 
+import '../../auth/models/models_with_freeze/colloge_model.dart';
+import '../../auth/repository/auth_repository.dart';
+import '../controller/text_post.dart';
 
-class UploadTextScreen extends StatelessWidget {
+final allwoProvidr = StateProvider<bool>((ref) => false);
+final selectedVal = StateProvider<int>((ref) => 1);
+
+// _selectedVal
+class UploadTextScreen extends ConsumerWidget {
   UploadTextScreen({super.key});
   static const String routeName = 'upload-text-screen';
+
   TextEditingController textEditingController = TextEditingController();
+  // TextEditingController collogeIdcontroller = TextEditingController();
+
+  List<Colloge> colloges = [];
+
+  var _selectedVal;
+
+  // String? _data;
+  bool initial = true;
+  bool allows = false;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(authProvider).getAllColloges(context).then((value) async {
+      await ref.watch(getUserProvider).then((map) async {
+        if (int.parse(map['type']) == 3) {
+          // allows = true;
+          ref.read(allwoProvidr.notifier).state = true;
+        }
+      });
+
+      // setState(() {
+      colloges = value!.toList();
+
+      // _selectedVal = colloges.first.id;
+      ref.read(selectedVal.notifier).state = colloges.first.id!;
+      initial = false;
+      // });
+    });
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -24,6 +58,12 @@ class UploadTextScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  if (ref.watch(allwoProvidr))
+                    Consumer(
+                      builder: (_, WidgetRef rf, __) {
+                        return dropDownListColloges(rf);
+                      },
+                    ),
                   TextFormField(
                     controller: textEditingController,
                     maxLines: 10,
@@ -39,7 +79,8 @@ class UploadTextScreen extends StatelessWidget {
                     onTap: () async {
                       TextPost().textPost(
                           content: textEditingController.text.trim().toString(),
-                          context: context);
+                          context: context,
+                          colloge_id: ref.watch(selectedVal).toString());
                     },
                   ),
                 ],
@@ -48,6 +89,39 @@ class UploadTextScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Container dropDownListColloges(rf) {
+    return Container(
+      alignment: Alignment.center,
+      width: double.maxFinite,
+      decoration: BoxDecoration(
+          color: Colors.blue, borderRadius: BorderRadius.circular(15)),
+      child: DropdownButton(
+          alignment: Alignment.center,
+          icon: Icon(Icons.person),
+          borderRadius: BorderRadius.circular(10),
+          dropdownColor: Color.fromARGB(255, 175, 213, 240),
+          items: colloges.map((val) {
+            return DropdownMenuItem(
+              alignment: Alignment.center,
+              value: val.id,
+              child: Text(
+                val.name.toString(),
+                textAlign: TextAlign.center,
+              ),
+            );
+          }).toList(),
+          value: rf.watch(selectedVal),
+          onChanged: (value) {
+            // setState(() {
+            // _selectedVal = value;
+            rf.read(selectedVal.notifier).state = value!;
+            // collogeIdcontroller.text. = value;
+            print(value);
+            // });
+          }),
     );
   }
 }

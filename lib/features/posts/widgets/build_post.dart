@@ -192,7 +192,7 @@ class HeaderThePost extends ConsumerWidget {
               : Image(
                   height: 50.0,
                   width: 50.0,
-                  image: NetworkImage(post.url!),
+                  image: NetworkImage(post.user.img),
                   fit: BoxFit.cover,
                 ),
         ),
