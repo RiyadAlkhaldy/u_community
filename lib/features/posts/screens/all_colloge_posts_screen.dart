@@ -6,6 +6,7 @@ import '../../../core/utils/loader.dart';
 import '../models/post_model.dart';
 import '../repository/repository_colloge_posts.dart';
 import '../widgets/build_post.dart';
+import 'layout/post_layout.dart';
 // import '../repository/repository_posts.dart';
 
 class AllCollogePostsScreen extends ConsumerStatefulWidget {
@@ -22,6 +23,13 @@ class _PostScreenState extends ConsumerState<AllCollogePostsScreen> {
   bool inital = true;
   @override
   Widget build(BuildContext context) {
+    @override
+    void initState() {
+      // TODO: implement initState
+      ref.read(currentIndexPagePost.notifier).state = 1;
+      super.initState();
+    }
+
     // final posts =
     if (inital == true) {
       ref.watch(collogePostsProvider.notifier).getAllCollogePosts.then((value) {

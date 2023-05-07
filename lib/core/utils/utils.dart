@@ -4,13 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 void showSnackBar({required BuildContext context, required String content}) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(content),
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: Center(
+      child: Text(
+        content,
+        style: Theme.of(context)
+            .textTheme
+            .bodyLarge!
+            .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+      ),
     ),
-  );
+    padding: EdgeInsets.only(bottom: 250),
+  ));
 }
-
 
 Future<File?> pickImageFromGallery(BuildContext context) async {
   File? image;

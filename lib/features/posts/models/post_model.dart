@@ -95,7 +95,7 @@ class Posts {
   final String createdAt;
   final String updatedAt;
 
-  final int commentCount;
+   final int commentCount;
   final int likeCount;
   final int amILike;
   final Colloge colloge;
@@ -169,7 +169,7 @@ class Posts {
       collogeId: map['colloge_id'] as int,
       createdAt: map['created_at'] as String,
       updatedAt: map['updated_at'] as String,
-      commentCount: map['comment_count'] ,
+      commentCount: map['comment_count'],
       likeCount: map['like_count'] as int,
       amILike: map['amILike'] as int,
       colloge: Colloge.fromMap(map['colloge'] as Map<String, dynamic>),
@@ -336,11 +336,11 @@ class Section {
 class User {
   final int id;
   final String name;
-  final String img;
+  String? img;
   User({
     required this.id,
     required this.name,
-    required this.img,
+    this.img,
   });
 
   User copyWith({
@@ -367,7 +367,7 @@ class User {
     return User(
       id: map['id'] as int,
       name: map['name'] as String,
-      img: map['img'] as String,
+      img: map['img'] ?? '',
     );
   }
 

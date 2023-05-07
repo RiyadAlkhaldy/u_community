@@ -187,12 +187,12 @@ class HeaderThePost extends ConsumerWidget {
       ),
       child: CircleAvatar(
         child: ClipOval(
-          child: post.user.img.isEmpty
+          child: post.user.img!.isEmpty
               ? Image.asset('assets/images/user1.png')
               : Image(
                   height: 50.0,
                   width: 50.0,
-                  image: NetworkImage(post.user.img),
+                  image: NetworkImage(post.user.img!),
                   fit: BoxFit.cover,
                 ),
         ),

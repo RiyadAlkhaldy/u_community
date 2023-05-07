@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:u_community/core/utils/utils.dart';
 import '../../../core/utils/valiadate_inputs.dart';
 import '../repository/auth_repository.dart';
 import '../widgets/text_field_custom.dart';
@@ -28,14 +30,19 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
       print('auth');
       isGoing = true;
 
-      await AuthRepository().registerStudent(
+      await ref.read(authProvider).registerStudent(
           email: emailController.text.trim(),
           uniId: univIdController.text.trim(),
-          IDNumber: IDNUmber.text.trim(),
+          iDNumber: IDNUmber.text.trim(),
           type: 1,
           context: context);
+    } else {
+      if (kDebugMode) {
+        print('no auth');
+      }
+      showSnackBar(context: context, content: 'content');
     }
-    print('no auth');
+
     isGoing = false;
 
     // setState(() {});
@@ -50,10 +57,11 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
         child: Column(
           children: [
             TextFieldCustom(
+              validator: (input) =>
+                  input!.isValidEmail() ? null : "Check your email",
               hintText: 'Email',
               labelText: 'Email',
               controller: emailController,
-              validator: (val) => validInputAuth(val, 15, 7),
               keyboardType: TextInputType.emailAddress,
             ),
             TextFieldCustom(

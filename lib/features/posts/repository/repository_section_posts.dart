@@ -1,11 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/constant.dart';
+import '../../../core/enums/user_enum.dart';
+import '../../../core/utils/utils.dart';
 import '../models/post_model.dart';
 
+final gitImageurlTemp = Provider((ref) =>
+    "https://img.freepik.com/free-photo/female-student-with-books-paperworks_1258-48204.jpg?w=1380&t=st=1671753820~exp=1671754420~hmac=5846bac8c4fd4ebceecca71a8eda1cd494b92c9aba4c07ea4a78d88de7abc454");
 final sectionPostsProvider =
     StateNotifierProvider<RepositorySectionPosts, List<Posts>>((ref) {
   // final myreq = ref.watch(myrequest);
@@ -75,26 +80,48 @@ class RepositorySectionPosts extends StateNotifier<List<Posts>> {
     ];
   }
 
-  void addLikeOrUndo(Posts currentPost) {
+  void addLikeOrUndo(Posts currentPost, BuildContext context) async {
     List<Posts> posts = [];
-    if (currentPost.amILike == 0) {
-      state.forEach((post) {
-        if (post.id == currentPost.id)
-          post = post.copyWith(amILike: 1, likeCount: post.likeCount + 1);
-        posts.add(post);
-      });
-    } else {
-      state.forEach((post) {
-        if (post.id == currentPost.id) {
-          post = post.copyWith(amILike: 0, likeCount: post.likeCount - 1);
-        }
-        posts.add(post);
-      });
-    }
-    state = [...posts];
-    // if(debug)
-    if (kDebugMode) {
-      print('liked post number $currentPost');
+    try {
+      SharedPreferences prefs = await _prefs;
+      ResponsePosts responsePosts;
+
+      var response;
+      print(await prefs.getString(UserEnum.token.type));
+
+      if (currentPost.amILike == 0) {
+        response = await dio.post('${ApiUrl}like/add-like/',
+            options: Options(headers: {
+              'authorization': 'Bearer ${prefs.getString(UserEnum.token.type)}',
+              "Accept": "application/json"
+            }),
+            queryParameters: {'post_id': currentPost.id});
+        state.forEach((post) {
+          if (post.id == currentPost.id)
+            post = post.copyWith(amILike: 1, likeCount: post.likeCount + 1);
+          posts.add(post);
+        });
+      } else {
+        response = await dio.post('${ApiUrl}like/un-like/',
+            options: Options(headers: {
+              'authorization': 'Bearer ${prefs.getString(UserEnum.token.type)}',
+              "Accept": "application/json"
+            }),
+            queryParameters: {'post_id': currentPost.id});
+        state.forEach((post) {
+          if (post.id == currentPost.id)
+            post = post.copyWith(amILike: 0, likeCount: post.likeCount - 1);
+          posts.add(post);
+        });
+      }
+      state = [...posts];
+      // if(debug)
+      print('liked post number ${currentPost}');
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      showSnackBar(context: context, content: e.toString());
     }
   }
 

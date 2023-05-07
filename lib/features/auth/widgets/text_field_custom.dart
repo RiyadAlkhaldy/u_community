@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextFieldCustom extends StatelessWidget {
-  const TextFieldCustom(
+  TextFieldCustom(
       {Key? key,
       required this.hintText,
       required this.labelText,
@@ -13,7 +13,7 @@ class TextFieldCustom extends StatelessWidget {
   final String labelText;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
-  final String Function(String?)? validator;
+  String? Function(String?)? validator;
   @override
   Widget build(BuildContext context) {
     return Padding(

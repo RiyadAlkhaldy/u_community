@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../repository/auth_repository.dart';
 import 'registration.dart';
+
+extension EmailValidator on String {
+  bool isValidEmail() {
+    return RegExp(
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(this);
+  }
+}
 
 //---------------------
 class Login extends ConsumerStatefulWidget {
@@ -49,7 +58,9 @@ class _LoginState extends ConsumerState<Login> {
           text: 'تسجيل الدخول',
           context: context,
           onTap: () async {
-            print('go to login');
+            if (kDebugMode) {
+              print('go to login');
+            }
 
             final fmSt = formState.currentState;
             if (fmSt!.validate()) {
@@ -144,14 +155,16 @@ Widget InputStyle(bool whatIs, context) {
 
 //---------------UserNameField--------------
 Widget inputUserName(TextEditingController controller, BuildContext context) {
-  return TextField(
+  return TextFormField(
+    validator: (input) => input!.isValidEmail() ? null : "Check your email",
+    // inputFormatters: [],
     style:
         Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black),
     controller: controller,
     textAlign: TextAlign.right,
     decoration: const InputDecoration(
       border: InputBorder.none,
-      contentPadding: EdgeInsets.only(right: 0, left: 0, bottom: 6, top: 15),
+      contentPadding: EdgeInsets.only(right: 0, left: 0, bottom: 0, top: 30),
       suffixIcon:
           Icon(Icons.supervised_user_circle_rounded, color: Colors.black),
       hintText: 'اسم المستخدم',
@@ -282,6 +295,4 @@ Widget restPasswd() {
   );
 }
 
-  //---------end-------------
-
-
+//---------end-------------

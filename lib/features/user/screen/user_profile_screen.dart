@@ -35,7 +35,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
         });
       });
     }
- 
+
     final height = MediaQuery.of(context).size.height / 3;
     print(MediaQuery.of(context).size);
     print('height' + height.toString());
@@ -55,19 +55,19 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           SliverList(
             delegate: SliverChildListDelegate([
               // PostHeader(),
-              Container(
-                width: double.infinity,
-                height: 100.0,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [NewWidget()],
-                ),
-              ), //
+              // Container(
+              //   width: double.infinity,
+              //   height: 100.0,
+              //   child: ListView(
+              //     scrollDirection: Axis.horizontal,
+              //     children: [NewWidget()],
+              //   ),
+              // ), //
 
               dataLoaded
                   ? Column(
                       children: ref
-                          .watch(postsProvider)
+                          .watch(userPostsProvider)
                           .map((p) => buildPost(
                                 index: 0,
                                 contextl: context,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // import '../controller/posts_controlller.dart';
 import '../../../core/utils/loader.dart';
 import '../models/post_model.dart';
-import '../repository/repository_post.dart';
+import '../repository/repository_posts.dart';
 import '../widgets/build_post.dart';
 
 class PostScreen extends ConsumerStatefulWidget {
@@ -21,8 +21,8 @@ var checkposts;
 class _PostScreenState extends ConsumerState<PostScreen> {
   @override
   void initState() async {
-    await ref.read(responseProvider.notifier).getAllPosts;
-    final p = ref.read(responseProvider.notifier).state.posts;
+    await ref.read(postsProvider.notifier).getAllPosts;
+    final p = ref.read(postsProvider.notifier).state;
     print(p);
 
     super.initState();
@@ -30,8 +30,8 @@ class _PostScreenState extends ConsumerState<PostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final posts = ref.watch(responseProvider);
-    final postss = ref.watch(AllPostsProvider);
+    final posts = ref.watch(postsProvider);
+    final postss = ref.watch(allPostsProvider);
 
     return CustomScrollView(
       slivers: [
@@ -52,7 +52,7 @@ class _PostScreenState extends ConsumerState<PostScreen> {
               data: (data) {
                 // print('length of the data ${data.length}');
                 return Column(
-                    children: posts.posts
+                    children: posts
                         .map((p) => buildPost(
                               index: 0,
                               contextl: context,

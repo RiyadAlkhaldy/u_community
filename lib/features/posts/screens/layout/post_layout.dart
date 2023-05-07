@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/utils/colors.dart';
 import '../../../../core/utils/utils.dart';
@@ -10,6 +10,8 @@ import '../../../auth/repository/laravel_echo.dart';
 import '../all_colloge_posts_screen.dart';
 import '../all_post_screen.dart';
 import '../all_section_posts_screen.dart';
+
+final currentIndexPagePost = StateProvider((ref) => 0);
 
 class PostLayout extends ConsumerStatefulWidget {
   PostLayout({Key? key}) : super(key: key);

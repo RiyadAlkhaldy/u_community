@@ -7,12 +7,12 @@ class UserResponseLogin {
   UserResponseLogin({
     required this.status,
     required this.message,
-    required this.user,
+    this.user,
     required this.authorisation,
   });
   final String status;
   final String message;
-  final User user;
+  final User? user;
   final Authorisation authorisation;
 
   UserResponseLogin copyWith({
@@ -33,7 +33,7 @@ class UserResponseLogin {
     return <String, dynamic>{
       'status': status,
       'message': message,
-      'user': user.toMap(),
+      'user': user!.toMap(),
       'authorisation': authorisation.toMap(),
     };
   }
@@ -51,7 +51,7 @@ class UserResponseLogin {
   String toJson() => json.encode(toMap());
 
   factory UserResponseLogin.fromJson(String source) =>
-      UserResponseLogin.fromMap(json.decode(source) as Map<String, dynamic>);
+      UserResponseLogin.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -194,8 +194,10 @@ class User {
       collogeId: map['colloge_id'],
       level: map['level'],
       type: map['type'],
-      colloge: Colloge.fromMap(map['colloge']),
-      section: map['section'] == null ? null : Section.fromMap(map['section']),
+      colloge: Colloge.fromMap(map['colloge'] as Map<String, dynamic>),
+      section: map['section'] == null
+          ? null
+          : Section.fromMap(map['section'] as Map<String, dynamic>),
     );
   }
 
@@ -258,10 +260,10 @@ class User {
 
 class Authorisation {
   Authorisation({
-    required this.token,
+    this.token,
     required this.type,
   });
-  final String token;
+  final String? token;
   final String type;
 
   Authorisation copyWith({
@@ -283,7 +285,7 @@ class Authorisation {
 
   factory Authorisation.fromMap(Map<String, dynamic> map) {
     return Authorisation(
-      token: map['token'] as String,
+      token: map['token'] != null ? map['token'] : null,
       type: map['type'] as String,
     );
   }
@@ -291,7 +293,7 @@ class Authorisation {
   String toJson() => json.encode(toMap());
 
   factory Authorisation.fromJson(String source) =>
-      Authorisation.fromMap(json.decode(source) as Map<String, dynamic>);
+      Authorisation.fromMap(json.decode(source));
 
   @override
   String toString() => 'Authorisation(token: $token, type: $type)';

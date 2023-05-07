@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/loader.dart';
+import '../../posts/repository/repository_section_posts.dart';
 import '../repository/repository_user.dart';
 import '../repository/upload_file.dart';
 
@@ -45,6 +46,8 @@ class _ProfileImageWidgetState extends ConsumerState<ProfileImageWidget> {
                       content: 'no data',
                       type: 2,
                       urlCompelete: 'user/upload-profile-image/');
+                  ref.refresh(getUserProviderProfile);
+
                   setState(() {});
                 }),
           ),
@@ -60,17 +63,30 @@ class _ProfileImageWidgetState extends ConsumerState<ProfileImageWidget> {
             color: Colors.transparent,
             child: ref.watch(getUserProviderProfile).when(
                   data: (data) {
+                    if (data!.img == null) {
+                      return CachedNetworkImage(
+                        // imageUrl: widget.imagePath,
+                        imageUrl: ref.watch(gitImageurlTemp),
+                        placeholder: (context, img) => const Loader(),
+                        fit: BoxFit.cover,
+                        width: 108,
+                        height: 108,
+                        // child: InkWell(onTap: onClicked),
+                        // ),
+                      );
+                    } else {
+                      return CachedNetworkImage(
+                        // imageUrl: widget.imagePath,
+                        imageUrl: data!.img!,
+                        placeholder: (context, img) => const Loader(),
+                        fit: BoxFit.cover,
+                        width: 108,
+                        height: 108,
+                        // child: InkWell(onTap: onClicked),
+                        // ),
+                      );
+                    }
                     // ref.read(getProfile.notifier).state = data;
-                    return CachedNetworkImage(
-                      // imageUrl: widget.imagePath,
-                      imageUrl: data!.img!,
-                      placeholder: (context, img) => const Loader(),
-                      fit: BoxFit.cover,
-                      width: 108,
-                      height: 108,
-                      // child: InkWell(onTap: onClicked),
-                      // ),
-                    );
                   },
                   error: (error, stackTrace) => const Text('error'),
                   loading: () => Loader(),

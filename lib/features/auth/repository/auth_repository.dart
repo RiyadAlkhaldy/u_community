@@ -64,13 +64,13 @@ class AuthRepository {
   Future<void> registerStudent(
       {required String email,
       required final String uniId,
-      required String IDNumber,
+      required String iDNumber,
       int type = 1,
       required BuildContext context}) async {
     Map<String, dynamic> data = {
       'email': email,
       'university_id': uniId,
-      'id_number': IDNumber,
+      'id_number': iDNumber,
       'type': type,
     };
     //  SharedPreferences.getInstance()
@@ -86,24 +86,25 @@ class AuthRepository {
       if (response.statusCode == 200) {
         print('ok');
         print(response.data);
-        userResponseLogin = UserResponseLogin.fromMap(response.data);
+        userResponseLogin =
+            UserResponseLogin.fromMap(response.data as Map<String, dynamic>);
         print(
             'tokennnnnnnnnnnnnnnnnnnnnnnnnnnnn${userResponseLogin.authorisation.token}');
         final SharedPreferences prefs = await _prefs;
-        await prefs.setString('token', userResponseLogin.authorisation.token);
-        await prefs.setString(UserEnum.name.type, userResponseLogin.user.name);
+        await prefs.setString('token', userResponseLogin.authorisation.token!);
+        await prefs.setString(UserEnum.name.type, userResponseLogin.user!.name);
         await prefs.setString(
-            UserEnum.email.type, userResponseLogin.user.email);
+            UserEnum.email.type, userResponseLogin.user!.email);
         await prefs.setString(UserEnum.sectionId.type,
-            userResponseLogin.user.sectionId.toString());
+            userResponseLogin.user!.sectionId.toString());
         await prefs.setString(UserEnum.collogeId.type,
-            userResponseLogin.user.collogeId.toString());
+            userResponseLogin.user!.collogeId.toString());
         await prefs.setString(
-            UserEnum.id.type, userResponseLogin.user.id.toString());
+            UserEnum.id.type, userResponseLogin.user!.id.toString());
         await prefs.setString(
-            UserEnum.img.type, userResponseLogin.user.img.toString());
+            UserEnum.img.type, userResponseLogin.user!.img.toString());
         await prefs.setString(
-            UserEnum.typeUser.type, userResponseLogin.user.type.toString());
+            UserEnum.typeUser.type, userResponseLogin.user!.type.toString());
         print(
             'tokennnnnnnnnnnnnnnnnnnnnnnnnnnnn${userResponseLogin.authorisation.token}');
         print(userResponseLogin);
@@ -152,7 +153,7 @@ class AuthRepository {
           print('ok');
           print(response.data);
         }
-        userResponseLogin = UserResponseLogin.fromMap(response.data);
+        userResponseLogin = UserResponseLogin.fromJson(response.data);
         if (kDebugMode) {
           print(userResponseLogin.authorisation);
           print(userResponseLogin);
@@ -216,21 +217,22 @@ class AuthRepository {
               'tokennnnnnnnnnnnnnnnnnnnnnnnnnnnn${userResponseLogin.authorisation.token}');
         }
         await SharedPreferences.getInstance().then((prefs) async {
-          await prefs.setString('token', userResponseLogin.authorisation.token);
           await prefs.setString(
-              UserEnum.name.type, userResponseLogin.user.name);
+              'token', userResponseLogin.authorisation.token!);
           await prefs.setString(
-              UserEnum.email.type, userResponseLogin.user.email);
+              UserEnum.name.type, userResponseLogin.user!.name);
+          await prefs.setString(
+              UserEnum.email.type, userResponseLogin.user!.email);
           await prefs.setString(UserEnum.sectionId.type,
-              userResponseLogin.user.sectionId.toString());
+              userResponseLogin.user!.sectionId.toString());
           await prefs.setString(UserEnum.collogeId.type,
-              userResponseLogin.user.collogeId.toString());
+              userResponseLogin.user!.collogeId.toString());
           await prefs.setString(
-              UserEnum.id.type, userResponseLogin.user.id.toString());
+              UserEnum.id.type, userResponseLogin.user!.id.toString());
           await prefs.setString(
-              UserEnum.img.type, userResponseLogin.user.img.toString());
+              UserEnum.img.type, userResponseLogin.user!.img.toString());
           await prefs.setString(
-              UserEnum.typeUser.type, userResponseLogin.user.type.toString());
+              UserEnum.typeUser.type, userResponseLogin.user!.type.toString());
         });
         if (kDebugMode) {
           print(
@@ -275,21 +277,23 @@ class AuthRepository {
         queryParameters: data,
         options: Options(headers: {"Accept": "application/json"}),
       );
-      print('ok');
-      print(response.data);
-      if (response.statusCode == 200) {
-        userResponseLogin = UserResponseLogin.fromMap(response.data);
+      if (kDebugMode) {
+        print(response.data);
+      }
+      if (response.statusCode == 200 &&
+          jsonDecode(response.data)['status'] == 'success') {
+        userResponseLogin = UserResponseLogin.fromJson(response.data);
 
         final SharedPreferences prefs = await _prefs;
-        prefs.setString('token', userResponseLogin.authorisation.token);
-        prefs.setString('name', userResponseLogin.user.name);
-        prefs.setString('email', userResponseLogin.user.email);
-        prefs.setString(
-            'section_id', userResponseLogin.user.sectionId.toString());
-        prefs.setString(
-            'colloge_id', userResponseLogin.user.collogeId.toString());
-        prefs.setString('id', userResponseLogin.user.id.toString());
-        prefs.setString('type', userResponseLogin.user.type.toString());
+        await prefs.setString('token', userResponseLogin.authorisation.token!);
+        await prefs.setString('name', userResponseLogin.user!.name);
+        await prefs.setString('email', userResponseLogin.user!.email);
+        await prefs.setString(
+            'section_id', userResponseLogin.user!.sectionId.toString());
+        await prefs.setString(
+            'colloge_id', userResponseLogin.user!.collogeId.toString());
+        await prefs.setString('id', userResponseLogin.user!.id.toString());
+        await prefs.setString('type', userResponseLogin.user!.type.toString());
 
         print(userResponseLogin);
         Navigator.pushNamedAndRemoveUntil(
@@ -299,8 +303,18 @@ class AuthRepository {
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Center(
+          child: Text(
+            'check from password or email is correct',
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+        ),
+        padding: EdgeInsets.only(bottom: 250),
+      ));
       if (kDebugMode) print(e.toString());
     }
     // ignore: use_build_context_synchronously

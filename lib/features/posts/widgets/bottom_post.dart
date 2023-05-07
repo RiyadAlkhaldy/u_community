@@ -32,7 +32,7 @@ Widget BottomPost(BuildContext context, Posts post) {
 
                             ref
                                 .read(postsProvider.notifier)
-                                .addLikeOrUndo(post);
+                                .addLikeOrUndo(post,context);
                           }),
                     ),
                     Text(
@@ -45,17 +45,22 @@ Widget BottomPost(BuildContext context, Posts post) {
                 SizedBox(width: 20.0),
                 Row(
                   children: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.chat),
-                      iconSize: 30.0,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ViewPostScreen(
-                              post: post,
-                            ),
-                          ),
+                    Consumer(
+                      builder: (_, WidgetRef ref, __) {
+                        return IconButton(
+                          icon: Icon(Icons.chat),
+                          iconSize: 30.0,
+                          onPressed: () {
+                            ref.read(postStateProvider.notifier).state = post;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ViewPostScreen(
+                                  post: post,
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),

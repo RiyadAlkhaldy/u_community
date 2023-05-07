@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/constant.dart';
+import '../../../core/enums/user_enum.dart';
 import '../models/comment_model.dart';
 
 // final myrequest = Provider<ResponsePosts>((ref) {
@@ -117,7 +118,20 @@ class RepositoryComment extends StateNotifier<List<Comments>> {
     print('update the Comment number ${currentComment}');
   }
 
-  void deleteComment(int comment_id) {
+  void deleteComment(int comment_id) async {
+    try {
+      SharedPreferences prefs = await _prefs;
+
+      var response;
+      response = await dio.post('${ApiUrl}comment/delete-comment/',
+          options: Options(headers: {
+            'authorization': 'Bearer ${prefs.getString(UserEnum.token.type)}',
+            "Accept": "application/json"
+          }),
+          queryParameters: {'id': comment_id});
+    } catch (e) {
+      print(e);
+    }
     print('deleted number $comment_id');
     state = [
       for (var comment in state)

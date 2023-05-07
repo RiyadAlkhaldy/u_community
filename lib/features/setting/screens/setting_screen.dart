@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:u_community/features/auth/repository/auth_repository.dart';
 import 'package:u_community/features/setting/screens/user_accounnt.dart';
-import '../widgets/build_dark_mode.dart';
+import '../widgets/reed_back.dart';
 import '../widgets/icon_widget.dart';
 import 'account_setting_screen.dart';
 

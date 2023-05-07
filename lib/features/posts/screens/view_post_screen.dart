@@ -1,11 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/utils/loader.dart';
+import '../../user/repository/repository_user.dart';
 import '../../video/orientation/portrait_landscape_player_page.dart';
 import '../models/post_model.dart';
-import '../repository/repository_comments.dart';
+import '../../comments/repository/repository_comments.dart';
 import '../repository/repository_posts.dart';
-import '../widgets/build_comment.dart';
+import '../repository/repository_section_posts.dart';
+import '../../comments/widgets/build_comment.dart';
 import '../widgets/build_post.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -187,14 +190,44 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
           ),
           child: CircleAvatar(
             child: ClipOval(
-              child: widget.post.user.img.isEmpty
-                  ? Image.asset('assets/images/user1.png')
-                  : Image(
-                      height: 48.0,
-                      width: 48.0,
-                      image: NetworkImage(widget.post.user.img),
-                      fit: BoxFit.cover,
-                    ),
+              child: ref.watch(getUserProviderProfile).when(
+                    data: (data) {
+                      if (data!.img == null) {
+                        return CachedNetworkImage(
+                          // imageUrl: widget.imagePath,
+                          imageUrl: ref.watch(gitImageurlTemp),
+                          placeholder: (context, img) => const Loader(),
+                          fit: BoxFit.cover,
+                          width: 108,
+                          height: 108,
+                          // child: InkWell(onTap: onClicked),
+                          // ),
+                        );
+                      } else {
+                        return CachedNetworkImage(
+                          // imageUrl: widget.imagePath,
+                          imageUrl: data!.img!,
+                          placeholder: (context, img) => const Loader(),
+                          fit: BoxFit.cover,
+                          width: 108,
+                          height: 108,
+                          // child: InkWell(onTap: onClicked),
+                          // ),
+                        );
+                      }
+                      // ref.read(getProfile.notifier).state = data;
+                    },
+                    error: (error, stackTrace) => const Text('error'),
+                    loading: () => Loader(),
+                  ),
+              //  widget.post.user.img!.isEmpty
+              //     ? Image.asset('assets/images/user1.png')
+              //     : Image(
+              //         height: 48.0,
+              //         width: 48.0,
+              //         image: NetworkImage(widget.post.user.img!),
+              //         fit: BoxFit.cover,
+              //       ),
             ),
           ),
         ),
