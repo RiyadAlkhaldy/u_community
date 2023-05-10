@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/utils/loader.dart';
 import '../../user/repository/repository_user.dart';
 import '../../video/orientation/portrait_landscape_player_page.dart';
-import '../models/post_model.dart';
+import '../../../models/post_model.dart';
 import '../../comments/repository/repository_comments.dart';
 import '../repository/repository_posts.dart';
 import '../repository/repository_section_posts.dart';
@@ -43,110 +43,113 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
         });
       });
     }
-    return Scaffold(
-      backgroundColor: Color(0xFFEDF0F6),
-      body: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        child: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(top: 40.0),
-              width: double.infinity,
-              // height: 600.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0),
-                    child: Column(
-                      children: <Widget>[
-                        //! view header the post
-                        HeaderThePost(
-                          post: widget.post,
-                        ),
-                        if (widget.post.type == 2)
-                          ContentViewPostScreen(post: widget.post),
-                        if (widget.post.type == 1)
-                          ViewPostText(
-                            post: widget.post,
-                          ),
-                        if (widget.post.type == 3)
-                          LimitedBox(
-                              maxWidth: double.infinity,
-                              maxHeight: 400,
-                              child: PortraitLandscapePlayerPage(
-                                post: widget.post,
-                                index: 1,
-                              )),
-
-                        Bottom_Post(context, posts!, ref),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 10.0),
-            // !this for build comments
-            Container(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Color(0xFFEDF0F6),
+        body: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 40.0),
                 width: double.infinity,
                 // height: 600.0,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
-                  ),
+                  borderRadius: BorderRadius.circular(25.0),
                 ),
-                child: dataLoaded == true
-                    ? Consumer(
-                        builder: (_, WidgetRef reff, __) {
-                          return Column(
-                              children: reff
-                                  .watch(commentsProvider.notifier)
-                                  .state
-                                  .map((comment) =>
-                                      buildComment(0, context, comment))
-                                  .toList());
-                        },
-                      )
-                    : Loader()
-                // buildComment(1,context,null),
-                )
-          ],
-        ),
-      ),
-      //! this for add comment
-      bottomNavigationBar: Transform.translate(
-        offset: Offset(0.0, -1 * MediaQuery.of(context).viewInsets.bottom),
-        child: Container(
-          height: 100.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30.0),
-              topRight: Radius.circular(30.0),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                offset: Offset(0, -2),
-                blurRadius: 6.0,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: Column(
+                        children: <Widget>[
+                          //! view header the post
+                          HeaderThePost(
+                            post: widget.post,
+                          amIInviewSinglePost: true,
+                          ),
+                          if (widget.post.type == 2)
+                            ContentViewPostScreen(post: widget.post),
+                          if (widget.post.type == 1)
+                            ViewPostText(
+                              post: widget.post,
+                            ),
+                          if (widget.post.type == 3)
+                            LimitedBox(
+                                maxWidth: double.infinity,
+                                maxHeight: 400,
+                                child: PortraitLandscapePlayerPage(
+                                  post: widget.post,
+                                  index: 1,
+                                )),
+
+                          Bottom_Post(context, posts!, ref),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              SizedBox(height: 10.0),
+              // !this for build comments
+              Container(
+                  width: double.infinity,
+                  // height: 600.0,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0),
+                    ),
+                  ),
+                  child: dataLoaded == true
+                      ? Consumer(
+                          builder: (_, WidgetRef reff, __) {
+                            return Column(
+                                children: reff
+                                    .watch(commentsProvider.notifier)
+                                    .state
+                                    .map((comment) =>
+                                        buildComment(0, context, comment))
+                                    .toList());
+                          },
+                        )
+                      : Loader()
+                  // buildComment(1,context,null),
+                  )
             ],
-            color: Colors.white,
           ),
-          child: Padding(
-            padding: EdgeInsets.all(12.0),
-            child: TextField(
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Colors.black),
-              controller: addCommentController,
-              decoration: InputDec(posts),
+        ),
+        //! this for add comment
+        bottomNavigationBar: Transform.translate(
+          offset: Offset(0.0, -1 * MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: 100.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  offset: Offset(0, -2),
+                  blurRadius: 6.0,
+                ),
+              ],
+              color: Colors.white,
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(12.0),
+              child: TextField(
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: Colors.black),
+                controller: addCommentController,
+                decoration: InputDec(posts),
+              ),
             ),
           ),
         ),
@@ -294,10 +297,17 @@ class ContentViewPostScreen extends ConsumerWidget {
               blurRadius: 8.0,
             ),
           ],
-          image: DecorationImage(
-            image: NetworkImage(posts!.url!),
-            fit: BoxFit.fitWidth,
-          ),
+          // image: DecorationImage(
+          //   image: NetworkImage(posts!.url!),
+          //   fit: BoxFit.fitWidth,
+          // ),
+        ),
+        child: CachedNetworkImage(
+          imageUrl: post.url!,
+          placeholder: (context, url) => const Loader(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+          fit: BoxFit.cover,
+          // fit: BoxFit.cover,
         ),
       ),
     );
@@ -343,22 +353,29 @@ class HeaderViewPostScreen extends ConsumerWidget {
               ),
               child: CircleAvatar(
                 child: ClipOval(
-                  child: Image(
-                    height: 50.0,
-                    width: 50.0,
-                    image: NetworkImage(posts!.content),
-                    fit: BoxFit.cover,
-                  ),
+                  child: posts!.user.img == null
+                      ? CachedNetworkImage(
+                          imageUrl: ref.watch(gitImageurlTemp),
+                          height: 50.0,
+                          width: 50.0,
+                          fit: BoxFit.cover,
+                        )
+                      : Image(
+                          height: 50.0,
+                          width: 50.0,
+                          image: NetworkImage(posts.user.img!),
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ),
             title: Text(
-              post.content,
+              post.content!,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            subtitle: Text(post.content),
+            subtitle: post.content == null ? null : Text(post.content!),
             trailing: IconButton(
               onPressed: () {
                 showDialog(

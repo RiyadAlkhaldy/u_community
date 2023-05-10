@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/utils/loader.dart';
-import '../models/post_model.dart';
+import '../../../models/post_model.dart';
 import '../repository/repository_section_posts.dart';
 import '../widgets/build_post.dart';
 import 'layout/post_layout.dart';

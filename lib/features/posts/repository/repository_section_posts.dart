@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constant.dart';
 import '../../../core/enums/user_enum.dart';
 import '../../../core/utils/utils.dart';
-import '../models/post_model.dart';
+import '../../../models/post_model.dart';
 
 final gitImageurlTemp = Provider((ref) =>
     "https://img.freepik.com/free-photo/female-student-with-books-paperworks_1258-48204.jpg?w=1380&t=st=1671753820~exp=1671754420~hmac=5846bac8c4fd4ebceecca71a8eda1cd494b92c9aba4c07ea4a78d88de7abc454");

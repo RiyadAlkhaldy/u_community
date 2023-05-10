@@ -58,7 +58,7 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
           children: [
             TextFieldCustom(
               validator: (input) =>
-                  input!.isValidEmail() ? null : "Check your email",
+                  input!.isValidEmail() ? null : "Check your syntax email ",
               hintText: 'Email',
               labelText: 'Email',
               controller: emailController,
@@ -82,7 +82,7 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
               padding: EdgeInsets.only(top: 20),
               margin: EdgeInsets.symmetric(horizontal: 8),
               child: !isGoing
-                  ? RegisterOrLoginButton(
+                  ? registerOrLoginButton(
                       text: 'تسجيل',
                       context: context,
                       onTap: () {

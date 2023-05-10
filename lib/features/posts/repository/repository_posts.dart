@@ -7,7 +7,7 @@ import 'package:u_community/core/utils/utils.dart';
 
 import '../../../core/constant.dart';
 import '../../../core/enums/user_enum.dart';
-import '../models/post_model.dart';
+import '../../../models/post_model.dart';
 // import 'package:http/http.dart' as http;
 
 final postsProvider =
@@ -35,10 +35,10 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
   // RepositoryPosts();
   Future<List<Posts>> get getAllPosts async {
     SharedPreferences prefs = await _prefs;
-    ResponsePosts responsePosts;
-
-    var response;
-    print(await prefs.getString(UserEnum.token.type));
+    Response response;
+    if (kDebugMode) {
+      print(prefs.getString(UserEnum.token.type));
+    }
     response = await dio.post(
       '${ApiUrl}posts/get-all-posts2/',
       options: Options(headers: {
@@ -46,8 +46,10 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
         "Accept": "application/json"
       }),
     );
-    print('ok');
-    print(response.data);
+    if (kDebugMode) {
+      print('ok');
+      print(response.data);
+    }
     ResponsePosts res = ResponsePosts.fromMap(response.data);
     List<Posts> posts = res.posts.map((e) => e).toList();
 
@@ -74,10 +76,10 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
     List<Posts> posts = [];
     try {
       SharedPreferences prefs = await _prefs;
-      ResponsePosts responsePosts;
-
-      var response;
-      print(await prefs.getString(UserEnum.token.type));
+      Response response;
+      if (kDebugMode) {
+        print(prefs.getString(UserEnum.token.type));
+      }
 
       if (currentPost.amILike == 0) {
         response = await dio.post('${ApiUrl}like/add-like/',

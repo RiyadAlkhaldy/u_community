@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/constant.dart';
 import '../../../core/enums/user_enum.dart';
-import '../../auth/models/user_response.dart';
+import '../../../models/user_response_auth.dart';
 
 final getUserDetailes = StateNotifierProvider<UserDetailes, User?>((ref) {
   final user = UserDetailes();

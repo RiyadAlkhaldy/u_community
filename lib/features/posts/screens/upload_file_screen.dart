@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../auth/models/models_with_freeze/colloge_model.dart';
+import '../../../models/colloge_model.dart';
 import '../../auth/repository/auth_repository.dart';
 import '../../video/orientation/portrait_player_widget.dart';
 import '../controller/upload_file.dart';

@@ -1,6 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/post_model.dart';
+import '../../../core/utils/loader.dart';
+import '../../user/repository/repository_get_user_by_id.dart';
+import '../../user/screen/view_any_user_screen.dart';
+import '../../../models/post_model.dart';
 import '../repository/repository_posts.dart';
 import 'body_the_post_image.dart';
 import 'body_the_post_text.dart';
@@ -42,6 +46,7 @@ class buildPost extends StatelessWidget {
                   // if (post!.type ==)
                   HeaderThePost(
                     post: post!,
+                    amIInviewSinglePost: false,
                   ),
 
                   if (post!.type == 2) BodyThePostImage(post: post!),
@@ -70,9 +75,11 @@ class buildPost extends StatelessWidget {
 
 class HeaderThePost extends ConsumerWidget {
   final Posts post;
+  final bool amIInviewSinglePost;
   HeaderThePost({
     Key? key,
     required this.post,
+    required this.amIInviewSinglePost,
   }) : super(key: key);
   // DateTime? timeage;
 
@@ -83,44 +90,81 @@ class HeaderThePost extends ConsumerWidget {
       // crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         ListTile(
-          trailing: Text(
-            post.colloge.name,
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall!
-                .copyWith(fontSize: 20, color: Colors.black),
+          trailing: InkWell(
+            onTap: () {},
+            child: Text(
+              post.colloge.name,
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .copyWith(fontSize: 20, color: Colors.black),
+            ),
           ),
-          leading: post.section != null
-              ? Text(post.section!.name,
-                  textAlign: TextAlign.end,
-                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        fontSize: 16,
-                        color: Colors.black.withOpacity(0.7),
-                      ))
-              : Text(''),
+
+          /// I check if I was in view all post Or view one post
+          title: !amIInviewSinglePost
+              ? null
+              : post.section != null
+                  ? Text(post.section!.name,
+                      textAlign: TextAlign.end,
+                      style:
+                          Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                fontSize: 16,
+                                color: Colors.black.withOpacity(0.7),
+                              ))
+                  : const Text(''),
+
+          /// I check if I was in view all post Or view one post
+          leading: amIInviewSinglePost
+              ? TextButton.icon(
+                  onPressed: () => Navigator.of(context).maybePop(),
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    size: 30,
+                  ),
+                  label: const Text('back'))
+              : post.section != null
+                  ? Text(post.section!.name,
+                      textAlign: TextAlign.end,
+                      style:
+                          Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                fontSize: 16,
+                                color: Colors.black.withOpacity(0.7),
+                              ))
+                  : null,
         ),
         ListTile(
           // contentPadding: EdgeInsets.symmetric(horizontal: 5),
 
           leading: LefePostHeader(context, ref),
           // leading: PostProfileImage(),
-          title: Text(
-            post.user.name,
-            textAlign: TextAlign.end,
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall!
-                .copyWith(fontSize: 20, color: Colors.black),
+          title: InkWell(
+            onTap: () {
+              ref.read(getUserIDFromUIProvider.notifier).state = post.user.id;
+
+              Navigator.pushNamed(context, ViewAnyUserScreen.routeName,
+                  arguments: post.user);
+            },
+            child: Text(
+              post.user.name,
+              textAlign: TextAlign.end,
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .copyWith(fontSize: 20, color: Colors.black),
+            ),
           ),
 
-          subtitle: Text(post.content,
-              textAlign: TextAlign.end,
-              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    fontSize: 16,
-                    color: Colors.black.withOpacity(0.5),
-                  )),
-          trailing: PostProfileImage(),
+          subtitle: post.content == null
+              ? null
+              : Text(post.content!,
+                  textAlign: TextAlign.end,
+                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        fontSize: 16,
+                        color: Colors.black.withOpacity(0.5),
+                      )),
+          trailing: PostProfileImage(context, ref),
         ),
       ],
     );
@@ -171,7 +215,7 @@ class HeaderThePost extends ConsumerWidget {
     );
   }
 
-  Container PostProfileImage() {
+  Container PostProfileImage(BuildContext context, WidgetRef ref) {
     return Container(
       width: 50.0,
       height: 50.0,
@@ -186,15 +230,23 @@ class HeaderThePost extends ConsumerWidget {
         ],
       ),
       child: CircleAvatar(
-        child: ClipOval(
-          child: post.user.img!.isEmpty
-              ? Image.asset('assets/images/user1.png')
-              : Image(
-                  height: 50.0,
-                  width: 50.0,
-                  image: NetworkImage(post.user.img!),
-                  fit: BoxFit.cover,
-                ),
+        child: InkWell(
+          onTap: () {
+            ref.read(getUserIDFromUIProvider.notifier).state = post.user.id;
+
+            Navigator.pushNamed(context, ViewAnyUserScreen.routeName,
+                arguments: post.user);
+          },
+          child: ClipOval(
+            child: post.user.img == null || post.user.img!.isEmpty
+                ? Image.asset('assets/images/user1.png')
+                : CachedNetworkImage(
+                    imageUrl: post.user.img!,
+                    placeholder: (context, img) => const Loader(),
+                    fit: BoxFit.cover,
+                    // fit: BoxFit.cover,
+                  ),
+          ),
         ),
       ),
     );

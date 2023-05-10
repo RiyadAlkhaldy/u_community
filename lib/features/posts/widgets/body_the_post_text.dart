@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/post_model.dart';
+import '../../../models/post_model.dart';
 import '../repository/repository_posts.dart';
 import '../screens/view_post_screen.dart';
 
@@ -47,7 +47,7 @@ class BodyThePostText extends StatelessWidget {
             ),
             child: Container(
                 child: Text(
-              post.content,
+              post.content!,
               // overflow: TextOverflow.ellipsis,
               maxLines: 4,
               softWrap: true,

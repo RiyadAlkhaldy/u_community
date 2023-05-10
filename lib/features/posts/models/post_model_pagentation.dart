@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-import 'post_model.dart';
+import '../../../models/post_model.dart';
 
 class ResponsePostsPagentaion {
   final String status;

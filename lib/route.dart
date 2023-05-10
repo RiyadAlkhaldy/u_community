@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:u_community/features/posts/models/post_model_pagentation.dart';
 import 'core/error/error.dart';
 import 'features/auth/Screens/login.dart';
 import 'features/auth/Screens/registration.dart';
@@ -9,14 +10,16 @@ import 'features/posts/screens/upload_file_screen.dart';
 import 'features/posts/screens/upload_text_screen copy.dart';
 import 'features/setting/screens/teachers_registerations_screen.dart';
 import 'features/user/screen/user_profile_screen.dart';
+import 'features/user/screen/view_any_user_screen.dart';
 import 'main.dart';
 import 'mobile_layout_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case UserProfileScreen.routeName:
+      final id = settings.arguments as int;
       return MaterialPageRoute(
-        builder: (context) => const UserProfileScreen(),
+        builder: (context) => UserProfileScreen(id: id),
       );
     case Login.routeName:
       return MaterialPageRoute(
@@ -55,6 +58,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case MessageToTeacherTempScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const MessageToTeacherTempScreen(),
+      );
+    case ViewAnyUserScreen.routeName:
+      User user = settings.arguments as User;
+      return MaterialPageRoute(
+        builder: (context) => ViewAnyUserScreen(
+          users: user,
+        ),
       );
     // case MobileChatScreen.routeName:
     //   final arguments = settings.arguments as Map<String, dynamic>;

@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../posts/models/post_model.dart';
+import '../../../models/post_model.dart';
 import 'video_player_fullscreen_widget.dart';
 
  

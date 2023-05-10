@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
-import '../models/post_model.dart';
+import '../../../models/post_model.dart';
 
 class ViewPostText extends StatelessWidget {
   final Posts post;
@@ -31,7 +31,7 @@ class ViewPostText extends StatelessWidget {
         ),
         child: Container(
             child: Text(
-          post.content,
+          post.content!,
           // overflow: TextOverflow.ellipsis,
           maxLines: 4,
           softWrap: true,

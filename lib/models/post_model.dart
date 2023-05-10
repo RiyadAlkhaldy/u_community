@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+import 'package:u_community/features/posts/models/post_model_pagentation.dart';
 
 class ResponsePosts {
   ResponsePosts({
@@ -70,7 +70,7 @@ class ResponsePosts {
 class Posts {
   Posts({
     required this.id,
-    required this.content,
+    this.content,
     required this.type,
     this.url,
     required this.userId,
@@ -86,7 +86,7 @@ class Posts {
     required this.user,
   });
   final int id;
-  final String content;
+  final String? content;
   final int type;
   final String? url;
   final int userId;
@@ -95,7 +95,7 @@ class Posts {
   final String createdAt;
   final String updatedAt;
 
-   final int commentCount;
+  final int commentCount;
   final int likeCount;
   final int amILike;
   final Colloge colloge;
@@ -161,7 +161,7 @@ class Posts {
   factory Posts.fromMap(Map<String, dynamic> map) {
     return Posts(
       id: map['id'] as int,
-      content: map['content'] as String,
+      content: map['content'] == null ? null : map['content'] as String,
       type: map['type'] as int,
       url: map['url'] != null ? map['url'] as String : null,
       userId: map['user_id'] as int,
@@ -333,62 +333,62 @@ class Section {
   int get hashCode => id.hashCode ^ name.hashCode;
 }
 
-class User {
-  final int id;
-  final String name;
-  String? img;
-  User({
-    required this.id,
-    required this.name,
-    this.img,
-  });
+// class UserPost {
+//   final int id;
+//   final String name;
+//   String? img;
+//   UserPost({
+//     required this.id,
+//     required this.name,
+//     this.img,
+//   });
 
-  User copyWith({
-    int? id,
-    String? name,
-    String? img,
-  }) {
-    return User(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      img: img ?? this.img,
-    );
-  }
+//   UserPost copyWith({
+//     int? id,
+//     String? name,
+//     String? img,
+//   }) {
+//     return UserPost(
+//       id: id ?? this.id,
+//       name: name ?? this.name,
+//       img: img ?? this.img,
+//     );
+//   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-      'img': img,
-    };
-  }
+//   Map<String, dynamic> toMap() {
+//     return <String, dynamic>{
+//       'id': id,
+//       'name': name,
+//       'img': img,
+//     };
+//   }
 
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
-      id: map['id'] as int,
-      name: map['name'] as String,
-      img: map['img'] ?? '',
-    );
-  }
+//   factory UserPost.fromMap(Map<String, dynamic> map) {
+//     return UserPost(
+//       id: map['id'] as int,
+//       name: map['name'] as String,
+//       img: map['img'] ?? '',
+//     );
+//   }
 
-  String toJson() => json.encode(toMap());
+//   String toJson() => json.encode(toMap());
 
-  factory User.fromJson(String source) =>
-      User.fromMap(json.decode(source) as Map<String, dynamic>);
+//   factory UserPost.fromJson(String source) =>
+//       UserPost.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  @override
-  String toString() => 'User(id: $id, name: $name, img: $img)';
+//   @override
+//   String toString() => 'User(id: $id, name: $name, img: $img)';
 
-  @override
-  bool operator ==(covariant User other) {
-    if (identical(this, other)) return true;
+//   @override
+//   bool operator ==(covariant UserPost other) {
+//     if (identical(this, other)) return true;
 
-    return other.id == id && other.name == name && other.img == img;
-  }
+//     return other.id == id && other.name == name && other.img == img;
+//   }
 
-  @override
-  int get hashCode => id.hashCode ^ name.hashCode ^ img.hashCode;
-}
+//   @override
+//   int get hashCode => id.hashCode ^ name.hashCode ^ img.hashCode;
+// }
 
 // class Post {
 //   String authorName;

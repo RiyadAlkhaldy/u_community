@@ -8,33 +8,39 @@ import '../../../core/enums/user_enum.dart';
 import '../../../models/post_model.dart';
 import '../../../models/response_user_posts.dart';
 
-final userPostsProvider =
-    StateNotifierProvider<RepositoryUserPosts, List<Posts>>((ref) {
+final userPostsByIdRepository =
+    StateNotifierProvider<RepositoryUserPostsById, List<Posts>>((ref) {
   // final myreq = ref.watch(myrequest);
-  return RepositoryUserPosts();
+  return RepositoryUserPostsById();
 });
 
-final postStateProvider = StateProvider<Posts?>((ref) => null);
+final userPostsByIdOther = Provider.family((ref, int userId) async {
+  final posts = ref.read(userPostsByIdRepository.notifier).getAllPosts(userId);
+  return posts;
+});
 
-class RepositoryUserPosts extends StateNotifier<List<Posts>> {
+final postStateRepository = StateProvider<Posts?>((ref) => null);
+
+class RepositoryUserPostsById extends StateNotifier<List<Posts>> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final dio = Dio();
 
-  RepositoryUserPosts() : super([]);
+  RepositoryUserPostsById() : super([]);
 
   // RepositoryPosts();
-  Future<List<Posts>> get getAllPosts async {
+  Future<List<Posts>> getAllPosts(int userId) async {
     SharedPreferences prefs = await _prefs;
     ResponseUserPosts responsePosts;
 
     var response;
     print(await prefs.getString(UserEnum.token.type));
     response = await dio.post(
-      '${ApiUrl}user/get-user-posts/',
+      '${ApiUrl}user/get-user-posts-by-userid/',
       options: Options(headers: {
         'authorization': 'Bearer ${prefs.getString(UserEnum.token.type)}',
         "Accept": "application/json"
       }),
+      queryParameters: {'user_id': userId},
     );
     print('ok');
     print(response.data);

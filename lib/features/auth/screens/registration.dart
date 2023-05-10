@@ -78,10 +78,11 @@ class _RegistrationState extends State<Registration> {
                   : _selectedValue == _accountType[1]
                       ? TeacherRegister()
                       : AdminRegister(),
-              CustomButton(
+              customButton(
                 text: 'تسجيل الدخول',
                 onPressed: () {
-                  Navigator.of(context).pushReplacementNamed(Login.routeName);
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      Login.routeName, (route) => false);
                 },
               ),
             ],

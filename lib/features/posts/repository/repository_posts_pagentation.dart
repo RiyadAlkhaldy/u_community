@@ -7,7 +7,7 @@ import 'package:u_community/core/utils/utils.dart';
 
 import '../../../core/constant.dart';
 import '../../../core/enums/user_enum.dart';
-import '../models/post_model.dart';
+import '../../../models/post_model.dart';
 import '../models/post_model_pagentation.dart';
 // import 'package:http/http.dart' as http;
 

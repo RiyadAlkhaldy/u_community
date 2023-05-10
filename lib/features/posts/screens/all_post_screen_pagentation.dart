@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // import '../controller/posts_controlller.dart';
 import '../../../core/utils/loader.dart';
-import '../models/post_model.dart';
+import '../../../models/post_model.dart';
 import '../repository/repository_posts_pagentation.dart';
 import '../widgets/build_post.dart';
 import 'layout/post_layout.dart';

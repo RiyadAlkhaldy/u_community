@@ -6,7 +6,7 @@ import '../../../core/constant.dart';
 import '../../../core/enums/user_enum.dart';
 import 'package:http/http.dart' as http;
 
-import '../model/teacher_tamp_model.dart';
+import '../../../models/teacher_tamp_model.dart';
 
 final teachersProvider =
     StateNotifierProvider<RepositoryTeachers, List<Teacher>>((ref) {

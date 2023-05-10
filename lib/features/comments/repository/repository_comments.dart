@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/constant.dart';
 import '../../../core/enums/user_enum.dart';
-import '../models/comment_model.dart';
+import '../../../models/comment_model.dart';
 
 // final myrequest = Provider<ResponsePosts>((ref) {
 //   return MyRequest().getResponsePosts();

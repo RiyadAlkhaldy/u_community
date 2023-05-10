@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; 
 import '../../video/orientation/portrait_player_widget.dart';
-import '../models/post_model.dart';
+import '../../../models/post_model.dart';
 import '../repository/repository_posts.dart';
 import '../screens/view_post_screen.dart';
 

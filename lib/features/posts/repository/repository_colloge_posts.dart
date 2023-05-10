@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constant.dart';
 import '../../../core/enums/user_enum.dart';
 import '../../../core/utils/utils.dart';
-import '../models/post_model.dart';
+import '../../../models/post_model.dart';
 
 final collogePostsProvider =
     StateNotifierProvider<RepositoryCollogePosts, List<Posts>>((ref) {

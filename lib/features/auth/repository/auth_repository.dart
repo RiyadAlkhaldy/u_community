@@ -6,14 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
-
 import '../../../core/constant.dart';
 import '../../../core/enums/user_enum.dart';
 import '../../../core/utils/utils.dart';
 import '../../../main.dart';
 import '../../../mobile_layout_screen.dart';
-import '../models/models_with_freeze/colloge_model.dart';
-import '../models/user_response.dart';
+import '../../../models/colloge_model.dart';
+import '../../../models/user_response_auth.dart';
 import '../screens/message_to_teacher_temp_screen.dart';
 
 final authProvider = StateProvider((ref) => AuthRepository());
@@ -160,9 +159,10 @@ class AuthRepository {
         }
       }
       // ignore: use_build_context_synchronously
-      Navigator.pushNamed(
+      Navigator.pushNamedAndRemoveUntil(
         context,
         MessageToTeacherTempScreen.routeName,
+        (route) => false,
       );
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -239,11 +239,12 @@ class AuthRepository {
               'tokennnnnnnnnnnnnnnnnnnnnnnnnnnnn${userResponseLogin.authorisation.token}');
           print(userResponseLogin);
         }
-        // Navigator.pushNamedAndRemoveUntil(
-        //   context,
-        //   MobileLayoutScreen.routeName,
-        //   (route) => true,
-        // );
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          MobileLayoutScreen.routeName,
+          (route) => false,
+        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context)

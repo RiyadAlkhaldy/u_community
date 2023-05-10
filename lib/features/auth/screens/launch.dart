@@ -28,7 +28,10 @@ class _StartScreenState extends State<StartScreen> {
 
   //------- Method ------------
   void route() {
-    Navigator.of(context).pushReplacementNamed(Login.routeName);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      Login.routeName,
+      (route) => true,
+    );
   }
 
   @override

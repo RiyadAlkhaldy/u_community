@@ -1,20 +1,21 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:u_community/features/auth/models/user_response.dart';
-import '../../../core/error/error.dart';
+import 'package:u_community/models/user_response_auth.dart';
 import '../../../core/utils/loader.dart';
-import '../../posts/repository/repository_posts.dart';
-import '../../posts/screens/all_colloge_posts_screen.dart';
 import '../../posts/widgets/build_post.dart';
-import '../models/user_post_model.dart';
+import '../repository/repository_get_user_by_id.dart';
+import '../repository/repository_user.dart';
 import '../repository/repository_user_posts.dart';
-import '../widgets/profile_image_widget.dart';
+import '../widgets/profile_image_widget.dart' as profile;
+import 'view_any_user_screen.dart';
 
 final getProfile = StateProvider<User?>((ref) => null);
 
 class UserProfileScreen extends ConsumerStatefulWidget {
-  const UserProfileScreen({Key? key}) : super(key: key);
+  final int id;
+  const UserProfileScreen({Key? key, required this.id}) : super(key: key);
   static const String routeName = 'user-profile-screen';
 
   @override
@@ -24,10 +25,13 @@ class UserProfileScreen extends ConsumerStatefulWidget {
 class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   bool dataLoaded = false;
   bool inital = true;
+  // var userMap;
   @override
   Widget build(BuildContext context) {
     if (inital == true) {
       ref.watch(userPostsProvider.notifier).getAllPosts.then((value) async {
+        // await ref.watch(getUserProvider).then((value) async => userMap = value);
+
         setState(() {
           dataLoaded = true;
           inital = false;
@@ -53,17 +57,10 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           ),
 
           SliverList(
+              delegate:
+                  SliverChildListDelegate([ProfileDetials(id: widget.id)])),
+          SliverList(
             delegate: SliverChildListDelegate([
-              // PostHeader(),
-              // Container(
-              //   width: double.infinity,
-              //   height: 100.0,
-              //   child: ListView(
-              //     scrollDirection: Axis.horizontal,
-              //     children: [NewWidget()],
-              //   ),
-              // ), //
-
               dataLoaded
                   ? Column(
                       children: ref
@@ -83,142 +80,6 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           )
         ],
       ),
-    );
-  }
-}
-
-// class SliverListt extends StatelessWidget {
-//   const SliverListt({
-//     Key? key,
-//     required this.listPostMode,
-//   }) : super(key: key);
-
-//   final AsyncValue<List<UserPostModel>> listPostMode;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SliverList(
-//       delegate: listPostMode.when(
-//         data: (data) {
-//           return SliverChildBuilderDelegate(
-//             (context, index) {
-//               return index % 2 == 0
-//                   ? buildPost(index: 1, contextl: context)
-//                   :
-//                   // height: 100,
-
-//                   buildPost(index: 0, contextl: context);
-//             },
-//             childCount: data.length,
-//           );
-//         },
-//         error: (error, stackTrace) {
-//           return SliverChildListDelegate([ErrorScreen(error: "error")]);
-//         },
-//         loading: () => SliverChildListDelegate([Loader()]),
-//       ),
-//     );
-//   }
-// }
-
-class ProfileDetials extends StatelessWidget {
-  final User data;
-  const ProfileDetials({
-    Key? key,
-    required this.data,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-        child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 5),
-      child: Column(
-        children: [
-          CustomContainer(
-            context: context,
-            child: Text(
-              data.name,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Text(
-              "Colloge:",
-              style: Theme.of(context).textTheme.titleSmall!,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              data.collogeId.toString(),
-              style: Theme.of(context).textTheme.titleSmall!,
-            ),
-            VerticalDivider(),
-            Text(
-              "Department:",
-              style: Theme.of(context).textTheme.titleSmall!,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              data.sectionId.toString(),
-              style: Theme.of(context).textTheme.titleSmall!,
-            ),
-          ]),
-          SizedBox(
-            height: 10,
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Text(
-              "level:",
-              style: Theme.of(context).textTheme.titleSmall!,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              data.level.toString().isEmpty ? 'level' : data.level.toString(),
-              style: Theme.of(context).textTheme.titleSmall!,
-            ),
-            VerticalDivider(),
-            Text(
-              "Address",
-              style: Theme.of(context).textTheme.titleSmall!,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-          ]),
-          SizedBox(
-            height: 10,
-          ),
-        ],
-      ),
-    ));
-  }
-
-  Container CustomContainer(
-      {required BuildContext context, required Widget child}) {
-    return Container(
-      margin: EdgeInsets.all(7),
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue,
-            blurRadius: 2,
-            offset: Offset(1, 1),
-          )
-        ],
-        border: Border.all(
-            // color: Colors.white60,
-            ),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.blue,
-      ),
-      child: child,
     );
   }
 }
@@ -246,7 +107,8 @@ Widget SliverAppBarCustom({
             // Expanded(child: Container()),
             Positioned(
               bottom: -10,
-              child: ProfileImageWidget(imagePath: imageUrl, onClicked: () {}),
+              child: profile.ProfileImageWidget(
+                  imagePath: imageUrl, onClicked: () {}),
             ),
           ]),
       centerTitle: true,

@@ -54,7 +54,7 @@ class _LoginState extends ConsumerState<Login> {
         const SizedBox(
           height: 10,
         ),
-        RegisterOrLoginButton(
+        registerOrLoginButton(
           text: 'تسجيل الدخول',
           context: context,
           onTap: () async {
@@ -73,10 +73,13 @@ class _LoginState extends ConsumerState<Login> {
           },
         ),
         restPasswd(),
-        CustomButton(
+        customButton(
           text: 'إنشاء حساب',
           onPressed: () {
-            Navigator.of(context).pushReplacementNamed(Registration.routeName);
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              Registration.routeName,
+              (route) => true,
+            );
           },
         ),
       ],
@@ -93,7 +96,7 @@ class _LoginState extends ConsumerState<Login> {
           child: Stack(
             children: [
               Container(
-                margin: EdgeInsets.only(bottom: 50),
+                margin: const EdgeInsets.only(bottom: 50),
                 height: 220,
                 width: double.infinity,
                 decoration: const BoxDecoration(
@@ -114,13 +117,13 @@ class _LoginState extends ConsumerState<Login> {
         );
       } else {
         return Container(
-          margin: EdgeInsets.only(top: 40),
-          padding: EdgeInsets.only(top: 20),
+          margin: const EdgeInsets.only(top: 40),
+          padding: const EdgeInsets.only(top: 20),
           height: 150,
           width: 150,
           child: CircleAvatar(
             backgroundColor: Colors.white.withOpacity(0),
-            child: Image(
+            child: const Image(
               image: AssetImage('assets/images/logo.png'),
             ),
           ),
@@ -156,7 +159,7 @@ Widget InputStyle(bool whatIs, context) {
 //---------------UserNameField--------------
 Widget inputUserName(TextEditingController controller, BuildContext context) {
   return TextFormField(
-    validator: (input) => input!.isValidEmail() ? null : "Check your email",
+    validator: (input) => input!.isValidEmail() ? null : "Check your syntax email ",
     // inputFormatters: [],
     style:
         Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black),
@@ -187,23 +190,26 @@ Widget inputUserPasswd(TextEditingController controller, context) {
     obscureText: true,
     decoration: InputDecoration(
       border: InputBorder.none,
-      contentPadding: EdgeInsets.only(right: 0, left: 0, bottom: 6, top: 15),
+      contentPadding:
+          const EdgeInsets.only(right: 0, left: 0, bottom: 6, top: 15),
       hintText: 'كلمة السر',
       prefixIcon: IconButton(
-        icon: isObsecured ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+        icon: isObsecured
+            ? const Icon(Icons.visibility)
+            : const Icon(Icons.visibility_off),
         onPressed: () {
           //  setState((){
           //   _isObsecured =!_isObsecured;
           // });
         },
       ),
-      suffixIcon: Icon(
+      suffixIcon: const Icon(
         Icons.lock,
         color: Colors.black,
       ),
       hintTextDirection: TextDirection.rtl,
       hintMaxLines: 1,
-      hintStyle: TextStyle(
+      hintStyle: const TextStyle(
         fontSize: 14,
       ),
     ),
@@ -212,7 +218,7 @@ Widget inputUserPasswd(TextEditingController controller, context) {
 
 //---------LoginButt--------
 
-Widget RegisterOrLoginButton(
+Widget registerOrLoginButton(
     {required String text,
     required BuildContext context,
     void Function()? onTap}) {
@@ -228,7 +234,7 @@ Widget RegisterOrLoginButton(
       child: Center(
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
               color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
         ),
       ),
@@ -237,7 +243,7 @@ Widget RegisterOrLoginButton(
 }
 
 //---------SignupButton-------
-Widget CustomButton(
+Widget customButton(
     {required String text, required void Function()? onPressed}) {
   return KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
     return Visibility(
@@ -262,7 +268,7 @@ Widget CustomButton(
               onPressed: onPressed,
               child: Text(
                 text,
-                style: TextStyle(
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 15,
                     fontWeight: FontWeight.bold),

@@ -5,7 +5,7 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:u_community/core/enums/user_enum.dart';
 import 'package:u_community/core/utils/loader.dart';
 
-import '../../auth/models/user_response.dart';
+import '../../../models/user_response_auth.dart';
 import '../../user/repository/repository_user.dart';
 import '../../user/screen/user_profile_screen.dart';
 import '../widgets/icon_widget.dart';
@@ -46,7 +46,9 @@ class _UserAccountState extends ConsumerState<UserAccount> {
             onTap: () {
               // Navigator.of(context).pushNamed(UserProfileScreen.routeName);
             },
-            child: UserProfileScreen(),
+            child: UserProfileScreen(
+              id: data.id,
+            ),
           );
         },
         error: (error, stackTrace) => Text('error $error'),

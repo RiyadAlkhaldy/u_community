@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock/wakelock.dart';
 
-import '../../posts/models/post_model.dart';
+import '../../../models/post_model.dart';
 import 'video_player_both_widget.dart'; 
 
 class PortraitLandscapePlayerPage extends StatefulWidget {

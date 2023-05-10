@@ -2,22 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
-// import 'package:freezed_annotation/freezed_annotation.dart';
-
-// part 'colloge_model.freezed.dart';
-// part 'colloge_model.g.dart';
-
-// @freezed
-// class CollogeModel with _$CollogeModel {
-//   factory CollogeModel({
-//     required int id,
-//     required String name,
-//   }) = _CollogeModel;
-//   factory CollogeModel.fromJson(Map<String, dynamic> json) =>
-//       _$CollogeModelFromJson(json);
-// }
-
+ 
 class ResponseColloge {
   final String status;
   final String message;

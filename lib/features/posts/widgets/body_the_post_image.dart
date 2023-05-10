@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/post_model.dart';
+import '../../../core/utils/loader.dart';
+import '../../../models/post_model.dart';
 import '../repository/repository_posts.dart';
 import '../screens/view_post_screen.dart';
 
@@ -43,10 +45,13 @@ class BodyThePostImage extends StatelessWidget {
                   blurRadius: 2.0,
                 ),
               ],
-              image: DecorationImage(
-                image: NetworkImage(post.url!),
-                fit: BoxFit.fitWidth,
-              ),
+            ),
+            child: CachedNetworkImage(
+              imageUrl: post.url!,
+              placeholder: (context, url) => const Loader(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+              fit: BoxFit.cover,
+              // fit: BoxFit.cover,
             ),
           ),
         );

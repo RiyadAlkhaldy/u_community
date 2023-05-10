@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/valiadate_inputs.dart';
 import '../../../mobile_layout_screen.dart';
-import '../models/models_with_freeze/colloge_model.dart';
+import '../../../models/colloge_model.dart';
 import '../repository/auth_repository.dart';
 import '../widgets/text_field_custom.dart';
 import 'login.dart';
@@ -32,7 +32,7 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
         print('auth');
         isGoing = true;
 
-        await AuthRepository().registerAsAdmin(
+        await ref.read(authProvider).registerAsAdmin(
             email: emailController.text.trim(),
             password: passwordController.text.trim(),
             name: nameController.text.trim(),
@@ -40,11 +40,6 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
             collogeId: _selectedVal.toString(),
             type: 3,
             context: context);
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          MobileLayoutScreen.routeName,
-          (route) => true,
-        );
       } catch (e) {
         print(e);
       }
@@ -93,7 +88,8 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
                 hintText: 'Email',
                 labelText: 'Email',
                 controller: emailController,
-                validator: (val) => validInputAuth(val, 15, 7),
+                validator: (input) =>
+                    input!.isValidEmail() ? null : "Check your syntax email ",
                 keyboardType: TextInputType.emailAddress,
               ),
               TextFieldCustom(
@@ -146,7 +142,7 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
                 padding: EdgeInsets.only(top: 20),
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 child: !isGoing
-                    ? RegisterOrLoginButton(
+                    ? registerOrLoginButton(
                         text: 'تسجيل',
                         context: context,
                         onTap: () async {

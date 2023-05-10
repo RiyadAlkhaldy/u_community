@@ -6,10 +6,10 @@ import 'package:u_community/core/utils/utils.dart';
 
 import '../../../core/utils/loader.dart';
 import '../../auth/repository/auth_repository.dart';
-import '../../posts/models/post_model.dart';
+import '../../../models/post_model.dart';
 import '../../posts/repository/repository_colloge_posts.dart';
 import '../../setting/screens/setting_screen.dart';
-import '../models/comment_model.dart';
+import '../../../models/comment_model.dart';
 import '../repository/repository_comments.dart';
 import '../../posts/repository/repository_posts.dart';
 import '../../posts/repository/repository_section_posts.dart';
