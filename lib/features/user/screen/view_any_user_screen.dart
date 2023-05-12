@@ -89,7 +89,7 @@ class _UserProfileScreenState extends ConsumerState<ViewAnyUserScreen> {
 class ProfileDetials extends ConsumerStatefulWidget {
   final int id;
 
-  ProfileDetials({
+  const ProfileDetials({
     Key? key,
     required this.id,
   }) : super(key: key);
@@ -100,7 +100,7 @@ class ProfileDetials extends ConsumerStatefulWidget {
 
 class _ProfileDetialsState extends ConsumerState<ProfileDetials> {
   bool initail = true;
-  User? user;
+  // User? user;
   bool dataloaded = false;
 
   @override
@@ -148,10 +148,12 @@ class _ProfileDetialsState extends ConsumerState<ProfileDetials> {
                       // color: Colors.white,
                     ),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text(
-                        data!.colloge!.name,
-                        style: Theme.of(context).textTheme.titleSmall!,
-                      ),
+                      data.colloge != null
+                          ? Text(
+                              data.colloge!.name,
+                              style: Theme.of(context).textTheme.titleSmall!,
+                            )
+                          : Text(''),
                       const SizedBox(
                         width: 5,
                       ),
@@ -189,7 +191,7 @@ class _ProfileDetialsState extends ConsumerState<ProfileDetials> {
                 );
                 // ref.read(getProfile.notifier).state = data;
               },
-              error: (error, stackTrace) => const Text('error'),
+              error: (error, stackTrace) => Text('$error'),
               loading: () => Loader(),
             ));
   }

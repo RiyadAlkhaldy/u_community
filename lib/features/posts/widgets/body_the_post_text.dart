@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/post_model.dart';
 import '../repository/repository_posts.dart';
+import '../screens/layout/post_layout.dart';
 import '../screens/view_post_screen.dart';
 
 class BodyThePostText extends StatelessWidget {
@@ -17,11 +18,15 @@ class BodyThePostText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (_, WidgetRef ref, __) {
-
         return InkWell(
           onDoubleTap: () => print('Like post'),
           onTap: () {
-        ref.read(postStateProvider.notifier).state = post;
+            // if (ref.watch(currentIndexPagePost) == 0) {
+            // } else if (ref.watch(currentIndexPagePost) == 1) {
+            //   ref.read(postStateProvider.notifier).state = post;
+            // } else {}
+            ref.read(postStateProvider.notifier).state = post;
+
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -37,7 +42,7 @@ class BodyThePostText extends StatelessWidget {
             height: 200.0,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25.0),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black26,
                   offset: Offset(0, 5),
@@ -46,16 +51,18 @@ class BodyThePostText extends StatelessWidget {
               ],
             ),
             child: Container(
-                child: Text(
-              post.content!,
-              // overflow: TextOverflow.ellipsis,
-              maxLines: 4,
-              softWrap: true,
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  height: 1.5,
-                  overflow: TextOverflow.ellipsis,
-                  color: Colors.black),
-            )),
+                child: post.content == null
+                    ? const Text('')
+                    : Text(
+                        post.content!,
+                        // overflow: TextOverflow.ellipsis,
+                        maxLines: 4,
+                        softWrap: true,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            height: 1.5,
+                            overflow: TextOverflow.ellipsis,
+                            color: Colors.black),
+                      )),
           ),
         );
       },

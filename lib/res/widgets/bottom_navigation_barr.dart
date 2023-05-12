@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../features/posts/screens/upload_file_screen.dart';
 import '../../features/posts/screens/upload_text_screen copy.dart';
-import 'show_modal_bottom_sheet_post.dart'; 
+import 'show_modal_bottom_sheet_post.dart';
+
 class BottomNavigationBarr extends StatelessWidget {
   Function(int)? onTap;
   int currentIndex = 0;
@@ -18,7 +19,7 @@ class BottomNavigationBarr extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.only(
+      borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(30.0),
         topRight: Radius.circular(30.0),
       ),
@@ -28,7 +29,7 @@ class BottomNavigationBarr extends StatelessWidget {
         onTap: onTap,
         type: BottomNavigationBarType.fixed,
         items: [
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(
               Icons.person_pin,
               size: 25.0,
@@ -37,28 +38,26 @@ class BottomNavigationBarr extends StatelessWidget {
             label: 'others',
             // backgroundColor: Colors.white,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person_outline,
-              size: 25.0,
-              color: Colors.grey,
-            ),
-            label: 'label',
-          ),
+          // const BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.person_outline,
+          //     size: 25.0,
+          //     color: Colors.grey,
+          //   ),
+          //   label: 'label',
+          // ),
           BottomNavigationBarItem(
             icon: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.0),
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: MaterialButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
-                color: Color(0xFF23B66F),
+                color: const Color(0xFF23B66F),
                 onPressed: () {
-                  if (kDebugMode) print('Upload photo');
-
                   showModalBottomSheetStudent(context);
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.add,
                   size: 25.0,
                   color: Colors.white,
@@ -67,14 +66,14 @@ class BottomNavigationBarr extends StatelessWidget {
             ),
             label: '',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.favorite_border,
-              size: 25.0,
-              color: Colors.grey,
-            ),
-            label: 'lebel',
-          ),
+          // const BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.favorite_border,
+          //     size: 25.0,
+          //     color: Colors.grey,
+          //   ),
+          //   label: 'lebel',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
@@ -116,7 +115,7 @@ Future<dynamic> showModalBottomSheetStudent(BuildContext context) {
                         arguments: {"type": FileType.video});
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 ButtonWidget(
@@ -129,7 +128,7 @@ Future<dynamic> showModalBottomSheetStudent(BuildContext context) {
                         arguments: {"type": FileType.image});
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 ButtonWidget(

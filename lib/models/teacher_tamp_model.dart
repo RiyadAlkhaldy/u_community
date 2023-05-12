@@ -72,7 +72,7 @@ class Teacher {
     required this.createdAt,
     required this.updatedAt,
     this.sectionId,
-    required this.collogeId,
+    this.collogeId,
     this.level,
     this.type,
   });
@@ -89,7 +89,7 @@ class Teacher {
   final String createdAt;
   final String updatedAt;
   final int? sectionId;
-  final int collogeId;
+  final int? collogeId;
   final int? level;
   final int? type;
 

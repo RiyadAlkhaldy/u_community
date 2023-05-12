@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
@@ -12,6 +13,10 @@ import 'features/setting/screens/header_setting_screen.dart';
 import 'mobile_layout_screen.dart';
 import 'route.dart';
 
+final dataUserAuthentecationProvider =
+    StateProvider<Map<String, dynamic>?>((ref) {
+  return null;
+});
 // 563492ad6f917000010000013d24e4038ca942559b31b58c298d1c40
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,12 +49,12 @@ void main() async {
   runApp(ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerStatefulWidget {
   static const String routeName = 'my-app';
   MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  ConsumerState<MyApp> createState() => _MyAppState();
 }
 
 // @override
@@ -63,7 +68,7 @@ class MyApp extends StatefulWidget {
 //   // super.initState();
 // }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> {
   final isDarkModes = Settings.getValue<bool>(HeaderSettingScreen.keyDarkMode,
       defaultValue: true);
 
@@ -79,15 +84,24 @@ class _MyAppState extends State<MyApp> {
       SharedPreferences.getInstance().then((value) async {
         //!this for clear all dara in SharedPreferences .
         // value.clear();
-        token = await value.getString('token');
-        print(UserEnum.token.type);
-        print(token);
-        print('tttttttttttttttt ${await value.getString(UserEnum.name.type)}');
-        print('tttttttttttttttt ${value.getString(UserEnum.id.type)}');
+
+        final userId = value.getString('id');
+        token = value.getString('token');
+        if (userId != null && userId.isNotEmpty) {
+          await ref.watch(getUserProvider).then((value) {
+            ref.read(dataUserAuthentecationProvider.notifier).state = value;
+          });
+        }
+        if (kDebugMode) {
+          print(UserEnum.token.type);
+          print(token);
+          print('tttttttttttttttt ${value.getString(UserEnum.name.type)}');
+          print('tttttttttttttttt ${value.getString(UserEnum.id.type)}');
+        }
         initial = false;
         setState(() {});
       });
-      return Center(
+      return const Center(
         child: CircularProgressIndicator(),
       );
     } else {
@@ -102,7 +116,8 @@ class _MyAppState extends State<MyApp> {
                 title: 'Flutter Demo',
                 theme: isDarkMode ? MyThemes.darkTheme : MyThemes.darkTheme,
                 // home: SettingScreen(),
-                home: token == null ? StartScreen() : MobileLayoutScreen(),
+                home:
+                    token == null ? const StartScreen() : MobileLayoutScreen(),
               ));
     }
   }

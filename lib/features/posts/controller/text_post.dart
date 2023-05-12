@@ -36,7 +36,7 @@ class TextPost {
         'type': 1,
         'user_id': prefs.getString('id'),
         'section_id': sectionId,
-        'colloge_id': int.parse(prefs.getString('type')!) == 3
+        'colloge_id': int.parse(prefs.getString('type')!) >= 3
             ? colloge_id
             : prefs.getString('colloge_id'),
       };
@@ -45,7 +45,7 @@ class TextPost {
         'content': content,
         'type': 1,
         'user_id': prefs.getString('id'),
-        'colloge_id': int.parse(prefs.getString('type')!) == 3
+        'colloge_id': int.parse(prefs.getString('type')!) >= 3
             ? colloge_id
             : prefs.getString('colloge_id'),
       };

@@ -57,21 +57,38 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
 
     if (response.statusCode == 200) {
       print(state);
-      // Navigator.pop(context);
     }
     return state;
-
-    // ignore: use_build_context_synchronously
   }
 
-  void deletePost(int post_id) {
+  void deletePost(int post_id) async {
     print('deleted number $post_id');
-    state = [
-      for (var post in state)
-        if (post.id != post_id) post,
-    ];
+    SharedPreferences prefs = await _prefs;
+    Response response;
+    if (kDebugMode) {
+      print(prefs.getString(UserEnum.token.type));
+    }
+    try {
+      response = await dio.post('${ApiUrl}posts/delete/',
+          options: Options(headers: {
+            'authorization': 'Bearer ${prefs.getString(UserEnum.token.type)}',
+            "Accept": "application/json"
+          }),
+          queryParameters: {'post_id': post_id});
+      if (kDebugMode) {
+        print('ok');
+        print(response.data);
+      }
+      state = [
+        for (var post in state)
+          if (post.id != post_id) post,
+      ];
+    } catch (e) {
+      print(e);
+    }
   }
 
+//add like or undo
   void addLikeOrUndo(Posts currentPost, BuildContext context) async {
     List<Posts> posts = [];
     try {
@@ -116,6 +133,8 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
       showSnackBar(context: context, content: e.toString());
     }
   }
+
+  //update
 
   void updateNumberTheComments(Posts currentPost, int value) {
     List<Posts> posts = [];

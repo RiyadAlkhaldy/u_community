@@ -1,3 +1,5 @@
+import '../../../models/post_model.dart';
+
 class AutoGenerate {
   AutoGenerate({
     required this.status,
@@ -23,74 +25,74 @@ class AutoGenerate {
   }
 }
 
-class Posts {
-  Posts({
-    required this.id,
-    required this.content,
-    required this.type,
-     this.url,
-    required this.userId,
-     this.sectionId,
-    required this.collogeId,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.commentCount,
-    required this.likeCount,
-    required this.colloge,
-     this.section,
-    required this.user,
-  });
-  late final int id;
-  late final String content;
-  late final int type;
-  late final String? url;
-  late final int userId;
-  late final int? sectionId;
-  late final int collogeId;
-  late final String createdAt;
-  late final String updatedAt;
-  late final int commentCount;
-  late final int likeCount;
-  late final Colloge colloge;
-  late final Section? section;
-  late final User user;
+// class Posts {
+//   Posts({
+//     required this.id,
+//     required this.content,
+//     required this.type,
+//      this.url,
+//     required this.userId,
+//      this.sectionId,
+//     required this.collogeId,
+//     required this.createdAt,
+//     required this.updatedAt,
+//     required this.commentCount,
+//     required this.likeCount,
+//     required this.colloge,
+//      this.section,
+//     required this.user,
+//   });
+//   late final int id;
+//   late final String content;
+//   late final int type;
+//   late final String? url;
+//   late final int userId;
+//   late final int? sectionId;
+//   late final int collogeId;
+//   late final String createdAt;
+//   late final String updatedAt;
+//   late final int commentCount;
+//   late final int likeCount;
+//   late final Colloge colloge;
+//   late final Section? section;
+//   late final User user;
   
-  Posts.fromJson(Map<String, dynamic> json){
-    id = json['id'];
-    content = json['content'];
-    type = json['type'];
-    url = null;
-    userId = json['user_id'];
-    sectionId = null;
-    collogeId = json['colloge_id'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    commentCount = json['comment_count'];
-    likeCount = json['like_count'];
-    colloge = Colloge.fromJson(json['colloge']);
-    section = null;
-    user = User.fromJson(json['user']);
-  }
+//   Posts.fromJson(Map<String, dynamic> json){
+//     id = json['id'];
+//     content = json['content'];
+//     type = json['type'];
+//     url = null;
+//     userId = json['user_id'];
+//     sectionId = null;
+//     collogeId = json['colloge_id'];
+//     createdAt = json['created_at'];
+//     updatedAt = json['updated_at'];
+//     commentCount = json['comment_count'];
+//     likeCount = json['like_count'];
+//     colloge = Colloge.fromJson(json['colloge']);
+//     section = null;
+//     user = User.fromJson(json['user']);
+//   }
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['content'] = content;
-    _data['type'] = type;
-    _data['url'] = url;
-    _data['user_id'] = userId;
-    _data['section_id'] = sectionId;
-    _data['colloge_id'] = collogeId;
-    _data['created_at'] = createdAt;
-    _data['updated_at'] = updatedAt;
-    _data['comment_count'] = commentCount;
-    _data['like_count'] = likeCount;
-    _data['colloge'] = colloge.toJson();
-    _data['section'] = section;
-    _data['user'] = user.toJson();
-    return _data;
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     final _data = <String, dynamic>{};
+//     _data['id'] = id;
+//     _data['content'] = content;
+//     _data['type'] = type;
+//     _data['url'] = url;
+//     _data['user_id'] = userId;
+//     _data['section_id'] = sectionId;
+//     _data['colloge_id'] = collogeId;
+//     _data['created_at'] = createdAt;
+//     _data['updated_at'] = updatedAt;
+//     _data['comment_count'] = commentCount;
+//     _data['like_count'] = likeCount;
+//     _data['colloge'] = colloge.toJson();
+//     _data['section'] = section;
+//     _data['user'] = user.toJson();
+//     return _data;
+//   }
+// }
 
 class Colloge {
   Colloge({

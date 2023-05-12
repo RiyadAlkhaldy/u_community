@@ -38,7 +38,7 @@ class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
   Widget build(BuildContext context) {
     ref.read(authProvider).getAllColloges(context).then((value) async {
       await ref.watch(getUserProvider).then((map) async {
-        if (int.parse(map['type']) == 3) {
+        if (int.parse(map['type']) >= 3) {
           // allows = true;
           ref.read(allwoProvidr.notifier).state = true;
         }

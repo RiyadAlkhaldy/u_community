@@ -63,9 +63,10 @@ class Comments {
     required this.createdAt,
     required this.updatedAt,
     required this.name,
-    required this.img,
+    this.img,
   });
   final int id;
+
   final String comment;
   final int userId;
   final int postId;

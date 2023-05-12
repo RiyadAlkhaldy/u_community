@@ -75,13 +75,13 @@ class Posts {
     this.url,
     required this.userId,
     this.sectionId,
-    required this.collogeId,
+    this.collogeId,
     required this.createdAt,
     required this.updatedAt,
     required this.commentCount,
     required this.likeCount,
     required this.amILike,
-    required this.colloge,
+    this.colloge,
     this.section,
     required this.user,
   });
@@ -91,14 +91,14 @@ class Posts {
   final String? url;
   final int userId;
   final int? sectionId;
-  final int collogeId;
+  final int? collogeId;
   final String createdAt;
   final String updatedAt;
 
   final int commentCount;
   final int likeCount;
   final int amILike;
-  final Colloge colloge;
+  final Colloge? colloge;
   final Section? section;
   final User user;
 
@@ -152,7 +152,7 @@ class Posts {
       'comment_count': commentCount,
       'like_count': likeCount,
       'amILike': amILike,
-      'colloge': colloge.toMap(),
+      'colloge': colloge?.toMap(),
       'section': section?.toMap(),
       'user': user.toMap(),
     };
@@ -166,7 +166,7 @@ class Posts {
       url: map['url'] != null ? map['url'] as String : null,
       userId: map['user_id'] as int,
       sectionId: map['section_id'],
-      collogeId: map['colloge_id'] as int,
+      collogeId: map['colloge_id'],
       createdAt: map['created_at'] as String,
       updatedAt: map['updated_at'] as String,
       commentCount: map['comment_count'],

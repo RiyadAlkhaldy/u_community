@@ -9,7 +9,7 @@ import '../../../models/user_response_auth.dart';
 final getUserIDFromUIProvider = StateProvider<int>((ref) {
   return 0;
 });
-final getUserByIdProvider = FutureProvider<User?>((ref) async {
+final getUserByIdProvider = FutureProvider.autoDispose<User?>((ref) async {
   final userId = ref.read(getUserIDFromUIProvider);
   final user = await ref.watch(getuserByid(userId));
   return user;
@@ -119,7 +119,7 @@ Future<User?> getUserById(int userId) async {
     if (kDebugMode) {
       // print(response.data);
     }
-    user = User.fromMap(response.data['user']);
+    user = User.fromMap(response.data['user'] as Map<String, dynamic>);
     if (kDebugMode) {
       print('the userrrrrrrrrrrrrrrrrrrrrrrrrrrrr $user');
     }

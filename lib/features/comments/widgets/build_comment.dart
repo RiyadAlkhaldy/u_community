@@ -2,9 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:u_community/core/enums/user_enum.dart';
 import 'package:u_community/core/utils/utils.dart';
 
 import '../../../core/utils/loader.dart';
+import '../../../main.dart';
 import '../../auth/repository/auth_repository.dart';
 import '../../../models/post_model.dart';
 import '../../posts/repository/repository_colloge_posts.dart';
@@ -14,12 +16,13 @@ import '../repository/repository_comments.dart';
 import '../../posts/repository/repository_posts.dart';
 import '../../posts/repository/repository_section_posts.dart';
 import '../../posts/screens/layout/post_layout.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 Widget buildComment(int index, BuildContext context, Comments comment) {
   return Consumer(
     builder: (_, WidgetRef ref, __) {
       var img = comment.img;
-      if (comment.img == null) {
+      if (comment.img == null || comment.img!.isEmpty) {
         img = ref.watch(gitImageurlTemp);
       }
       return Padding(
@@ -44,6 +47,8 @@ Widget buildComment(int index, BuildContext context, Comments comment) {
                 // imageUrl: widget.imagePath,
                 imageUrl: img!,
                 placeholder: (context, img) => const Loader(),
+                errorWidget: (context, url, error) =>
+                    CachedNetworkImage(imageUrl: url),
                 fit: BoxFit.cover,
                 width: 108,
                 height: 108,
@@ -70,36 +75,54 @@ Widget buildComment(int index, BuildContext context, Comments comment) {
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 18)),
-          subtitle: Text(
-            comment.comment,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(color: Colors.black, fontSize: 16),
-          ),
-          trailing: IconButton(
-              icon: Icon(
-                Icons.delete,
+          subtitle: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                comment.comment,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: Colors.black, fontSize: 16),
               ),
-              color: Colors.grey,
-              onPressed: () async {
-                // print('delete////');
-                final user = await ref.watch(getUserProvider);
-                if (int.parse(user['id']) == comment.userId ||
-                    int.parse(user['type']) == 3) {
-                  // ignore: use_build_context_synchronously
-                  await showModalBottomAcceptDelete(
-                    context,
-                    comment,
-                    ref,
-                  );
-                } else {
-                  showSnackBar(
-                      context: context,
-                      content:
-                          'لايمكنك جذف التعليق لانك ليس لديك صلاحية عليه أو لأنك لست صحاب التعليق ');
-                }
-              }),
+              // parse time created comment
+              Text(
+                  timeago.format(
+                    DateTime.parse(comment.createdAt),
+                  ),
+                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        fontSize: 12,
+                        color: Colors.black.withOpacity(0.5),
+                      )),
+            ],
+          ),
+          trailing: int.parse(ref.watch(
+                      dataUserAuthentecationProvider)![UserEnum.id.type]) ==
+                  comment.userId
+              ? IconButton(
+                  icon: const Icon(
+                    Icons.delete,
+                  ),
+                  color: Colors.grey,
+                  onPressed: () async {
+                    // print('delete////');
+                    final user = await ref.watch(getUserProvider);
+                    if (int.parse(user['id']) == comment.userId ||
+                        int.parse(user['type']) == 3) {
+                      // ignore: use_build_context_synchronously
+                      await showModalBottomAcceptDelete(
+                        context,
+                        comment,
+                        ref,
+                      );
+                    } else {
+                      showSnackBar(
+                          context: context,
+                          content:
+                              'لايمكنك جذف التعليق لانك ليس لديك صلاحية عليه أو لأنك لست صحاب التعليق ');
+                    }
+                  })
+              : Text(''),
         ),
       );
     },

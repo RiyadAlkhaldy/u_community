@@ -23,12 +23,9 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
   TextEditingController IDNUmber = TextEditingController();
   bool isGoing = false;
   register() async {
-    setState(() {});
-
     final fmSt = formState.currentState;
     if (!fmSt!.validate()) {
       print('auth');
-      isGoing = true;
 
       await ref.read(authProvider).registerStudent(
           email: emailController.text.trim(),
@@ -42,10 +39,6 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
       }
       showSnackBar(context: context, content: 'content');
     }
-
-    isGoing = false;
-
-    // setState(() {});
   }
 
   @override
@@ -86,17 +79,16 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
                       text: 'تسجيل',
                       context: context,
                       onTap: () {
-                        setState(() {
-                          register();
-                        });
+                        isGoing = true;
+                        setState(() {});
+                        register();
+                        isGoing = false;
+                        setState(() {});
                       })
-                  : Container(
-                      // decoration: BoxDecoration(color: Colors.black54),
-                      // padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: CircularProgressIndicator(
+                  : const CircularProgressIndicator(
                       strokeWidth: 20,
                       color: Colors.blue,
-                    )),
+                    ),
             ),
           ],
         ),

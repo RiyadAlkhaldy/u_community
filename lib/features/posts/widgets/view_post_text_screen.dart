@@ -16,12 +16,12 @@ class ViewPostText extends StatelessWidget {
     return InkWell(
       onDoubleTap: () => print('Like post'),
       child: Container(
-        padding: EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
         width: double.infinity,
         height: 200.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25.0),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black26,
               offset: Offset(0, 5),
@@ -29,8 +29,7 @@ class ViewPostText extends StatelessWidget {
             ),
           ],
         ),
-        child: Container(
-            child: Text(
+        child: Text(
           post.content!,
           // overflow: TextOverflow.ellipsis,
           maxLines: 4,
@@ -39,7 +38,7 @@ class ViewPostText extends StatelessWidget {
               height: 1.5,
               overflow: TextOverflow.ellipsis,
               color: Colors.black),
-        )),
+        ),
       ),
     );
   }

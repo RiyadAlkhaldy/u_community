@@ -1,4 +1,6 @@
- class AutoGenerate {
+ import '../../../models/post_model.dart';
+
+class AutoGenerate {
   AutoGenerate({
     required this.status,
     required this.message,
@@ -23,54 +25,54 @@
   }
 }
 
-class Posts {
-  Posts({
-    required this.currentPage,
-    required this.data,
-    required this.firstPageUrl,
-    required this.from,
-    required this.nextPageUrl,
-    required this.path,
-    required this.perPage,
-     this.prevPageUrl,
-    required this.to,
-  });
-  late final int currentPage;
-  late final List<Data> data;
-  late final String firstPageUrl;
-  late final int from;
-  late final String nextPageUrl;
-  late final String path;
-  late final int perPage;
-  late final Null prevPageUrl;
-  late final int to;
+// class Posts {
+//   Posts({
+//     required this.currentPage,
+//     required this.data,
+//     required this.firstPageUrl,
+//     required this.from,
+//     required this.nextPageUrl,
+//     required this.path,
+//     required this.perPage,
+//      this.prevPageUrl,
+//     required this.to,
+//   });
+//   late final int currentPage;
+//   late final List<Data> data;
+//   late final String firstPageUrl;
+//   late final int from;
+//   late final String nextPageUrl;
+//   late final String path;
+//   late final int perPage;
+//   late final Null prevPageUrl;
+//   late final int to;
   
-  Posts.fromJson(Map<String, dynamic> json){
-    currentPage = json['current_page'];
-    data = List.from(json['data']).map((e)=>Data.fromJson(e)).toList();
-    firstPageUrl = json['first_page_url'];
-    from = json['from'];
-    nextPageUrl = json['next_page_url'];
-    path = json['path'];
-    perPage = json['per_page'];
-    prevPageUrl = null;
-    to = json['to'];
-  }
+//   Posts.fromJson(Map<String, dynamic> json){
+//     currentPage = json['current_page'];
+//     data = List.from(json['data']).map((e)=>Data.fromJson(e)).toList();
+//     firstPageUrl = json['first_page_url'];
+//     from = json['from'];
+//     nextPageUrl = json['next_page_url'];
+//     path = json['path'];
+//     perPage = json['per_page'];
+//     prevPageUrl = null;
+//     to = json['to'];
+//   }
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['current_page'] = currentPage;
-    _data['data'] = data.map((e)=>e.toJson()).toList();
-    _data['first_page_url'] = firstPageUrl;
-    _data['from'] = from;
-    _data['next_page_url'] = nextPageUrl;
-    _data['path'] = path;
-    _data['per_page'] = perPage;
-    _data['prev_page_url'] = prevPageUrl;
-    _data['to'] = to;
-    return _data;
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     final _data = <String, dynamic>{};
+//     _data['current_page'] = currentPage;
+//     _data['data'] = data.map((e)=>e.toJson()).toList();
+//     _data['first_page_url'] = firstPageUrl;
+//     _data['from'] = from;
+//     _data['next_page_url'] = nextPageUrl;
+//     _data['path'] = path;
+//     _data['per_page'] = perPage;
+//     _data['prev_page_url'] = prevPageUrl;
+//     _data['to'] = to;
+//     return _data;
+//   }
+// }
 
 class Data {
   Data({

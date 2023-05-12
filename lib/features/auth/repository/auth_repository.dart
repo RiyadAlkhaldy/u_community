@@ -13,6 +13,7 @@ import '../../../main.dart';
 import '../../../mobile_layout_screen.dart';
 import '../../../models/colloge_model.dart';
 import '../../../models/user_response_auth.dart';
+import '../screens/message_auth_teacher.dart';
 import '../screens/message_to_teacher_temp_screen.dart';
 
 final authProvider = StateProvider((ref) => AuthRepository());
@@ -79,12 +80,15 @@ class AuthRepository {
         '${ApiUrl}auth/register/',
         queryParameters: data,
       );
+      // ignore: use_build_context_synchronously
       if (_checkIfUserRegsterBefore(response, context)) {
         if (kDebugMode) print('It is regisger before');
       }
       if (response.statusCode == 200) {
-        print('ok');
-        print(response.data);
+        if (kDebugMode) {
+          print('ok');
+          print(response.data);
+        }
         userResponseLogin =
             UserResponseLogin.fromMap(response.data as Map<String, dynamic>);
         print(
@@ -104,13 +108,16 @@ class AuthRepository {
             UserEnum.img.type, userResponseLogin.user!.img.toString());
         await prefs.setString(
             UserEnum.typeUser.type, userResponseLogin.user!.type.toString());
-        print(
-            'tokennnnnnnnnnnnnnnnnnnnnnnnnnnnn${userResponseLogin.authorisation.token}');
-        print(userResponseLogin);
+        if (kDebugMode) {
+          print(
+              'tokennnnnnnnnnnnnnnnnnnnnnnnnnnnn${userResponseLogin.authorisation.token}');
+          print(userResponseLogin);
+        }
+        // ignore: use_build_context_synchronously
         Navigator.pushNamedAndRemoveUntil(
           context,
-          MobileLayoutScreen.routeName,
-          (route) => true,
+          MyApp.routeName,
+          (route) => false,
         );
       }
     } catch (e) {
@@ -124,7 +131,7 @@ class AuthRepository {
   Future<void> registerTeacher(
       {required String email,
       required String name,
-      required final String password,
+      required String password,
       required String iDNumber,
       required String collogeId,
       int type = 2,
@@ -152,18 +159,17 @@ class AuthRepository {
           print('ok');
           print(response.data);
         }
-        userResponseLogin = UserResponseLogin.fromJson(response.data);
-        if (kDebugMode) {
-          print(userResponseLogin.authorisation);
-          print(userResponseLogin);
-        }
+        if (kDebugMode) {}
       }
       // ignore: use_build_context_synchronously
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        MessageToTeacherTempScreen.routeName,
-        (route) => false,
-      );
+      if (response.statusCode == 200 && response.data['status'] == 'success') {
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          MessageAuthTeacher.routeName,
+          (route) => false,
+        );
+      }
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
@@ -184,13 +190,11 @@ class AuthRepository {
   Future<void> registerAsAdmin(
       {required String email,
       required final String password,
-      required final String name,
       required String iDNumber,
       int type = 3,
       required String collogeId,
       required BuildContext context}) async {
     Map<String, dynamic> data = {
-      'name': name,
       'email': email,
       'password': password,
       'id_number': iDNumber,
@@ -242,7 +246,7 @@ class AuthRepository {
         // ignore: use_build_context_synchronously
         Navigator.pushNamedAndRemoveUntil(
           context,
-          MobileLayoutScreen.routeName,
+          MyApp.routeName,
           (route) => false,
         );
       }
@@ -265,7 +269,7 @@ class AuthRepository {
     // ignore: use_build_context_synchronously
   }
 
-  void login(
+  Future<void> login(
       {required String email,
       required String password,
       required BuildContext context}) async {
@@ -281,41 +285,40 @@ class AuthRepository {
       if (kDebugMode) {
         print(response.data);
       }
-      if (response.statusCode == 200 &&
-          jsonDecode(response.data)['status'] == 'success') {
-        userResponseLogin = UserResponseLogin.fromJson(response.data);
-
+      if (response.statusCode == 200 && response.data['status'] == 'success') {
+        print(response.data);
+        userResponseLogin =
+            UserResponseLogin.fromMap(response.data as Map<String, dynamic>);
+        print(
+            'tokennnnnnnnnnnnnnnnnnnnnnnnnnnnn${userResponseLogin.authorisation.token}');
         final SharedPreferences prefs = await _prefs;
         await prefs.setString('token', userResponseLogin.authorisation.token!);
-        await prefs.setString('name', userResponseLogin.user!.name);
-        await prefs.setString('email', userResponseLogin.user!.email);
+        await prefs.setString(UserEnum.name.type, userResponseLogin.user!.name);
         await prefs.setString(
-            'section_id', userResponseLogin.user!.sectionId.toString());
+            UserEnum.email.type, userResponseLogin.user!.email);
+        await prefs.setString(UserEnum.sectionId.type,
+            userResponseLogin.user!.sectionId.toString());
+        await prefs.setString(UserEnum.collogeId.type,
+            userResponseLogin.user!.collogeId.toString());
         await prefs.setString(
-            'colloge_id', userResponseLogin.user!.collogeId.toString());
-        await prefs.setString('id', userResponseLogin.user!.id.toString());
-        await prefs.setString('type', userResponseLogin.user!.type.toString());
+            UserEnum.id.type, userResponseLogin.user!.id.toString());
+        await prefs.setString(
+            UserEnum.img.type, userResponseLogin.user!.img.toString());
+        await prefs.setString(
+            UserEnum.typeUser.type, userResponseLogin.user!.type.toString());
 
         print(userResponseLogin);
         Navigator.pushNamedAndRemoveUntil(
           context,
-          MobileLayoutScreen.routeName,
-          (route) => true,
+          MyApp.routeName,
+          (route) => false,
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Center(
-          child: Text(
-            'check from password or email is correct',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ),
-        padding: EdgeInsets.only(bottom: 250),
-      ));
+      print('errrrrrrrrrr${e.toString()}');
+      showSnackBar(
+          context: context,
+          content: 'check from password or email is corrects $e');
       if (kDebugMode) print(e.toString());
     }
     // ignore: use_build_context_synchronously
@@ -323,7 +326,10 @@ class AuthRepository {
 
   Future<void> logout({required BuildContext context}) async {
     SharedPreferences prefs = await _prefs;
-
+    await SharedPreferences.getInstance().then((user) async {
+      user.clear();
+      // myuser[UserEnum.token.type] = user.getString(UserEnum.token.type);
+    });
     try {
       Response response;
       response = await dio.post(
@@ -349,7 +355,7 @@ class AuthRepository {
       Navigator.pushNamedAndRemoveUntil(
         context,
         MyApp.routeName,
-        (route) => true,
+        (route) => false,
       );
     } catch (e) {
       // ignore: use_build_context_synchronously

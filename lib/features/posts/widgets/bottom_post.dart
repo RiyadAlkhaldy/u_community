@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/post_model.dart';
+import '../repository/repository_colloge_posts.dart';
 import '../repository/repository_posts.dart';
+import '../repository/repository_section_posts.dart';
+import '../screens/layout/post_layout.dart';
 import '../screens/view_post_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -29,10 +32,19 @@ Widget BottomPost(BuildContext context, Posts post) {
                           iconSize: 30.0,
                           onPressed: () {
                             print('Like post');
-
-                            ref
-                                .read(postsProvider.notifier)
-                                .addLikeOrUndo(post,context);
+                            if (ref.watch(currentIndexPagePost) == 0) {
+                              ref
+                                  .read(postsProvider.notifier)
+                                  .addLikeOrUndo(post, context);
+                            } else if (ref.watch(currentIndexPagePost) == 1) {
+                              ref
+                                  .read(collogePostsProvider.notifier)
+                                  .addLikeOrUndo(post, context);
+                            } else {
+                              ref
+                                  .read(sectionPostsProvider.notifier)
+                                  .addLikeOrUndo(post, context);
+                            }
                           }),
                     ),
                     Text(
@@ -42,7 +54,7 @@ Widget BottomPost(BuildContext context, Posts post) {
                     ),
                   ],
                 ),
-                SizedBox(width: 20.0),
+                const SizedBox(width: 20.0),
                 Row(
                   children: <Widget>[
                     Consumer(

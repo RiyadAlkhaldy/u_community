@@ -18,7 +18,7 @@ final commentsProvider =
 // final Provider = FutureProvider.family<, >((ref, ) async {
 //   return ;
 // });
-final AllcommentsProvider = FutureProvider.family((ref, int post_id) async {
+final allcommentsProvider = FutureProvider.family((ref, int post_id) async {
   List<Comments> comments = [];
   await ref
       .read(commentsProvider.notifier)

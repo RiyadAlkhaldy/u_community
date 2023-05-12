@@ -6,6 +6,7 @@ import 'package:u_community/core/enums/user_enum.dart';
 import 'package:u_community/core/utils/loader.dart';
 
 import '../../../models/user_response_auth.dart';
+import '../../user/repository/repository_get_user_by_id.dart';
 import '../../user/repository/repository_user.dart';
 import '../../user/screen/user_profile_screen.dart';
 import '../widgets/icon_widget.dart';
@@ -33,17 +34,18 @@ class _UserAccountState extends ConsumerState<UserAccount> {
 
     return ref.watch(getUserProviderProfile).when(
         data: (data) {
-          var name = data!.name;
+          var name = data.name;
           print(name);
 
           return SimpleSettingsTile(
             title: data.name,
             subtitle: 'Your Profile',
-            leading: IconWidget(
+            leading: const IconWidget(
               icon: Icons.person,
               color: Colors.green,
             ),
             onTap: () {
+              ref.read(getUserIDFromUIProvider.notifier).state = data.id;
               // Navigator.of(context).pushNamed(UserProfileScreen.routeName);
             },
             child: UserProfileScreen(

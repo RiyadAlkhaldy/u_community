@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // import '../controller/posts_controlller.dart';
 import '../../../core/utils/loader.dart';
@@ -39,7 +40,12 @@ class _PostScreenState extends ConsumerState<AllCollogePostsScreen> {
         });
       });
     }
-
+    // Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    // Future<SharedPreferences> prefs = _prefs;
+    // SharedPreferences.getInstance().then((user) async {
+    //   await user.clear();
+    //   // myuser[UserEnum.token.type] = user.getString(UserEnum.token.type);
+    // });
     return CustomScrollView(
       slivers: [
         SliverOverlapInjector(

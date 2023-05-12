@@ -28,7 +28,7 @@ class UploadTextScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(authProvider).getAllColloges(context).then((value) async {
       await ref.watch(getUserProvider).then((map) async {
-        if (int.parse(map['type']) == 3) {
+        if (int.parse(map['type']) >= 3) {
           // allows = true;
           ref.read(allwoProvidr.notifier).state = true;
         }

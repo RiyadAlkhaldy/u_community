@@ -4,6 +4,7 @@ import 'package:u_community/features/posts/models/post_model_pagentation.dart';
 import 'core/error/error.dart';
 import 'features/auth/Screens/login.dart';
 import 'features/auth/Screens/registration.dart';
+import 'features/auth/screens/message_auth_teacher.dart';
 import 'features/auth/screens/message_to_teacher_temp_screen.dart';
 import 'features/auth/screens/student_register.dart';
 import 'features/posts/screens/upload_file_screen.dart';
@@ -66,6 +67,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           users: user,
         ),
       );
+        case MessageAuthTeacher.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const MessageAuthTeacher(),
+      );
+       
     // case MobileChatScreen.routeName:
     //   final arguments = settings.arguments as Map<String, dynamic>;
     //   final name = arguments['name'];

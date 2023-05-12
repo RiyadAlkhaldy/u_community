@@ -4,7 +4,8 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
 import '../screens/teachers_registerations_screen.dart';
 import 'icon_widget.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:font_awesome_flutter_example/icons.dart';
 // Widget buildAcount() => SimpleSettingsTile(
 //       title: "Account Settings",
 //       subtitle: 'privacy, security, Languages',
@@ -43,7 +44,8 @@ Widget buildNotificationTeachersRegisteraions(
         {required BuildContext context}) =>
     SimpleSettingsTile(
       title: "Teachers Registrations",
-      leading: IconWidget(icon: Icons.notifications_active, color: Colors.red),
+      leading:
+          const IconWidget(icon: FontAwesomeIcons.users, color: Colors.red),
       onTap: () {
         Navigator.pushNamed(context, TeacherRegisterations.routeName);
         // switchList = darkMode;

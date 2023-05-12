@@ -12,7 +12,7 @@ import '../all_colloge_posts_screen.dart';
 import '../all_post_screen.dart';
 import '../all_section_posts_screen.dart';
 
-final currentIndexPagePost = StateProvider((ref) => 0);
+final currentIndexPagePost = StateProvider<int>((ref) => 0);
 
 class PostLayout extends ConsumerStatefulWidget {
   PostLayout({Key? key}) : super(key: key);
@@ -127,8 +127,8 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
             ],
           ),
         ),
-        floatingActionButton:
-            FloatingActionButtonWidget(tabBarController: tabBarController),
+        // floatingActionButton:
+        //     FloatingActionButtonWidget(tabBarController: tabBarController),
       ),
     );
   }
@@ -139,7 +139,7 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
       // decoration: BoxDecoration(color: Colors.white),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        children: const [
           Text(
             'University Communty',
             style: TextStyle(
@@ -148,18 +148,18 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
               fontWeight: FontWeight.bold,
             ),
           ),
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.search, color: Colors.grey),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.add, color: Colors.grey),
-                onPressed: () {},
-              ),
-            ],
-          )
+          // Row(
+          //   children: [
+          //     IconButton(
+          //       icon: const Icon(Icons.search, color: Colors.grey),
+          //       onPressed: () {},
+          //     ),
+          //     IconButton(
+          //       icon: const Icon(Icons.add, color: Colors.grey),
+          //       onPressed: () {},
+          //     ),
+          //   ],
+          // )
         ],
       ),
     );

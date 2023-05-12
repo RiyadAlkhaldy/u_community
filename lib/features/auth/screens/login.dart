@@ -27,12 +27,34 @@ class Login extends ConsumerStatefulWidget {
 }
 
 GlobalKey<FormState> formState = GlobalKey();
-bool isDone = false;
 TextEditingController emailContoller = TextEditingController();
 TextEditingController passwordContoller = TextEditingController();
-// login() async {}
 
 class _LoginState extends ConsumerState<Login> {
+  bool isGoing = false;
+
+  login() async {
+    if (kDebugMode) {
+      print('go to login');
+    }
+
+    final fmSt = formState.currentState;
+
+    if (fmSt!.validate()) {
+      // isGoing = true;
+      // setState(() {});
+      if (kDebugMode) {
+        print('login');
+      }
+      await ref.read(authProvider).login(
+          email: emailContoller.text.trim(),
+          password: passwordContoller.text.trim(),
+          context: context);
+    }
+    // isGoing == false;
+    // setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,24 +76,33 @@ class _LoginState extends ConsumerState<Login> {
         const SizedBox(
           height: 10,
         ),
-        registerOrLoginButton(
-          text: 'تسجيل الدخول',
-          context: context,
-          onTap: () async {
-            if (kDebugMode) {
-              print('go to login');
-            }
-
-            final fmSt = formState.currentState;
-            if (fmSt!.validate()) {
-              print('auth');
-              ref.read(authProvider).login(
-                  email: emailContoller.text.trim(),
-                  password: passwordContoller.text.trim(),
-                  context: context);
-            }
-          },
+        Container(
+          child: !isGoing
+              ? registerOrLoginButton(
+                  text: 'تسجيل الدخول',
+                  context: context,
+                  onTap: () async {
+                    isGoing = true;
+                    setState(() {});
+                    await login();
+                    isGoing = false;
+                    setState(() {});
+                  })
+              : Container(
+                  // decoration: BoxDecoration(color: Colors.black54),
+                  // padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: CircularProgressIndicator(
+                  strokeWidth: 20,
+                  color: Colors.blue,
+                )),
         ),
+        // registerOrLoginButton(
+        //   text: 'تسجيل الدخول',
+        //   context: context,
+        //   onTap: () async {
+        //     login();
+        //   },
+        // ),
         restPasswd(),
         customButton(
           text: 'إنشاء حساب',
@@ -159,7 +190,8 @@ Widget InputStyle(bool whatIs, context) {
 //---------------UserNameField--------------
 Widget inputUserName(TextEditingController controller, BuildContext context) {
   return TextFormField(
-    validator: (input) => input!.isValidEmail() ? null : "Check your syntax email ",
+    validator: (input) =>
+        input!.isValidEmail() ? null : "Check your syntax email ",
     // inputFormatters: [],
     style:
         Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black),

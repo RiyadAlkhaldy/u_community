@@ -50,7 +50,7 @@ dependencies:
   wakelock: ^0.4.0
   auto_orientation: ^2.3.0
   native_device_orientation: ^1.1.4
-  shared_preferences: ^2.1.0
+  shared_preferences: ^2.1.1
   flutter_launcher_icons: ^0.13.1
   permission_handler: ^10.2.0
   path_provider_android: ^2.0.27
@@ -75,7 +75,7 @@ dependencies:
       url: https://github.com/kakajansh/echo.git
       ref: master
   freezed_annotation: ^2.2.0
-  file_picker: ^5.2.5
+  file_picker: ^5.3.0
   http: ^0.13.5
   json_annotation: ^4.8.1
 

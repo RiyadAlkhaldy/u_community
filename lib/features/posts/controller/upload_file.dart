@@ -21,7 +21,7 @@ final uploadFileProvider =
 //   return up;
 // });
 final uploadFilePppp = FutureProvider.autoDispose((ref) async {
-  final file = ref.watch(uploadFileProvider).getFile();
+  final file = ref.read(uploadFileProvider).getFile();
   return file;
 });
 
@@ -58,8 +58,7 @@ class UploadFileReposetitory {
         withReadStream: true,
         type: type,
         allowMultiple: false,
-        onFileLoading: (FilePickerStatus status) =>
-            print('file status $status'),
+        onFileLoading: (FilePickerStatus status) => print(status),
         allowedExtensions: (_extension?.isNotEmpty ?? false)
             ? _extension?.replaceAll(' ', '').split(',')
             : null,
@@ -90,7 +89,6 @@ class UploadFileReposetitory {
       String? colloge_id}) async {
     if (path != null) {
       final prefs = await _prefs;
-
       var _path = path!.path;
       if (kDebugMode) print('path $_path');
       String fileName = _path!.split('/').last;
@@ -113,13 +111,22 @@ class UploadFileReposetitory {
         String? sectionId = prefs.getString('section_id');
         Map<String, dynamic> data;
         // print(sectionId! != null);
-        if (sectionId != null && sectionId.length <= 2) {
+        if (sectionId != null && sectionId.length <= 2 && colloge_id != null) {
           data = {
             'content': content,
             'type': type,
             'user_id': prefs.getString('id'),
             'section_id': sectionId,
-            'colloge_id': int.parse(prefs.getString('type')!) == 3
+            'colloge_id': int.parse(prefs.getString('type')!) >= 3
+                ? colloge_id
+                : prefs.getString('colloge_id'),
+          };
+        } else if (colloge_id != null) {
+          data = {
+            'content': content,
+            'type': type,
+            'user_id': prefs.getString('id'),
+            'colloge_id': int.parse(prefs.getString('type')!) >= 3
                 ? colloge_id
                 : prefs.getString('colloge_id'),
           };
@@ -128,34 +135,35 @@ class UploadFileReposetitory {
             'content': content,
             'type': type,
             'user_id': prefs.getString('id'),
-            'colloge_id': int.parse(prefs.getString('type')!) == 3
-                ? colloge_id
-                : prefs.getString('colloge_id'),
+            'section_id': sectionId,
           };
         }
-        if (kDebugMode) {
-          print(data);
-        }
+        if (kDebugMode) {}
+
         Response? response = await chunkedUploader.upload(
           fileKey: "file",
           method: "POST",
-          fileName: _path,
-          maxChunkSize: 50000000,
+          fileName: path!.name,
+          maxChunkSize: 5000000000,
           path: url,
           fileSize: path!.size,
           // fileDataStream: paths!.single.readStream!,
           fileDataStream: path!.readStream!,
           data: data,
-          // onUploadProgress: onUploadProgress,
+          onUploadProgress: (v) {
+            print('upload is  $v');
+          },
         );
+
         // path!.bytes!.clear();
         print('the response from upload fileeeeeeeeeeeeeeeeeeeee $response');
-
+        if (kDebugMode) {
+          print(response);
+        }
         if (context != null) Navigator.pop(context);
-        if (kDebugMode) {}
       } on DioError catch (e) {
         if (kDebugMode) {
-          print('errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrror $e');
+          print('errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrror ${e}');
         }
       }
     } else {

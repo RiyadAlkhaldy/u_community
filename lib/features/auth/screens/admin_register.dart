@@ -19,7 +19,7 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
   GlobalKey<FormState> formState = GlobalKey();
   bool isDone = false;
   TextEditingController emailController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
+  // TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController IDNUmber = TextEditingController();
   bool isGoing = false;
@@ -35,10 +35,9 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
         await ref.read(authProvider).registerAsAdmin(
             email: emailController.text.trim(),
             password: passwordController.text.trim(),
-            name: nameController.text.trim(),
             iDNumber: IDNUmber.text.trim(),
             collogeId: _selectedVal.toString(),
-            type: 3,
+            type: 4,
             context: context);
       } catch (e) {
         print(e);
@@ -77,13 +76,13 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
           key: formState,
           child: Column(
             children: [
-              TextFieldCustom(
-                hintText: 'Your Name',
-                labelText: 'the Name',
-                controller: nameController,
-                validator: (val) => validInputAuth(val, 15, 7),
-                keyboardType: TextInputType.text,
-              ),
+              // TextFieldCustom(
+              //   hintText: 'Your Name',
+              //   labelText: 'the Name',
+              //   controller: nameController,
+              //   validator: (val) => validInputAuth(val, 15, 7),
+              //   keyboardType: TextInputType.text,
+              // ),
               TextFieldCustom(
                 hintText: 'Email',
                 labelText: 'Email',
@@ -106,38 +105,39 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
                 validator: (val) => validInputAuth(val, 15, 3),
                 keyboardType: TextInputType.number,
               ),
-              if (!initial)
-                Container(
-                  alignment: Alignment.center,
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(15)),
-                  child: DropdownButton(
-                      // isExpanded: true,
+              // if (!initial)
+              //   Container(
+              //     alignment: Alignment.center,
+              //     width: double.maxFinite,
+              //     decoration: BoxDecoration(
+              //         color: Colors.blue,
+              //         borderRadius: BorderRadius.circular(15)),
+              //     child: DropdownButton(
+              //         // isExpanded: true,
 
-                      alignment: Alignment.center,
-                      icon: Icon(Icons.person),
-                      borderRadius: BorderRadius.circular(10),
-                      dropdownColor: Color.fromARGB(255, 175, 213, 240),
-                      items: colloges.map((val) {
-                        return DropdownMenuItem(
-                          alignment: Alignment.center,
-                          value: val.id,
-                          child: Text(
-                            val.name.toString(),
-                            textAlign: TextAlign.center,
-                          ),
-                        );
-                      }).toList(),
-                      value: _selectedVal,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedVal = value;
-                          print(value);
-                        });
-                      }),
-                ),
+              //         alignment: Alignment.center,
+              //         icon: Icon(Icons.person),
+              //         borderRadius: BorderRadius.circular(10),
+              //         dropdownColor: Color.fromARGB(255, 175, 213, 240),
+              //         items: colloges.map((val) {
+              //           return DropdownMenuItem(
+              //             alignment: Alignment.center,
+              //             value: val.id,
+              //             child: Text(
+              //               val.name.toString(),
+              //               textAlign: TextAlign.center,
+              //             ),
+              //           );
+              //         }).toList(),
+              //         value: _selectedVal,
+              //         onChanged: (value) {
+              //           setState(() {
+              //             _selectedVal = value;
+              //             print(value);
+              //           });
+              //         }),
+              //   ),
+
               Container(
                 padding: EdgeInsets.only(top: 20),
                 margin: EdgeInsets.symmetric(horizontal: 8),

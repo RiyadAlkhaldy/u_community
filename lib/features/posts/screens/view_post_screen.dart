@@ -6,6 +6,7 @@ import '../../user/repository/repository_user.dart';
 import '../../video/orientation/portrait_landscape_player_page.dart';
 import '../../../models/post_model.dart';
 import '../../comments/repository/repository_comments.dart';
+import '../repository/repository_colloge_posts.dart';
 import '../repository/repository_posts.dart';
 import '../repository/repository_section_posts.dart';
 import '../../comments/widgets/build_comment.dart';
@@ -13,6 +14,7 @@ import '../widgets/build_post.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../widgets/view_post_text_screen.dart';
+import 'layout/post_layout.dart';
 
 class ViewPostScreen extends ConsumerStatefulWidget {
   static const String routeName = "view-post-screen";
@@ -29,6 +31,7 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
   bool inital = true;
   TextEditingController addCommentController = TextEditingController();
   // Comments varComment ;
+  @override
   Widget build(BuildContext context) {
     final posts = ref.watch(postStateProvider);
 
@@ -45,13 +48,13 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
     }
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFFEDF0F6),
+        backgroundColor: const Color(0xFFEDF0F6),
         body: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
-            children: <Widget>[
+            children: [
               Container(
-                padding: EdgeInsets.only(top: 40.0),
+                padding: const EdgeInsets.only(top: 40.0),
                 width: double.infinity,
                 // height: 600.0,
                 decoration: BoxDecoration(
@@ -59,15 +62,15 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 child: Column(
-                  children: <Widget>[
+                  children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Column(
-                        children: <Widget>[
+                        children: [
                           //! view header the post
                           HeaderThePost(
                             post: widget.post,
-                          amIInviewSinglePost: true,
+                            amIInviewSinglePost: true,
                           ),
                           if (widget.post.type == 2)
                             ContentViewPostScreen(post: widget.post),
@@ -91,12 +94,12 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
               // !this for build comments
               Container(
                   width: double.infinity,
                   // height: 600.0,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30.0),
@@ -115,7 +118,7 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
                                     .toList());
                           },
                         )
-                      : Loader()
+                      : const Loader()
                   // buildComment(1,context,null),
                   )
             ],
@@ -126,7 +129,7 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
           offset: Offset(0.0, -1 * MediaQuery.of(context).viewInsets.bottom),
           child: Container(
             height: 100.0,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30.0),
                 topRight: Radius.circular(30.0),
@@ -141,7 +144,7 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
               color: Colors.white,
             ),
             child: Padding(
-              padding: EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(12.0),
               child: TextField(
                 style: Theme.of(context)
                     .textTheme
@@ -165,23 +168,23 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
         border: InputBorder.none,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Colors.grey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Colors.grey),
         ),
-        contentPadding: EdgeInsets.all(20.0),
+        contentPadding: const EdgeInsets.all(20.0),
         hintText: 'Add a comment',
         hintStyle: Theme.of(context)
             .textTheme
             .bodyMedium!
             .copyWith(color: Colors.black45),
         prefixIcon: Container(
-          margin: EdgeInsets.all(4.0),
+          margin: const EdgeInsets.all(4.0),
           width: 48.0,
           height: 48.0,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
@@ -221,7 +224,7 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
                       // ref.read(getProfile.notifier).state = data;
                     },
                     error: (error, stackTrace) => const Text('error'),
-                    loading: () => Loader(),
+                    loading: () => const Loader(),
                   ),
               //  widget.post.user.img!.isEmpty
               //     ? Image.asset('assets/images/user1.png')
@@ -235,7 +238,7 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
           ),
         ),
         suffixIcon: Container(
-          margin: EdgeInsets.only(right: 4.0),
+          margin: const EdgeInsets.only(right: 4.0),
           width: 70.0,
           child: Consumer(
             builder: (_, WidgetRef reff, __) {
@@ -243,7 +246,7 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
-                color: Color(0xFF23B66F),
+                color: const Color(0xFF23B66F),
                 onPressed: () async {
                   print('Post comment');
                   if (addCommentController.text.trim().isNotEmpty) {
@@ -256,9 +259,10 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
                     addCommentController.clear();
                     reff.read(postStateProvider.notifier).state =
                         post.copyWith(commentCount: post.commentCount + 1);
+                    ref.invalidate(allcommentsProvider(post.id));
                   }
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.send,
                   size: 25.0,
                   color: Colors.white,
@@ -285,13 +289,13 @@ class ContentViewPostScreen extends ConsumerWidget {
     return InkWell(
       onDoubleTap: () => print('Like post'),
       child: Container(
-        margin: EdgeInsets.all(10.0),
+        margin: const EdgeInsets.all(10.0),
         width: double.infinity,
         height: 400.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25.0),
           boxShadow: [
-            BoxShadow(
+            const BoxShadow(
               color: Colors.black45,
               offset: Offset(0, 5),
               blurRadius: 8.0,
@@ -305,7 +309,7 @@ class ContentViewPostScreen extends ConsumerWidget {
         child: CachedNetworkImage(
           imageUrl: post.url!,
           placeholder: (context, url) => const Loader(),
-          errorWidget: (context, url, error) => Icon(Icons.error),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
           fit: BoxFit.cover,
           // fit: BoxFit.cover,
         ),
@@ -330,7 +334,7 @@ class HeaderViewPostScreen extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           iconSize: 30.0,
           color: Colors.black,
           onPressed: () => Navigator.pop(context),
@@ -341,7 +345,7 @@ class HeaderViewPostScreen extends ConsumerWidget {
             leading: Container(
               width: 50.0,
               height: 50.0,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
@@ -371,7 +375,7 @@ class HeaderViewPostScreen extends ConsumerWidget {
             ),
             title: Text(
               post.content!,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -394,7 +398,7 @@ class HeaderViewPostScreen extends ConsumerWidget {
                                         borderRadius:
                                             BorderRadius.circular(25.0),
                                         boxShadow: [
-                                          BoxShadow(
+                                          const BoxShadow(
                                             color: Color.fromARGB(
                                                 115, 138, 222, 245),
                                             offset: Offset(0, 5),
@@ -431,17 +435,17 @@ class HeaderViewPostScreen extends ConsumerWidget {
 
 Widget Bottom_Post(BuildContext context, Posts post, [WidgetRef? ref]) {
   return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 20.0),
+    padding: const EdgeInsets.symmetric(horizontal: 20.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+          children: [
             Row(
-              children: <Widget>[
+              children: [
                 Row(
-                  children: <Widget>[
+                  children: [
                     //!likePosts
                     IconButton(
                         icon: Icon(
@@ -453,14 +457,31 @@ Widget Bottom_Post(BuildContext context, Posts post, [WidgetRef? ref]) {
                           print('Like post');
                           final amILike = post.amILike;
                           final numberLikes = post.likeCount;
-                          ref!.read(postStateProvider.notifier).state =
+                          if (ref!.watch(currentIndexPagePost) == 0) {
+                            ref
+                                .read(postsProvider.notifier)
+                                .addLikeOrUndo(post, context);
+                          } else if (ref.watch(currentIndexPagePost) == 1) {
+                            ref
+                                .read(collogePostsProvider.notifier)
+                                .addLikeOrUndo(post, context);
+                          } else {
+                            ref
+                                .read(sectionPostsProvider.notifier)
+                                .addLikeOrUndo(post, context);
+                          }
+
+                          // ref
+                          //     .read(postsProvider.notifier)
+                          //     .addLikeOrUndo(post, context);
+                          ref.read(postStateProvider.notifier).state =
                               post.copyWith(
                                   amILike: amILike == 0 ? 1 : 0,
                                   likeCount: amILike == 0
                                       ? numberLikes + 1
                                       : numberLikes - 1);
-                          final p = ref.watch(postStateProvider);
-                          ref.read(postsProvider.notifier).updatePost(p!);
+                          // final p = ref.watch(postStateProvider);
+                          // ref.read(postsProvider.notifier).updatePost(p!);
                         }),
                     Text(
                       ref!
@@ -473,11 +494,11 @@ Widget Bottom_Post(BuildContext context, Posts post, [WidgetRef? ref]) {
                     ),
                   ],
                 ),
-                SizedBox(width: 20.0),
+                const SizedBox(width: 20.0),
                 Row(
-                  children: <Widget>[
+                  children: [
                     IconButton(
-                      icon: Icon(Icons.chat),
+                      icon: const Icon(Icons.chat),
                       iconSize: 30.0,
                       onPressed: () {
                         Navigator.push(
@@ -500,7 +521,7 @@ Widget Bottom_Post(BuildContext context, Posts post, [WidgetRef? ref]) {
               ],
             ),
             IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.bookmark_border,
               ),
               iconSize: 30.0,

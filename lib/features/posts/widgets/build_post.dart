@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:u_community/core/enums/user_enum.dart';
 import '../../../core/utils/loader.dart';
+import '../../../main.dart';
 import '../../user/repository/repository_get_user_by_id.dart';
 import '../../user/screen/view_any_user_screen.dart';
 import '../../../models/post_model.dart';
@@ -27,7 +29,7 @@ class buildPost extends StatelessWidget {
   Widget build(BuildContext context) {
     // print('post =     ${post!.url}');
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       child: Container(
         width: double.infinity,
         // !
@@ -39,7 +41,7 @@ class buildPost extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Column(
                 children: <Widget>[
                   //! Header The Post Widget
@@ -90,17 +92,31 @@ class HeaderThePost extends ConsumerWidget {
       // crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         ListTile(
-          trailing: InkWell(
-            onTap: () {},
-            child: Text(
-              post.colloge.name,
-              textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineSmall!
-                  .copyWith(fontSize: 20, color: Colors.black),
-            ),
-          ),
+          trailing: post.colloge != null
+              ? post.section == null
+                  ? InkWell(
+                      onTap: () {},
+                      child: Text(
+                        'عميد ${post.colloge!.name}',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(fontSize: 20, color: Colors.black),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () {},
+                      child: Text(
+                        post.colloge!.name,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(fontSize: 20, color: Colors.black),
+                      ),
+                    )
+              : null,
 
           /// I check if I was in view all post Or view one post
           title: !amIInviewSinglePost
@@ -137,7 +153,11 @@ class HeaderThePost extends ConsumerWidget {
         ListTile(
           // contentPadding: EdgeInsets.symmetric(horizontal: 5),
 
-          leading: LefePostHeader(context, ref),
+          leading: int.parse(ref.watch(
+                      dataUserAuthentecationProvider)![UserEnum.id.type]) ==
+                  post.userId
+              ? lefePostHeader(context, ref)
+              : null,
           // leading: PostProfileImage(),
           title: InkWell(
             onTap: () {
@@ -170,7 +190,7 @@ class HeaderThePost extends ConsumerWidget {
     );
   }
 
-  IconButton LefePostHeader(BuildContext context, WidgetRef ref) {
+  IconButton lefePostHeader(BuildContext context, WidgetRef ref) {
     return IconButton(
       onPressed: () {
         showDialog(
@@ -181,13 +201,13 @@ class HeaderThePost extends ConsumerWidget {
               child: ListView(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shrinkWrap: true,
-                  children: ['Delete', 'Modify']
+                  children: ['Delete']
                       .map(
                         (e) => InkWell(
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25.0),
-                                boxShadow: [
+                                boxShadow: const [
                                   BoxShadow(
                                     color: Color.fromARGB(115, 138, 222, 245),
                                     offset: Offset(0, 5),
@@ -211,7 +231,7 @@ class HeaderThePost extends ConsumerWidget {
           },
         );
       },
-      icon: const Icon(Icons.more_vert),
+      icon: const Icon(Icons.more_vert, color: Colors.black54),
     );
   }
 
@@ -219,7 +239,7 @@ class HeaderThePost extends ConsumerWidget {
     return Container(
       width: 50.0,
       height: 50.0,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(

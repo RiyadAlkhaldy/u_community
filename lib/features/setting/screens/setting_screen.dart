@@ -3,18 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:u_community/features/auth/repository/auth_repository.dart';
 import 'package:u_community/features/setting/screens/user_accounnt.dart';
+import '../../../core/enums/user_enum.dart';
+import '../../../main.dart';
 import '../widgets/reed_back.dart';
 import '../widgets/icon_widget.dart';
 import 'account_setting_screen.dart';
 
-class SettingScreen extends StatefulWidget {
+class SettingScreen extends ConsumerStatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
 
   @override
-  State<SettingScreen> createState() => _SettingScreenState();
+  ConsumerState<SettingScreen> createState() => _SettingScreenState();
 }
 
-class _SettingScreenState extends State<SettingScreen> {
+class _SettingScreenState extends ConsumerState<SettingScreen> {
   final switchList = false;
   static const keyDarkMode = 'key-dark-mode';
   @override
@@ -26,22 +28,31 @@ class _SettingScreenState extends State<SettingScreen> {
             height: 22,
           ),
           const UserAccount(),
-          const AccountSettingScreen(),
+          // const AccountSettingScreen(),
           const SizedBox(
             height: 32,
           ),
           SettingsGroup(title: "GENERAL", children: [
             buildLogout(context),
-            buildDeleteAccount(),
+            // buildDeleteAccount(),
           ]),
           const SizedBox(
             height: 32,
           ),
-          SettingsGroup(title: "Feedback", children: [
-            buildNotificationTeachersRegisteraions(context: context),
-            buildReportBug(context: context),
-            buildSendFeedback(context: context),
-          ]),
+          // if()
+          if (int.parse(ref.watch(
+                  dataUserAuthentecationProvider)![UserEnum.typeUser.type]) <=
+              4)
+            SettingsGroup(title: "others", children: [
+              buildNotificationTeachersRegisteraions(context: context),
+              // buildReportBug(context: context),
+            ]),
+          // if()
+          // SettingsGroup(title: "Feedback", children: [
+          //   buildNotificationTeachersRegisteraions(context: context),
+          //   buildReportBug(context: context),
+          //   buildSendFeedback(context: context),
+          // ]),
         ],
       ),
     );
@@ -70,29 +81,42 @@ Future<dynamic> showModalBottomAcceptLogout(BuildContext context) {
                   topRight: Radius.circular(20), topLeft: Radius.circular(20))),
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Row(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                buttonLogoutOurCancel(
-                  'Cancel',
-                  () {
-                    Navigator.pop(context);
-                  },
+                const Text(
+                  'Are sure , Do you want to logout ?',
                 ),
                 const SizedBox(
-                  width: 50,
+                  height: 30,
                 ),
-                Consumer(
-                  builder: (context, ref, child) {
-                    return StatefulBuilder(
-                      builder: (context, setState) => buttonLogoutOurCancel(
-                        'OK',
-                        () async {
-                          await ref.read(authProvider).logout(context: context);
-                        },
-                      ),
-                    );
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buttonLogoutOurCancel(
+                      'Cancel',
+                      () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    const SizedBox(
+                      width: 50,
+                    ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        return StatefulBuilder(
+                          builder: (context, setState) => buttonLogoutOurCancel(
+                            'OK',
+                            () async {
+                              await ref
+                                  .read(authProvider)
+                                  .logout(context: context);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -17,7 +17,7 @@ final getUserDetailesFuture = FutureProvider((ref) async {
   // await user.initi();
   return await user.getUserData();
 });
-final getUserProviderProfile = FutureProvider((ref) async {
+final getUserProviderProfile = FutureProvider<User>((ref) async {
   var user;
   await ref
       .watch(getUserDetailes.notifier)

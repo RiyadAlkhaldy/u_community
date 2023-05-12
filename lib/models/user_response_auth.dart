@@ -91,7 +91,7 @@ class User {
     required this.createdAt,
     required this.updatedAt,
     this.sectionId,
-    required this.collogeId,
+    this.collogeId,
     this.level,
     this.type,
     this.colloge,
@@ -110,7 +110,7 @@ class User {
   final String createdAt;
   final String updatedAt;
   final int? sectionId;
-  final int collogeId;
+  final int? collogeId;
   final int? level;
   final int? type;
   final Colloge? colloge;
@@ -194,7 +194,9 @@ class User {
       collogeId: map['colloge_id'],
       level: map['level'],
       type: map['type'],
-      colloge: Colloge.fromMap(map['colloge'] as Map<String, dynamic>),
+      colloge: map['colloge'] == null
+          ? null
+          : Colloge.fromMap(map['colloge'] as Map<String, dynamic>),
       section: map['section'] == null
           ? null
           : Section.fromMap(map['section'] as Map<String, dynamic>),
@@ -261,10 +263,10 @@ class User {
 class Authorisation {
   Authorisation({
     this.token,
-    required this.type,
+    this.type,
   });
   final String? token;
-  final String type;
+  final String? type;
 
   Authorisation copyWith({
     String? token,
