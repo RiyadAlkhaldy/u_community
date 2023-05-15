@@ -36,23 +36,20 @@ class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
   bool allows = false;
   @override
   Widget build(BuildContext context) {
-    ref.read(authProvider).getAllColloges(context).then((value) async {
-      await ref.watch(getUserProvider).then((map) async {
-        if (int.parse(map['type']) >= 3) {
-          // allows = true;
-          ref.read(allwoProvidr.notifier).state = true;
-        }
+    if (initial) {
+      ref.read(authProvider).getAllColloges(context).then((value) async {
+        await ref.watch(getUserProviderfromSharedPrefernces).then((map) async {
+          if (int.parse(map['type']) >= 3) {
+            // ref.read(allwoProvidr.notifier).state = true;
+            colloges = value!.toList();
+            ref.read(selectedVal.notifier).state = colloges.first.id!;
+            allows = true;
+
+            setState(() {});
+          }
+        });
       });
-
-      // setState(() {
-      colloges = value!.toList();
-
-      // _selectedVal = colloges.first.id;
-      ref.read(selectedVal.notifier).state = colloges.first.id!;
-      initial = false;
-      // });
-    });
-
+    }
     // final upload = ref.watch(uploadFileProvider);
     @override
     void initState() {
@@ -63,16 +60,16 @@ class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
       }
     }
 
-    if (contentController.text.trim().isNotEmpty) {
-      contentController.clear();
-    }
+    // if (contentController.text.trim().isNotEmpty) {
+    //   contentController.clear();
+    // }
 
     return Scaffold(
       backgroundColor: Colors.grey.withOpacity(0.8),
       body: SafeArea(
         child: Container(
           height: double.maxFinite,
-          color: Color(0xFF2e3253).withOpacity(0.4),
+          color: const Color(0xFF2e3253).withOpacity(0.4),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
@@ -92,7 +89,7 @@ class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
                               fit: BoxFit.contain),
                     ),
                   InputStyle(context: context, controller: contentController),
-                  if (ref.watch(allwoProvidr))
+                  if (allows)
                     Consumer(
                       builder: (_, WidgetRef rf, __) {
                         return dropDownListColloges(rf);
@@ -110,7 +107,7 @@ class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
                       setState(() {});
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   UploadButtonWidget(
@@ -145,9 +142,9 @@ class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
           color: Colors.blue, borderRadius: BorderRadius.circular(15)),
       child: DropdownButton(
           alignment: Alignment.center,
-          icon: Icon(Icons.person),
+          icon: const Icon(Icons.person),
           borderRadius: BorderRadius.circular(10),
-          dropdownColor: Color.fromARGB(255, 175, 213, 240),
+          dropdownColor: const Color.fromARGB(255, 175, 213, 240),
           items: colloges.map((val) {
             return DropdownMenuItem(
               alignment: Alignment.center,
@@ -174,7 +171,7 @@ class _UploadFileScreenState extends ConsumerState<UploadFileScreen> {
 Widget InputStyle({BuildContext? context, TextEditingController? controller}) {
   return Container(
       height: 200,
-      margin: EdgeInsets.only(top: 0, bottom: 20),
+      margin: const EdgeInsets.only(top: 0, bottom: 20),
       decoration: BoxDecoration(
         color: Colors.white70,
         borderRadius: BorderRadius.circular(10),
@@ -198,7 +195,7 @@ Widget InputUserName(
     TextEditingController? controller}) {
   return TextFormField(
       controller: controller,
-      style: TextStyle(color: Colors.black),
+      style: const TextStyle(color: Colors.black),
       maxLines: 5,
       minLines: 1,
       keyboardType: TextInputType.multiline,
@@ -206,13 +203,14 @@ Widget InputUserName(
       decoration: InputDecoration(
         fillColor: Colors.blue,
         border: InputBorder.none,
-        contentPadding: EdgeInsets.only(right: 0, left: 0, bottom: 6, top: 15),
+        contentPadding:
+            const EdgeInsets.only(right: 0, left: 0, bottom: 6, top: 15),
         hintText: hintText,
         suffixText: 'الوصف أو العنوان',
         labelStyle:
             TextStyle(fontSize: 24, color: Colors.black.withOpacity(0.3)),
         hintTextDirection: TextDirection.rtl,
-        hintStyle: TextStyle(
+        hintStyle: const TextStyle(
           color: Colors.black,
           fontSize: 24,
         ),

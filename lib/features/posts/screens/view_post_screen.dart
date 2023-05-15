@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:u_community/features/video/screens/basics/network_player_widget.dart';
 import '../../../core/utils/loader.dart';
 import '../../user/repository/repository_user.dart';
 import '../../video/orientation/portrait_landscape_player_page.dart';
@@ -111,8 +113,7 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
                           builder: (_, WidgetRef reff, __) {
                             return Column(
                                 children: reff
-                                    .watch(commentsProvider.notifier)
-                                    .state
+                                    .watch(commentsProvider)
                                     .map((comment) =>
                                         buildComment(0, context, comment))
                                     .toList());
@@ -129,30 +130,134 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
           offset: Offset(0.0, -1 * MediaQuery.of(context).viewInsets.bottom),
           child: Container(
             height: 100.0,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                topRight: Radius.circular(30.0),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  offset: Offset(0, -2),
-                  blurRadius: 6.0,
-                ),
-              ],
-              color: Colors.white,
-            ),
+            decoration: boxDecoration(),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: TextField(
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: Colors.black),
-                controller: addCommentController,
-                decoration: InputDec(posts),
-              ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: Colors.black),
+                  controller: addCommentController,
+                  decoration: InputDecoration(
+                    labelStyle: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: Colors.black),
+                    border: InputBorder.none,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: const BorderSide(color: Colors.grey),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: const BorderSide(color: Colors.grey),
+                    ),
+                    contentPadding: const EdgeInsets.all(20.0),
+                    hintText: 'Add a comment',
+                    hintStyle: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: Colors.black45),
+                    prefixIcon: Container(
+                      margin: const EdgeInsets.all(4.0),
+                      width: 48.0,
+                      height: 48.0,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black45,
+                            offset: Offset(0, 2),
+                            blurRadius: 6.0,
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        child: ClipOval(
+                          child: ref.watch(getUserProviderProfile).when(
+                                data: (data) {
+                                  if (data.img == null) {
+                                    return Image.asset(
+                                      'assets/images/user1.png',
+                                      width: 108,
+                                      height: 108,
+                                    );
+                                  } else {
+                                    return CachedNetworkImage(
+                                      imageUrl: data.img!,
+                                      placeholder: (context, img) =>
+                                          const Loader(),
+                                      errorWidget: (context, url, error) =>
+                                          CachedNetworkImage(imageUrl: url),
+                                      fit: BoxFit.cover,
+                                      width: 108,
+                                      height: 108,
+                                    );
+                                  }
+                                },
+                                error: (error, stackTrace) =>
+                                    const Text('error'),
+                                loading: () => const Loader(),
+                              ),
+                        ),
+                      ),
+                    ),
+                    suffixIcon: Container(
+                      margin: const EdgeInsets.only(right: 4.0),
+                      width: 70.0,
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        color: const Color(0xFF23B66F),
+                        onPressed: () async {
+                          if (kDebugMode) {
+                            print('Post comment');
+                          }
+
+                          if (addCommentController.text.trim().isNotEmpty) {
+                            final tabBarIndexPagePost =
+                                ref.watch(currentIndexPagePost);
+                            //add the comment
+                            await ref
+                                .read(commentsProvider.notifier)
+                                .addComment(
+                                    comment: addCommentController.text
+                                        .trim()
+                                        .toString(),
+                                    post_id: posts.id);
+
+                            if (tabBarIndexPagePost == 0) {
+                              ref
+                                  .read(postsProvider.notifier)
+                                  .updateNumberTheComments(posts, 1);
+                            } else if (tabBarIndexPagePost == 1) {
+                              ref
+                                  .read(collogePostsProvider.notifier)
+                                  .updateNumberTheComments(posts, 1);
+                            } else {
+                              ref
+                                  .read(sectionPostsProvider.notifier)
+                                  .updateNumberTheComments(posts, 1);
+                            }
+
+                            addCommentController.clear();
+                            ref.read(postStateProvider.notifier).state = posts
+                                .copyWith(commentCount: posts.commentCount + 1);
+
+                            // ignore: unused_result
+                            ref.refresh(allcommentsProvider(posts.id));
+                          }
+                        },
+                        child: const Icon(
+                          Icons.send,
+                          size: 25.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  )),
             ),
           ),
         ),
@@ -160,118 +265,128 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
     );
   }
 
-  InputDecoration InputDec(Posts post) => InputDecoration(
-        labelStyle: Theme.of(context)
-            .textTheme
-            .bodyMedium!
-            .copyWith(color: Colors.black),
-        border: InputBorder.none,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(color: Colors.grey),
+  BoxDecoration boxDecoration() {
+    return const BoxDecoration(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(30.0),
+        topRight: Radius.circular(30.0),
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black12,
+          offset: Offset(0, -2),
+          blurRadius: 6.0,
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(color: Colors.grey),
-        ),
-        contentPadding: const EdgeInsets.all(20.0),
-        hintText: 'Add a comment',
-        hintStyle: Theme.of(context)
-            .textTheme
-            .bodyMedium!
-            .copyWith(color: Colors.black45),
-        prefixIcon: Container(
-          margin: const EdgeInsets.all(4.0),
-          width: 48.0,
-          height: 48.0,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black45,
-                offset: Offset(0, 2),
-                blurRadius: 6.0,
-              ),
-            ],
-          ),
-          child: CircleAvatar(
-            child: ClipOval(
-              child: ref.watch(getUserProviderProfile).when(
-                    data: (data) {
-                      if (data!.img == null) {
-                        return CachedNetworkImage(
-                          // imageUrl: widget.imagePath,
-                          imageUrl: ref.watch(gitImageurlTemp),
-                          placeholder: (context, img) => const Loader(),
-                          fit: BoxFit.cover,
-                          width: 108,
-                          height: 108,
-                          // child: InkWell(onTap: onClicked),
-                          // ),
-                        );
-                      } else {
-                        return CachedNetworkImage(
-                          // imageUrl: widget.imagePath,
-                          imageUrl: data!.img!,
-                          placeholder: (context, img) => const Loader(),
-                          fit: BoxFit.cover,
-                          width: 108,
-                          height: 108,
-                          // child: InkWell(onTap: onClicked),
-                          // ),
-                        );
-                      }
-                      // ref.read(getProfile.notifier).state = data;
-                    },
-                    error: (error, stackTrace) => const Text('error'),
-                    loading: () => const Loader(),
-                  ),
-              //  widget.post.user.img!.isEmpty
-              //     ? Image.asset('assets/images/user1.png')
-              //     : Image(
-              //         height: 48.0,
-              //         width: 48.0,
-              //         image: NetworkImage(widget.post.user.img!),
-              //         fit: BoxFit.cover,
-              //       ),
-            ),
-          ),
-        ),
-        suffixIcon: Container(
-          margin: const EdgeInsets.only(right: 4.0),
-          width: 70.0,
-          child: Consumer(
-            builder: (_, WidgetRef reff, __) {
-              return MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                color: const Color(0xFF23B66F),
-                onPressed: () async {
-                  print('Post comment');
-                  if (addCommentController.text.trim().isNotEmpty) {
-                    reff.read(commentsProvider.notifier).addComment(
-                        comment: addCommentController.text.trim().toString(),
-                        post_id: post.id);
-                    reff
-                        .read(postsProvider.notifier)
-                        .updateNumberTheComments(post, 1);
-                    addCommentController.clear();
-                    reff.read(postStateProvider.notifier).state =
-                        post.copyWith(commentCount: post.commentCount + 1);
-                    ref.invalidate(allcommentsProvider(post.id));
-                  }
-                },
-                child: const Icon(
-                  Icons.send,
-                  size: 25.0,
-                  color: Colors.white,
-                ),
-              );
-            },
-          ),
-        ),
-      );
+      ],
+      color: Colors.white,
+    );
+  }
+
+  // InputDecoration InputDec(Posts post) => InputDecoration(
+  //       labelStyle: Theme.of(context)
+  //           .textTheme
+  //           .bodyMedium!
+  //           .copyWith(color: Colors.black),
+  //       border: InputBorder.none,
+  //       enabledBorder: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(30.0),
+  //         borderSide: const BorderSide(color: Colors.grey),
+  //       ),
+  //       focusedBorder: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(30.0),
+  //         borderSide: const BorderSide(color: Colors.grey),
+  //       ),
+  //       contentPadding: const EdgeInsets.all(20.0),
+  //       hintText: 'Add a comment',
+  //       hintStyle: Theme.of(context)
+  //           .textTheme
+  //           .bodyMedium!
+  //           .copyWith(color: Colors.black45),
+  //       prefixIcon: Container(
+  //         margin: const EdgeInsets.all(4.0),
+  //         width: 48.0,
+  //         height: 48.0,
+  //         decoration: const BoxDecoration(
+  //           shape: BoxShape.circle,
+  //           boxShadow: [
+  //             BoxShadow(
+  //               color: Colors.black45,
+  //               offset: Offset(0, 2),
+  //               blurRadius: 6.0,
+  //             ),
+  //           ],
+  //         ),
+  //         child: CircleAvatar(
+  //           child: ClipOval(
+  //             child: ref.watch(getUserProviderProfile).when(
+  //                   data: (data) {
+  //                     if (data.img == null) {
+  //                       return CachedNetworkImage(
+  //                         // imageUrl: widget.imagePath,
+  //                         imageUrl: ref.watch(gitImageurlTemp),
+  //                         placeholder: (context, img) => const Loader(),
+  //                         errorWidget: (context, url, error) =>
+  //                             CachedNetworkImage(imageUrl: urlPortraitVideo),
+  //                         fit: BoxFit.cover,
+  //                         width: 108,
+  //                         height: 108,
+  //                         // child: InkWell(onTap: onClicked),
+  //                         // ),
+  //                       );
+  //                     } else {
+  //                       return CachedNetworkImage(
+  //                         // imageUrl: widget.imagePath,
+  //                         imageUrl: data.img!,
+  //                         placeholder: (context, img) => const Loader(),
+  //                         errorWidget: (context, url, error) =>
+  //                             CachedNetworkImage(imageUrl: urlPortraitVideo),
+  //                         fit: BoxFit.cover,
+  //                         width: 108,
+  //                         height: 108,
+  //                       );
+  //                     }
+  //                   },
+  //                   error: (error, stackTrace) => const Text('error'),
+  //                   loading: () => const Loader(),
+  //                 ),
+  //           ),
+  //         ),
+  //       ),
+  //       suffixIcon: Container(
+  //         margin: const EdgeInsets.only(right: 4.0),
+  //         width: 70.0,
+  //         child: Consumer(
+  //           builder: (_, WidgetRef reff, __) {
+  //             return MaterialButton(
+  //               shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(30.0),
+  //               ),
+  //               color: const Color(0xFF23B66F),
+  //               onPressed: () async {
+  //                 print('Post comment');
+  //                 if (addCommentController.text.trim().isNotEmpty) {
+  //                  await reff.read(commentsProvider.notifier).addComment(
+  //                       comment: addCommentController.text.trim().toString(),
+  //                       post_id: post.id);
+  //                   reff
+  //                       .read(postsProvider.notifier)
+  //                       .updateNumberTheComments(post, 1);
+  //                   addCommentController.clear();
+  //                   reff.read(postStateProvider.notifier).state =
+  //                       post.copyWith(commentCount: post.commentCount + 1);
+  //                   // ref.invalidate(allcommentsProvider(post.id));
+  //                 }
+  //               },
+  //               child: const Icon(
+  //                 Icons.send,
+  //                 size: 25.0,
+  //                 color: Colors.white,
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //     );
 }
 
 class ContentViewPostScreen extends ConsumerWidget {
@@ -294,8 +409,8 @@ class ContentViewPostScreen extends ConsumerWidget {
         height: 400.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25.0),
-          boxShadow: [
-            const BoxShadow(
+          boxShadow: const [
+            BoxShadow(
               color: Colors.black45,
               offset: Offset(0, 5),
               blurRadius: 8.0,
@@ -397,8 +512,8 @@ class HeaderViewPostScreen extends ConsumerWidget {
                                       decoration: BoxDecoration(
                                         borderRadius:
                                             BorderRadius.circular(25.0),
-                                        boxShadow: [
-                                          const BoxShadow(
+                                        boxShadow: const [
+                                          BoxShadow(
                                             color: Color.fromARGB(
                                                 115, 138, 222, 245),
                                             offset: Offset(0, 5),

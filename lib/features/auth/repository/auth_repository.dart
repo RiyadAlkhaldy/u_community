@@ -10,14 +10,12 @@ import '../../../core/constant.dart';
 import '../../../core/enums/user_enum.dart';
 import '../../../core/utils/utils.dart';
 import '../../../main.dart';
-import '../../../mobile_layout_screen.dart';
 import '../../../models/colloge_model.dart';
 import '../../../models/user_response_auth.dart';
 import '../screens/message_auth_teacher.dart';
-import '../screens/message_to_teacher_temp_screen.dart';
 
 final authProvider = StateProvider((ref) => AuthRepository());
-final getUserProvider = StateProvider((ref) async {
+final getUserProviderfromSharedPrefernces = StateProvider((ref) async {
   Map<String, dynamic> myuser = {};
   await SharedPreferences.getInstance().then((user) {
     myuser[UserEnum.token.type] = user.getString(UserEnum.token.type);
@@ -30,6 +28,34 @@ final getUserProvider = StateProvider((ref) async {
     myuser[UserEnum.sectionId.type] = user.getString(UserEnum.sectionId.type);
   });
   return myuser;
+});
+final setUserProviderfromSharedPrefernces =
+    StateProvider.family((ref, UserResponseLogin userResponseLogin) async {
+  // Map<String, dynamic> myuser = {};
+  await SharedPreferences.getInstance().then((prefs) async {
+    await prefs.setString(
+        UserEnum.token.type, userResponseLogin.authorisation.token.toString());
+    await prefs.setString(
+        UserEnum.name.type, userResponseLogin.user!.name.toString());
+    await prefs.setString(
+        UserEnum.email.type, userResponseLogin.user!.email.toString());
+    if (userResponseLogin.user!.sectionId != null) {
+      await prefs.setString(UserEnum.sectionId.type,
+          userResponseLogin.user!.sectionId.toString());
+    }
+    if (userResponseLogin.user!.collogeId != null) {
+      await prefs.setString(UserEnum.collogeId.type,
+          userResponseLogin.user!.collogeId.toString());
+    }
+    await prefs.setString(
+        UserEnum.id.type, userResponseLogin.user!.id.toString());
+    if (userResponseLogin.user!.img != null) {
+      await prefs.setString(
+          UserEnum.img.type, userResponseLogin.user!.img.toString());
+    }
+    await prefs.setString(
+        UserEnum.typeUser.type, userResponseLogin.user!.type.toString());
+  });
 });
 
 class AuthRepository {
@@ -191,15 +217,11 @@ class AuthRepository {
       {required String email,
       required final String password,
       required String iDNumber,
-      int type = 3,
-      required String collogeId,
       required BuildContext context}) async {
     Map<String, dynamic> data = {
       'email': email,
       'password': password,
       'id_number': iDNumber,
-      'type': type,
-      'colloge_id': collogeId,
     };
     try {
       Response response;
@@ -308,6 +330,7 @@ class AuthRepository {
             UserEnum.typeUser.type, userResponseLogin.user!.type.toString());
 
         print(userResponseLogin);
+        // ignore: use_build_context_synchronously
         Navigator.pushNamedAndRemoveUntil(
           context,
           MyApp.routeName,
@@ -326,10 +349,7 @@ class AuthRepository {
 
   Future<void> logout({required BuildContext context}) async {
     SharedPreferences prefs = await _prefs;
-    await SharedPreferences.getInstance().then((user) async {
-      user.clear();
-      // myuser[UserEnum.token.type] = user.getString(UserEnum.token.type);
-    });
+
     try {
       Response response;
       response = await dio.post(
@@ -339,23 +359,19 @@ class AuthRepository {
           "Accept": "application/json"
         }),
       );
-
+      // clear sharedprefernces
+      await prefs.clear();
       if (kDebugMode) {
         print('ok');
         print(response.data);
         // ignore: use_build_context_synchronously
         showSnackBar(context: context, content: response.data.toString());
       }
-
-      await SharedPreferences.getInstance().then((user) async {
-        user.clear();
-        // myuser[UserEnum.token.type] = user.getString(UserEnum.token.type);
-      });
       // ignore: use_build_context_synchronously
-      Navigator.pushNamedAndRemoveUntil(
+      Navigator.pushReplacementNamed(
         context,
         MyApp.routeName,
-        (route) => false,
+        // (route) => false,
       );
     } catch (e) {
       // ignore: use_build_context_synchronously

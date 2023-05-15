@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../repository/auth_repository.dart';
 import 'registration.dart';
 
+final showPassProvider = StateProvider<bool>((ref) => false);
+
 extension EmailValidator on String {
   bool isValidEmail() {
     return RegExp(
@@ -78,7 +80,7 @@ class _LoginState extends ConsumerState<Login> {
         ),
         Container(
           child: !isGoing
-              ? registerOrLoginButton(
+              ? registerOrLoginOrResetPasswordButton(
                   text: 'تسجيل الدخول',
                   context: context,
                   onTap: () async {
@@ -103,7 +105,7 @@ class _LoginState extends ConsumerState<Login> {
         //     login();
         //   },
         // ),
-        restPasswd(),
+        // restPasswd(),
         customButton(
           text: 'إنشاء حساب',
           onPressed: () {
@@ -167,16 +169,16 @@ class _LoginState extends ConsumerState<Login> {
 //---------------InputStyle---------------------
 Widget InputStyle(bool whatIs, context) {
   return Container(
-    height: 40,
-    margin: const EdgeInsets.only(right: 35, left: 35, top: 0, bottom: 20),
+    height: 50,
+    margin: const EdgeInsets.only(right: 35, left: 35, top: 25, bottom: 20),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(20),
       boxShadow: [
         BoxShadow(
           color: Colors.grey.withOpacity(0.5),
-          spreadRadius: 2,
-          blurRadius: 4,
+          // spreadRadius: 2,
+          // blurRadius: 4,
           offset: const Offset(0, 3),
         ),
       ],
@@ -196,15 +198,22 @@ Widget inputUserName(TextEditingController controller, BuildContext context) {
     style:
         Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black),
     controller: controller,
-    textAlign: TextAlign.right,
+
+    // textAlign: TextAlign.right,
     decoration: const InputDecoration(
       border: InputBorder.none,
-      contentPadding: EdgeInsets.only(right: 0, left: 0, bottom: 0, top: 30),
-      suffixIcon:
-          Icon(Icons.supervised_user_circle_rounded, color: Colors.black),
-      hintText: 'اسم المستخدم',
-      hintTextDirection: TextDirection.rtl,
+      contentPadding: EdgeInsets.only(right: 0, left: 0, bottom: 6, top: 15),
+      // suffixIcon:
+      //     Icon(Icons.supervised_user_circle_rounded, color: Colors.black),
+      hintText: 'Email',
+      // labelText: 'Email',
+      labelStyle: TextStyle(
+        color: Colors.black45,
+        fontSize: 14,
+      ),
+      // hintTextDirection: TextDirection.rtl,
       hintStyle: TextStyle(
+        color: Colors.black45,
         fontSize: 14,
       ),
     ),
@@ -213,44 +222,58 @@ Widget inputUserName(TextEditingController controller, BuildContext context) {
 
 //---------------UserPassWordField--------------
 Widget inputUserPasswd(TextEditingController controller, context) {
-  bool isObsecured = true;
-  return TextFormField(
-    controller: controller,
-    style:
-        Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black),
-    textAlign: TextAlign.right,
-    obscureText: true,
-    decoration: InputDecoration(
-      border: InputBorder.none,
-      contentPadding:
-          const EdgeInsets.only(right: 0, left: 0, bottom: 6, top: 15),
-      hintText: 'كلمة السر',
-      prefixIcon: IconButton(
-        icon: isObsecured
-            ? const Icon(Icons.visibility)
-            : const Icon(Icons.visibility_off),
-        onPressed: () {
-          //  setState((){
-          //   _isObsecured =!_isObsecured;
-          // });
-        },
-      ),
-      suffixIcon: const Icon(
-        Icons.lock,
-        color: Colors.black,
-      ),
-      hintTextDirection: TextDirection.rtl,
-      hintMaxLines: 1,
-      hintStyle: const TextStyle(
-        fontSize: 14,
-      ),
-    ),
+  return Consumer(
+    builder: (_, WidgetRef ref, __) {
+      return TextFormField(
+        controller: controller,
+        style: Theme.of(context)
+            .textTheme
+            .bodyMedium!
+            .copyWith(color: Colors.black),
+        // textAlign: TextAlign.right,
+        obscureText: ref.watch(showPassProvider),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          contentPadding:
+              const EdgeInsets.only(right: 0, left: 0, bottom: 6, top: 15),
+          hintText: 'Password',
+          suffixIcon: Consumer(
+            builder: (_, WidgetRef ref, __) {
+              final showPass = ref.watch(showPassProvider);
+              return IconButton(
+                icon: showPass
+                    ? const Icon(Icons.visibility_off)
+                    : const Icon(Icons.visibility),
+                onPressed: () {
+                  ref.read(showPassProvider.notifier).update((state) => !state);
+                },
+              );
+            },
+          ),
+          // suffixIcon: const Icon(
+          //   Icons.lock,
+          //   color: Colors.black,
+          // ),
+          // hintTextDirection: TextDirection.rtl,
+          hintMaxLines: 1,
+          // labelText: 'Password',
+          labelStyle: TextStyle(
+            color: Colors.black45,
+            fontSize: 14,
+          ),
+          hintStyle: const TextStyle(
+            color: Colors.black45,
+            fontSize: 14,
+          ),
+        ),
+      );
+    },
   );
 }
 
 //---------LoginButt--------
 
-Widget registerOrLoginButton(
+Widget registerOrLoginOrResetPasswordButton(
     {required String text,
     required BuildContext context,
     void Function()? onTap}) {

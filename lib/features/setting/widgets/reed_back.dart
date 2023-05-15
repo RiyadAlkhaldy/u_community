@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:u_community/features/setting/screens/reset_email_screen.dart';
 
+import '../screens/reset_password_screen.dart';
 import '../screens/teachers_registerations_screen.dart';
 import 'icon_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,6 +26,21 @@ Widget buildDeleteAccount() => SimpleSettingsTile(
       leading: IconWidget(icon: Icons.delete, color: Colors.pink),
       onTap: () {
         // switchList = darkMode;
+      },
+    );
+Widget buildResetPassword(context) => SimpleSettingsTile(
+      title: "Password Reset",
+      leading: IconWidget(icon: Icons.lock_reset_outlined, color: Colors.black),
+      onTap: () {
+        Navigator.pushNamed(context, ResetPasswordScreen.routeName);
+      },
+    );
+Widget buildResetEmail(context) => SimpleSettingsTile(
+      title: "Email Reset",
+      leading: IconWidget(icon: Icons.alternate_email, color: Colors.pink),
+      onTap: () {
+        Navigator.pushNamed(context, ResetEmailScreen.routeName);
+
       },
     );
 Widget buildReportBug({required BuildContext context}) => SimpleSettingsTile(

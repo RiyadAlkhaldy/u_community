@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/enums/user_enum.dart';
 import '../../../core/utils/loader.dart';
 import '../../../main.dart';
-import '../repository/repository_reachers.dart';
+import '../repository/repository_teachers.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TeacherRegisterations extends ConsumerStatefulWidget {

@@ -140,7 +140,7 @@ class _AdminRegisterState extends ConsumerState<TeacherRegister> {
                 padding: EdgeInsets.only(top: 20),
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 child: !isGoing
-                    ? registerOrLoginButton(
+                    ? registerOrLoginOrResetPasswordButton(
                         text: 'تسجيل',
                         context: context,
                         onTap: () {

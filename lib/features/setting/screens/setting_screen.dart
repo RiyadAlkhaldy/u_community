@@ -33,8 +33,9 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
             height: 32,
           ),
           SettingsGroup(title: "GENERAL", children: [
+            buildResetEmail(context),
+            buildResetPassword(context),
             buildLogout(context),
-            // buildDeleteAccount(),
           ]),
           const SizedBox(
             height: 32,

@@ -97,7 +97,7 @@ Widget SliverAppBarCustom({
     // leading: Icon(Icons.menu),
     expandedHeight: height - 13,
     flexibleSpace: FlexibleSpaceBar(
-      stretchModes: [
+      stretchModes: const [
         StretchMode.blurBackground,
       ],
       title: Stack(
@@ -107,7 +107,7 @@ Widget SliverAppBarCustom({
             // Expanded(child: Container()),
             Positioned(
               bottom: -10,
-              child: profile.ProfileImageWidget(
+              child: profile.ProfileImageForuserLogin(
                   imagePath: imageUrl, onClicked: () {}),
             ),
           ]),

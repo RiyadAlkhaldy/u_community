@@ -36,8 +36,6 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
             email: emailController.text.trim(),
             password: passwordController.text.trim(),
             iDNumber: IDNUmber.text.trim(),
-            collogeId: _selectedVal.toString(),
-            type: 4,
             context: context);
       } catch (e) {
         print(e);
@@ -142,7 +140,7 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
                 padding: EdgeInsets.only(top: 20),
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 child: !isGoing
-                    ? registerOrLoginButton(
+                    ? registerOrLoginOrResetPasswordButton(
                         text: 'تسجيل',
                         context: context,
                         onTap: () async {

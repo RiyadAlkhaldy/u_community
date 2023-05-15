@@ -8,8 +8,10 @@ import 'package:u_community/themes.dart';
 
 import 'core/enums/user_enum.dart';
 import 'features/auth/Screens/launch.dart';
+import 'features/auth/Screens/login.dart';
 import 'features/auth/repository/auth_repository.dart';
 import 'features/setting/screens/header_setting_screen.dart';
+import 'features/setting/screens/reset_password_screen.dart';
 import 'mobile_layout_screen.dart';
 import 'route.dart';
 
@@ -88,7 +90,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         final userId = value.getString('id');
         token = value.getString('token');
         if (userId != null && userId.isNotEmpty) {
-          await ref.watch(getUserProvider).then((value) {
+          await ref.watch(getUserProviderfromSharedPrefernces).then((value) {
             ref.read(dataUserAuthentecationProvider.notifier).state = value;
           });
         }
@@ -118,6 +120,7 @@ class _MyAppState extends ConsumerState<MyApp> {
                 // home: SettingScreen(),
                 home:
                     token == null ? const StartScreen() : MobileLayoutScreen(),
+                // home: ResetPasswordScreen(),
               ));
     }
   }

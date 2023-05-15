@@ -12,19 +12,19 @@ final getUserDetailes = StateNotifierProvider<UserDetailes, User?>((ref) {
 
   return user;
 });
-final getUserDetailesFuture = FutureProvider((ref) async {
+final getUserDetailesFuture = FutureProvider<User>((ref) async {
   final user = UserDetailes();
   // await user.initi();
   return await user.getUserData();
 });
 final getUserProviderProfile = FutureProvider<User>((ref) async {
   var user;
-  await ref
+  return await ref
       .watch(getUserDetailes.notifier)
       .getUserData()
-      .then((value) async => user = value);
+      .then((value) async => value);
   // await user;
-  return user;
+  // return user;
 });
 
 class UserDetailes extends StateNotifier<User?> {

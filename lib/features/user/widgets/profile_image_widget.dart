@@ -4,16 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/loader.dart';
-import '../../posts/repository/repository_section_posts.dart';
 import '../repository/repository_user.dart';
 import '../repository/upload_file.dart';
 
-class ProfileImageWidget extends ConsumerStatefulWidget {
+class ProfileImageForuserLogin extends ConsumerStatefulWidget {
   final String imagePath;
   final bool isEdit;
   final void Function()? onClicked;
 
-  ProfileImageWidget({
+  const ProfileImageForuserLogin({
     Key? key,
     required this.imagePath,
     this.isEdit = false,
@@ -21,10 +20,11 @@ class ProfileImageWidget extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<ProfileImageWidget> createState() => _ProfileImageWidgetState();
+  ConsumerState<ProfileImageForuserLogin> createState() =>
+      _ProfileImageWidgetState();
 }
 
-class _ProfileImageWidgetState extends ConsumerState<ProfileImageWidget> {
+class _ProfileImageWidgetState extends ConsumerState<ProfileImageForuserLogin> {
   // bool initail = true;
   // User? user;
   @override
@@ -64,20 +64,15 @@ class _ProfileImageWidgetState extends ConsumerState<ProfileImageWidget> {
             child: ref.watch(getUserProviderProfile).when(
                   data: (data) {
                     if (data!.img == null) {
-                      return CachedNetworkImage(
-                        // imageUrl: widget.imagePath,
-                        imageUrl: ref.watch(gitImageurlTemp),
-                        placeholder: (context, img) => const Loader(),
-                        fit: BoxFit.cover,
+                      return Image.asset(
+                        'assets/images/user1.png',
                         width: 108,
                         height: 108,
-                        // child: InkWell(onTap: onClicked),
-                        // ),
                       );
                     } else {
                       return CachedNetworkImage(
                         // imageUrl: widget.imagePath,
-                        imageUrl: data!.img!,
+                        imageUrl: data.img!,
                         placeholder: (context, img) => const Loader(),
                         fit: BoxFit.cover,
                         width: 108,

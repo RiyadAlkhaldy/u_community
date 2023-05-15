@@ -9,39 +9,41 @@ final allwoProvidr = StateProvider<bool>((ref) => false);
 final selectedVal = StateProvider<int>((ref) => 1);
 
 // _selectedVal
-class UploadTextScreen extends ConsumerWidget {
+class UploadTextScreen extends ConsumerStatefulWidget {
   UploadTextScreen({super.key});
   static const String routeName = 'upload-text-screen';
 
+  ConsumerState<UploadTextScreen> createState() => _UploadTextScreenState();
+}
+
+class _UploadTextScreenState extends ConsumerState<UploadTextScreen> {
   TextEditingController textEditingController = TextEditingController();
-  // TextEditingController collogeIdcontroller = TextEditingController();
-
   List<Colloge> colloges = [];
-
   var _selectedVal;
-
   // String? _data;
   bool initial = true;
   bool allows = false;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(authProvider).getAllColloges(context).then((value) async {
-      await ref.watch(getUserProvider).then((map) async {
-        if (int.parse(map['type']) >= 3) {
-          // allows = true;
-          ref.read(allwoProvidr.notifier).state = true;
-        }
+  @override
+  Widget build(BuildContext context) {
+    if (initial) {
+      // ref.read(allwoProvidr.notifier).state = false;
+
+      ref.read(authProvider).getAllColloges(context).then((value) async {
+        await ref.watch(getUserProviderfromSharedPrefernces).then((map) async {
+          ref.read(allwoProvidr.notifier).state = false;
+
+          if (int.parse(map['type']) >= 3) {
+            allows = true;
+            // ref.read(allwoProvidr.notifier).state = true;
+            colloges = value!.toList();
+            ref.read(selectedVal.notifier).state = colloges.first.id!;
+            setState(() {});
+          }
+        });
       });
-
-      // setState(() {
-      colloges = value!.toList();
-
-      // _selectedVal = colloges.first.id;
-      ref.read(selectedVal.notifier).state = colloges.first.id!;
-      initial = false;
-      // });
-    });
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -58,7 +60,7 @@ class UploadTextScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  if (ref.watch(allwoProvidr))
+                  if (allows)
                     Consumer(
                       builder: (_, WidgetRef rf, __) {
                         return dropDownListColloges(rf);
@@ -67,9 +69,10 @@ class UploadTextScreen extends ConsumerWidget {
                   TextFormField(
                     controller: textEditingController,
                     maxLines: 10,
-                    decoration: InputDecoration(border: OutlineInputBorder()),
+                    decoration:
+                        const InputDecoration(border: OutlineInputBorder()),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 50,
                   ),
                   UploadButtonWidget(
@@ -100,9 +103,9 @@ class UploadTextScreen extends ConsumerWidget {
           color: Colors.blue, borderRadius: BorderRadius.circular(15)),
       child: DropdownButton(
           alignment: Alignment.center,
-          icon: Icon(Icons.person),
+          icon: const Icon(Icons.person),
           borderRadius: BorderRadius.circular(10),
-          dropdownColor: Color.fromARGB(255, 175, 213, 240),
+          dropdownColor: const Color.fromARGB(255, 175, 213, 240),
           items: colloges.map((val) {
             return DropdownMenuItem(
               alignment: Alignment.center,

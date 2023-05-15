@@ -4,10 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/utils/colors.dart';
-import '../../../../core/utils/utils.dart';
-import '../../../auth/repository/auth_repository.dart';
-import '../../../auth/repository/laravel_echo.dart';
-import '../../../user/repository/repository_get_user_by_id.dart';
 import '../all_colloge_posts_screen.dart';
 import '../all_post_screen.dart';
 import '../all_section_posts_screen.dart';
@@ -32,11 +28,11 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
     WidgetsBinding.instance.addObserver(this);
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    WidgetsBinding.instance.removeObserver(this);
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   WidgetsBinding.instance.removeObserver(this);
+  // }
 
   // MyWebsocketAndPusher echo = MyWebsocketAndPusher();
 
@@ -167,6 +163,9 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
 
   TabBar TabBarr() {
     return TabBar(
+      onTap: (value) {
+        ref.read(currentIndexPagePost.notifier).state = value;
+      },
       controller: tabBarController,
       indicatorColor: tabColor,
       indicatorWeight: 4,
@@ -190,90 +189,90 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
   }
 }
 
-//! floating Action Button Widget
-class FloatingActionButtonWidget extends StatelessWidget {
-  FloatingActionButtonWidget({
-    Key? key,
-    required this.tabBarController,
-  }) : super(key: key);
-
-  final TabController tabBarController;
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () async {
-        if (tabBarController.index == 0) {
-          // Navigator.pushNamed(context, SelectContactsScreen.routeName);
-        } else {
-          File? pickedImage = await pickImageFromGallery(context);
-          if (pickedImage != null) {
-            // Navigator.pushNamed(
-            //   context,
-            //   ConfirmStatusScreen.routeName,
-            //   arguments: pickedImage,
-            // );
-          }
-        }
-      },
-      backgroundColor: tabColor,
-      child: const Icon(
-        Icons.add,
-        color: Colors.white,
-      ),
-    );
-  }
-}
-
-//! popup menu buttom widget
-// class PopupMenuButtomWidget extends StatelessWidget {
-//   const PopupMenuButtomWidget({
+// //! floating Action Button Widget
+// class FloatingActionButtonWidget extends StatelessWidget {
+//   FloatingActionButtonWidget({
 //     Key? key,
+//     required this.tabBarController,
 //   }) : super(key: key);
+
+//   final TabController tabBarController;
 
 //   @override
 //   Widget build(BuildContext context) {
-//     return PopupMenuButton(
-//       icon: const Icon(
-//         Icons.more_vert,
-//         color: Colors.grey,
+//     return FloatingActionButton(
+//       onPressed: () async {
+//         if (tabBarController.index == 0) {
+//           // Navigator.pushNamed(context, SelectContactsScreen.routeName);
+//         } else {
+//           File? pickedImage = await pickImageFromGallery(context);
+//           if (pickedImage != null) {
+//             // Navigator.pushNamed(
+//             //   context,
+//             //   ConfirmStatusScreen.routeName,
+//             //   arguments: pickedImage,
+//             // );
+//           }
+//         }
+//       },
+//       backgroundColor: tabColor,
+//       child: const Icon(
+//         Icons.add,
+//         color: Colors.white,
 //       ),
-//       itemBuilder: (context) => [
-//         PopupMenuItem(
-//           child: const Text(
-//             'Create Group',
-//           ),
-//           // onTap: () => Future(
-//           //   () => Navigator.pushNamed(context, UserProfileScreen.routeName),
-//           // ),
-//         )
-//       ],
 //     );
 //   }
 // }
 
+// //! popup menu buttom widget
+// // class PopupMenuButtomWidget extends StatelessWidget {
+// //   const PopupMenuButtomWidget({
+// //     Key? key,
+// //   }) : super(key: key);
 
-//  AppBar AppBarr() {
-//     return AppBar(
-//       elevation: 0,
-//       backgroundColor: appBarColor,
-//       centerTitle: false,
-//       title: const Text(
-//         'University Communty',
-//         style: TextStyle(
-//           fontSize: 20,
-//           color: Colors.grey,
-//           fontWeight: FontWeight.bold,
-//         ),
-//       ),
-//       actions: [
-//         IconButton(
-//           icon: const Icon(Icons.search, color: Colors.grey),
-//           onPressed: () {},
-//         ),
-//         PopupMenuButtomWidget(),
-//       ],
-//       // title: TabBarr(),
-//       // bottom: TabBarr(),
-//     );
-//   }
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     return PopupMenuButton(
+// //       icon: const Icon(
+// //         Icons.more_vert,
+// //         color: Colors.grey,
+// //       ),
+// //       itemBuilder: (context) => [
+// //         PopupMenuItem(
+// //           child: const Text(
+// //             'Create Group',
+// //           ),
+// //           // onTap: () => Future(
+// //           //   () => Navigator.pushNamed(context, UserProfileScreen.routeName),
+// //           // ),
+// //         )
+// //       ],
+// //     );
+// //   }
+// // }
+
+
+// //  AppBar AppBarr() {
+// //     return AppBar(
+// //       elevation: 0,
+// //       backgroundColor: appBarColor,
+// //       centerTitle: false,
+// //       title: const Text(
+// //         'University Communty',
+// //         style: TextStyle(
+// //           fontSize: 20,
+// //           color: Colors.grey,
+// //           fontWeight: FontWeight.bold,
+// //         ),
+// //       ),
+// //       actions: [
+// //         IconButton(
+// //           icon: const Icon(Icons.search, color: Colors.grey),
+// //           onPressed: () {},
+// //         ),
+// //         PopupMenuButtomWidget(),
+// //       ],
+// //       // title: TabBarr(),
+// //       // bottom: TabBarr(),
+// //     );
+// //   }

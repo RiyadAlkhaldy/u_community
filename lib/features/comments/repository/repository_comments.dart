@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,36 +13,36 @@ import '../../../models/comment_model.dart';
 // });
 
 final commentsProvider =
-    StateNotifierProvider<RepositoryComment, List<Comments>>((ref) {
+    StateNotifierProvider<RepositoryComment, List<Comment>>((ref) {
   return RepositoryComment();
 });
 // final Provider = FutureProvider.family<, >((ref, ) async {
 //   return ;
 // });
 final allcommentsProvider = FutureProvider.family((ref, int post_id) async {
-  List<Comments> comments = [];
-  await ref
+  List<Comment> comments = [];
+  return await ref
       .read(commentsProvider.notifier)
       .getAllComments(post_id)
       .then((value) {
-    comments = ref.watch(commentsProvider.notifier).state;
-    return comments;
+    return value;
+    // comments = ref.read(commentsProvider);
+    // return comments;
   });
-  return comments;
+  // return comments;
 
   // ignore: invalid_use_of_protected_member
 });
 
-class RepositoryComment extends StateNotifier<List<Comments>> {
+class RepositoryComment extends StateNotifier<List<Comment>> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final dio = Dio();
 
   RepositoryComment() : super([]);
 
   // RepositoryPosts();
-  Future<List<Comments>> getAllComments(int post_id) async {
+  Future<List<Comment>> getAllComments(int post_id) async {
     final SharedPreferences prefs = await _prefs;
-    final ResponseComment responseComment;
     // final WidgetRef ref;
 
     Response? response;
@@ -54,30 +55,36 @@ class RepositoryComment extends StateNotifier<List<Comments>> {
           "Accept": "application/json"
         }),
       );
-      print('ok');
-      print(response.data);
+
+      if (kDebugMode) {
+        print('ok');
+        print(response.data);
+      }
+      ResponseComment res =
+          ResponseComment.fromMap(response.data as Map<String, dynamic>);
+      List<Comment>? comments = res.comment;
+
+      state = [...comments!];
+
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print(state);
+        }
+      }
+      return state;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
 
-    ResponseComment res = ResponseComment.fromMap(response!.data);
-    List<Comments> comments = res.comments;
-
-    state = [...comments];
-
-    if (response.statusCode == 200) {
-      print(state);
-      // Navigator.pop(context);
-    }
-    // showSnackBar(context: context, content: state.toString());
     return state;
-
-    // ignore: use_build_context_synchronously
   }
 
-  void addComment({required String comment, required int post_id}) async {
+  Future<void> addComment(
+      {required String comment, required int post_id}) async {
     final SharedPreferences prefs = await _prefs;
-    final Comments _Comment;
+    final Comment _comment;
 
     Response? response;
     try {
@@ -93,21 +100,28 @@ class RepositoryComment extends StateNotifier<List<Comments>> {
           "Accept": "application/json"
         }),
       );
-      print(response.data['comment']);
-      _Comment = Comments.fromMap(response.data['comment']);
-      if (state.isEmpty)
-        state = [_Comment];
-      else
-        state = [_Comment, ...state];
+      if (kDebugMode) {
+        print(response.data['comment']);
+      }
+      _comment =
+          Comment.fromMap(response.data['comment'] as Map<String, dynamic>);
+      // if (state.isEmpty) {
+      //   // state = [_Comment];
+      //   state.add(_comment);
+      // } else {
+      // }
+      state = [_comment, ...state];
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
 
     // print('add the Comment number ${currentComment}');
   }
 
-  void updateComment(Comments currentComment) {
-    List<Comments> comments = [];
+  void updateComment(Comment currentComment) {
+    List<Comment> comments = [];
 
     state.forEach((comment) {
       if (comment.id == currentComment.id) comment = currentComment;
@@ -118,7 +132,7 @@ class RepositoryComment extends StateNotifier<List<Comments>> {
     print('update the Comment number ${currentComment}');
   }
 
-  void deleteComment(int comment_id) async {
+  Future<void> deleteComment(int comment_id) async {
     try {
       SharedPreferences prefs = await _prefs;
 

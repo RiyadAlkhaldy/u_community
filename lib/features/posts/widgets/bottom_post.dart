@@ -9,7 +9,7 @@ import '../screens/layout/post_layout.dart';
 import '../screens/view_post_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-Widget BottomPost(BuildContext context, Posts post) {
+Widget bottomPost(BuildContext context, Posts post) {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 20.0),
     child: Column(
@@ -45,6 +45,7 @@ Widget BottomPost(BuildContext context, Posts post) {
                                   .read(sectionPostsProvider.notifier)
                                   .addLikeOrUndo(post, context);
                             }
+                            // ref.read(postStateProvider.notifier).state = post;
                           }),
                     ),
                     Text(
@@ -85,13 +86,13 @@ Widget BottomPost(BuildContext context, Posts post) {
                 ),
               ],
             ),
-            IconButton(
-              icon: Icon(
-                Icons.bookmark_border,
-              ),
-              iconSize: 30.0,
-              onPressed: () => print('Save post'),
-            ),
+            // IconButton(
+            //   icon: const Icon(
+            //     Icons.bookmark_border,
+            //   ),
+            //   iconSize: 30.0,
+            //   onPressed: () => print('Save post'),
+            // ),
           ],
         ),
         // time age

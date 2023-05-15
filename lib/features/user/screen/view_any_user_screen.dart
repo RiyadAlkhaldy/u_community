@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_community/features/posts/models/post_model_pagentation.dart';
 import '../../../core/utils/loader.dart';
-import '../../posts/repository/repository_section_posts.dart';
 import '../../posts/widgets/build_post.dart';
 import '../repository/repository_get_user_by_id.dart';
-import '../repository/repository_user.dart';
 import '../repository/repository_user_posts _by_id.dart';
-import '../repository/repository_user_posts.dart';
 
 final getProfile = StateProvider<User?>((ref) => null);
 
@@ -29,6 +26,8 @@ class _UserProfileScreenState extends ConsumerState<ViewAnyUserScreen> {
   @override
   Widget build(BuildContext context) {
     if (inital == true) {
+      ref.read(getUserIDFromUIProvider.notifier).state = widget.users.id;
+
       ref
           .watch(userPostsByIdRepository.notifier)
           .getAllPosts(widget.users.id)
@@ -195,72 +194,6 @@ class _ProfileDetialsState extends ConsumerState<ProfileDetials> {
               loading: () => Loader(),
             ));
   }
-  // final AsyncValue user = ref.watch(getUserModelById(id));
-  // return Container(
-  //     padding: const EdgeInsets.symmetric(horizontal: 5),
-  //     // child: dataloaded == true
-  //     // ?
-  //     child: Column(children: []
-  //           CustomContainer(
-  //             context: context,
-  //             child: Text(
-  //               user!.name.toString(),
-  //               style: Theme.of(context).textTheme.titleLarge,
-  //             ),
-  //           ),
-  //           const SizedBox(height: 5),
-  //           const VerticalDivider(
-  //             thickness: 10,
-  //             width: 5,
-  //             // color: Colors.white,
-  //           ),
-  //           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-  //             Text(
-  //               user!.colloge!.name,
-  //               style: Theme.of(context).textTheme.titleSmall!,
-  //             ),
-  //             const SizedBox(
-  //               width: 5,
-  //             ),
-  //             user!.section != null
-  //                 ? Text(
-  //                     user!.section!.name,
-  //                     style: Theme.of(context).textTheme.titleSmall!,
-  //                   )
-  //                 : const Text(''),
-  //             const VerticalDivider(),
-  //           ]),
-  //           const SizedBox(
-  //             height: 10,
-  //           ),
-  //           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-  //             Text(
-  //               'Email:   ${user!.email}',
-  //               style: Theme.of(context)
-  //                   .textTheme
-  //                   .titleSmall!
-  //                   .copyWith(color: Colors.grey),
-  //             ),
-  //             const SizedBox(
-  //               width: 5,
-  //             ),
-  //             Text(
-  //               '',
-  //               style: Theme.of(context).textTheme.titleSmall!,
-  //             ),
-  //           ]),
-  //           const SizedBox(
-  //             height: 10,
-  //           ),
-  //         ],
-  //           )
-  //       // ref.read(getProfile.notifier).state = data;
-
-  //       // : const Loader()
-  //       );
-  // }
-
-  // }
 
   Container CustomContainer(
       {required BuildContext context, required Widget child}) {
@@ -289,10 +222,7 @@ class _ProfileDetialsState extends ConsumerState<ProfileDetials> {
 Widget SliverAppBarCustom({
   required double height,
   required BuildContext context,
-  // User? user,
 }) {
-  const String imageUrl =
-      "https://img.freepik.com/free-photo/female-student-with-books-paperworks_1258-48204.jpg?w=1380&t=st=1671753820~exp=1671754420~hmac=5846bac8c4fd4ebceecca71a8eda1cd494b92c9aba4c07ea4a78d88de7abc454";
   return SliverAppBar(
     stretch: true,
     centerTitle: true,
@@ -309,7 +239,7 @@ Widget SliverAppBarCustom({
             // Expanded(child: Container()),
             Positioned(
               bottom: -10,
-              child: ProfileImageTheUser(imagePath: imageUrl, onClicked: () {}),
+              child: ProfileImageTheUser(onClicked: () {}),
             ),
           ]),
       centerTitle: true,
@@ -326,13 +256,11 @@ Widget SliverAppBarCustom({
 }
 
 class ProfileImageTheUser extends ConsumerStatefulWidget {
-  final String imagePath;
   final bool isEdit;
   final void Function()? onClicked;
 
   ProfileImageTheUser({
     Key? key,
-    required this.imagePath,
     this.isEdit = false,
     required this.onClicked,
   }) : super(key: key);
@@ -379,19 +307,26 @@ class _ProfileImageWidgetState extends ConsumerState<ProfileImageTheUser> {
         child: ClipOval(
           child: Material(
             color: Colors.transparent,
-            child: ref.watch(getUserProviderProfile).when(
+            child: ref
+                .watch(userModelProvider  )
+                .when(
                   data: (data) {
                     if (data!.img == null) {
-                      return CachedNetworkImage(
-                        // imageUrl: widget.imagePath,
-                        imageUrl: ref.watch(gitImageurlTemp),
-                        placeholder: (context, img) => const Loader(),
-                        fit: BoxFit.cover,
+                      return Image.asset(
+                        'assets/images/user1.png',
                         width: 108,
                         height: 108,
-                        // child: InkWell(onTap: onClicked),
-                        // ),
                       );
+                      // return CachedNetworkImage(
+                      //   // imageUrl: widget.imagePath,
+                      //   imageUrl: ref.watch(gitImageurlTemp),
+                      //   placeholder: (context, img) => const Loader(),
+                      //   fit: BoxFit.cover,
+                      //   width: 108,
+                      //   height: 108,
+                      //   // child: InkWell(onTap: onClicked),
+                      //   // ),
+                      // );
                     } else {
                       return CachedNetworkImage(
                         // imageUrl: widget.imagePath,

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // import '../controller/posts_controlller.dart';
 import '../../../core/utils/loader.dart';
-import '../../../models/post_model.dart';
 import '../repository/repository_posts.dart';
 import '../widgets/build_post.dart';
 import 'layout/post_layout.dart';
@@ -29,17 +28,15 @@ class _PostScreenState extends ConsumerState<AllPostScreen> {
 
   bool dataLoaded = false;
   bool inital = true;
+  // final posts =
+  @override
+  void initState() {
+    ref.read(currentIndexPagePost.notifier).state =0 ;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final posts =
-    @override
-    void initState() {
-      // TODO: implement initState
-      ref.read(currentIndexPagePost.notifier).state = 0;
-      super.initState();
-    }
-
     if (inital == true) {
       ref.watch(postsProvider.notifier).getAllPosts.then((value) {
         setState(() {

@@ -16,21 +16,32 @@ final getUserByIdProvider = FutureProvider.autoDispose<User?>((ref) async {
 });
 
 //get user model provider
-final getUserModelRepository = Provider((ref) {
+final getUserModelRepository = Provider<RepositoryUserData>((ref) {
   return RepositoryUserData();
 });
 
-final userModelProvider =
-    StateNotifierProvider<RepositoryUserData, User?>((ref) {
+final userModelProvider = FutureProvider<User?>((ref) async {
   final userId = ref.watch(getUserIDFromUIProvider);
+  return await ref.read(getUserModelRepository).getUserById(userId);
   User? user;
-  ref.read(getuserByid(userId)).then((value) => user = value);
-  return RepositoryUserData();
+
+  // final use = ref.read(getUserModelRepository).getUserById(userId).then((value) => value);
+  // use.getUserById(userId);
+  // return use;
+});
+final userModelPostsModelFuture = FutureProvider<User?>((ref) {
+  // final userId = ref.watch(getUserIDFromUIProvider);
+  // User? user;
+  // ref
+  //     .read(getUserModelRepository)
+  //     .getUserById(userId)
+  //     .then((value) => user = value);
+  // return ref.read(userModelProvider);
 });
 
 final getUserModelById =
     FutureProvider.family<User, int>((ref, int userId) async {
-  final respone = ref.watch(userModelProvider.notifier);
+  final respone = ref.read(getUserModelRepository);
   return respone.state!;
 });
 
@@ -41,7 +52,7 @@ class RepositoryUserData extends StateNotifier<User?> {
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Future<User?> get getState async => state;
-  Future<void> getUserById(int userId) async {
+  Future<User?> getUserById(int userId) async {
     SharedPreferences prefs = await _prefs;
     try {
       final response = await dio.post(
@@ -61,24 +72,7 @@ class RepositoryUserData extends StateNotifier<User?> {
       var json = response.data['user'];
 
       print('my jsssssssssssssssonnnnnnnnnnnnnnnnnnnnnnnnv ${json.toString()}');
-      // final user = UserModel.fromJson(json);
-
-//  as Map<String, dynamic>
       final user = User.fromMap(json as Map<String, dynamic>);
-      // final user = User().copyWith(
-      //   colloge: json['colloge'],
-      //   collogeId: json['colloge_id'],
-      //   id: json['id'],
-      //   name: json['name'],
-      //   email: json['email'],
-      //   createdAt: 'created_at',
-      //   type: json['type'],
-      //   img: json['img'],
-      //   level: json['level'],
-      //   section: json['section'],
-      //   sectionId: json['section_id'],
-      //   idNumber: json['id_number'],
-      // );
       state = user;
       print('the ssssssssssssssssstatataattatattaatttata s $state');
 
@@ -86,6 +80,7 @@ class RepositoryUserData extends StateNotifier<User?> {
     } catch (e) {
       print(' ssssssssssssssssstatataattatattaatttata eerrror $e');
     }
+    return state;
     // return state;
   }
 }

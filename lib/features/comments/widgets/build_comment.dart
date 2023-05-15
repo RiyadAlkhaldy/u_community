@@ -8,7 +8,6 @@ import 'package:u_community/core/utils/utils.dart';
 import '../../../core/utils/loader.dart';
 import '../../../main.dart';
 import '../../auth/repository/auth_repository.dart';
-import '../../../models/post_model.dart';
 import '../../posts/repository/repository_colloge_posts.dart';
 import '../../setting/screens/setting_screen.dart';
 import '../../../models/comment_model.dart';
@@ -18,119 +17,122 @@ import '../../posts/repository/repository_section_posts.dart';
 import '../../posts/screens/layout/post_layout.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-Widget buildComment(int index, BuildContext context, Comments comment) {
-  return Consumer(
-    builder: (_, WidgetRef ref, __) {
-      var img = comment.img;
-      if (comment.img == null || comment.img!.isEmpty) {
-        img = ref.watch(gitImageurlTemp);
-      }
-      return Padding(
-        padding: EdgeInsets.all(10.0),
-        child: ListTile(
-          leading: Container(
-            width: 50.0,
-            height: 50.0,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black45,
-                  offset: Offset(0, 2),
-                  blurRadius: 6.0,
-                ),
-              ],
-            ),
-            child: CircleAvatar(
-                child: ClipOval(
-              child: CachedNetworkImage(
-                // imageUrl: widget.imagePath,
-                imageUrl: img!,
-                placeholder: (context, img) => const Loader(),
-                errorWidget: (context, url, error) =>
-                    CachedNetworkImage(imageUrl: url),
-                fit: BoxFit.cover,
-                width: 108,
-                height: 108,
-                // child: InkWell(onTap: onClicked),
-                // ),
+Widget buildComment(int index, BuildContext context, Comment comment) {
+  return Padding(
+    padding: const EdgeInsets.all(10.0),
+    child: ListTile(
+        leading: Container(
+          width: 50.0,
+          height: 50.0,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black45,
+                offset: Offset(0, 2),
+                blurRadius: 6.0,
               ),
-
-              //  Image(
-              //   height: 50.0,
-              //   width: 50.0,
-              //   image: AssetImage(comments[index].authorImageUrl),
-              //   fit: BoxFit.cover,
-              // ),
-            )),
-          ),
-          title: comment.name!.isEmpty
-              ? Text('the name prop is null',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18))
-              : Text(comment.name!,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18)),
-          subtitle: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                comment.comment,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: Colors.black, fontSize: 16),
-              ),
-              // parse time created comment
-              Text(
-                  timeago.format(
-                    DateTime.parse(comment.createdAt),
-                  ),
-                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        fontSize: 12,
-                        color: Colors.black.withOpacity(0.5),
-                      )),
             ],
           ),
-          trailing: int.parse(ref.watch(
-                      dataUserAuthentecationProvider)![UserEnum.id.type]) ==
-                  comment.userId
-              ? IconButton(
-                  icon: const Icon(
-                    Icons.delete,
+          child: CircleAvatar(
+              child: ClipOval(
+            child: comment.user!.img != null
+                ? CachedNetworkImage(
+                    // imageUrl: widget.imagePath,
+                    imageUrl: comment.user!.img!,
+                    placeholder: (context, img) => const Loader(),
+                    errorWidget: (context, url, error) =>
+                        CachedNetworkImage(imageUrl: url),
+                    fit: BoxFit.cover,
+                    width: 108,
+                    height: 108,
+                    // child: InkWell(onTap: onClicked),
+                    // ),
+                  )
+                : Image.asset(
+                    'assets/images/user1.png',
+                    width: 108,
+                    height: 108,
                   ),
-                  color: Colors.grey,
-                  onPressed: () async {
-                    // print('delete////');
-                    final user = await ref.watch(getUserProvider);
-                    if (int.parse(user['id']) == comment.userId ||
-                        int.parse(user['type']) == 3) {
-                      // ignore: use_build_context_synchronously
-                      await showModalBottomAcceptDelete(
-                        context,
-                        comment,
-                        ref,
-                      );
-                    } else {
-                      showSnackBar(
-                          context: context,
-                          content:
-                              'لايمكنك جذف التعليق لانك ليس لديك صلاحية عليه أو لأنك لست صحاب التعليق ');
-                    }
-                  })
-              : Text(''),
+
+            //  Image(
+            //   height: 50.0,
+            //   width: 50.0,
+            //   image: AssetImage(comments[index].authorImageUrl),
+            //   fit: BoxFit.cover,
+            // ),
+          )),
         ),
-      );
-    },
+        title: comment.user!.name.isEmpty
+            ? Text('the name prop is null',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18))
+            : Text(comment.user!.name,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18)),
+        subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              comment.comment!,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: Colors.black, fontSize: 16),
+            ),
+            // parse time created comment
+            Text(
+                timeago.format(
+                  DateTime.parse(comment.createdAt!),
+                ),
+                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                      fontSize: 12,
+                      color: Colors.black.withOpacity(0.5),
+                    )),
+          ],
+        ),
+        trailing: Consumer(
+          builder: (ctx, ref, child) {
+            return int.parse(ref.watch(
+                        dataUserAuthentecationProvider)![UserEnum.id.type]) ==
+                    comment.userId
+                ? IconButton(
+                    icon: const Icon(
+                      Icons.delete,
+                    ),
+                    color: Colors.grey,
+                    onPressed: () async {
+                      // print('delete////');
+                      final user =
+                          await ref.watch(getUserProviderfromSharedPrefernces);
+                      if (int.parse(user['id']) == comment.userId ||
+                          int.parse(user['type']) == 3) {
+                        // ignore: use_build_context_synchronously
+                        await showModalBottomAcceptDelete(
+                          context,
+                          comment,
+                          ref,
+                        );
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        showSnackBar(
+                            context: context,
+                            content:
+                                'لايمكنك جذف التعليق لانك ليس لديك صلاحية عليه أو لأنك لست صحاب التعليق ');
+                      }
+                    })
+                : const Text('');
+          },
+        )),
   );
 }
 
 Future<dynamic> showModalBottomAcceptDelete(
-    BuildContext context, Comments comment, WidgetRef ref) {
+    BuildContext context, Comment comment, WidgetRef ref) {
   return showModalBottomSheet(
       backgroundColor: Colors.transparent,
       barrierColor: Colors.transparent,
@@ -167,13 +169,13 @@ Future<dynamic> showModalBottomAcceptDelete(
                           try {
                             ref
                                 .read(commentsProvider.notifier)
-                                .deleteComment(comment.id);
+                                .deleteComment(comment.id!);
                             int pagePostType = ref.watch(currentIndexPagePost);
                             if (pagePostType == 0) {
                               // final currentPost = ref.watch(postStateProvider);
                               // currentPost!.copyWith(
                               //     commentCount: currentPost.commentCount - 1);
-                              ;
+                              // ;
                               // ref
                               //     .read(postsProvider.notifier)
                               //     .updatePost(currentPost);

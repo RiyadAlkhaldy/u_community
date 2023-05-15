@@ -23,14 +23,13 @@ class _PostScreenState extends ConsumerState<AllCollogePostsScreen> {
   bool dataLoaded = false;
   bool inital = true;
   @override
-  Widget build(BuildContext context) {
-    @override
-    void initState() {
-      // TODO: implement initState
-      ref.read(currentIndexPagePost.notifier).state = 1;
-      super.initState();
-    }
+  void initState() {
+    ref.read(currentIndexPagePost.notifier).state = 1;
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     // final posts =
     if (inital == true) {
       ref.watch(collogePostsProvider.notifier).getAllCollogePosts.then((value) {

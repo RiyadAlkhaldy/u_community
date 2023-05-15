@@ -16,7 +16,7 @@ final sectionPostsProvider =
   // final myreq = ref.watch(myrequest);
   return RepositorySectionPosts();
 });
-final AllSectionPostsProvider = FutureProvider<List<Posts>>((ref) async {
+final allSectionPostsProvider = FutureProvider<List<Posts>>((ref) async {
   List<Posts> posts = [];
   await ref
       .read(sectionPostsProvider.notifier)
@@ -136,7 +136,7 @@ class RepositorySectionPosts extends StateNotifier<List<Posts>> {
       }
       state = [...posts];
       // if(debug)
-      print('liked post number ${currentPost}');
+      print('liked post number ${response.data}');
     } catch (e) {
       if (kDebugMode) {
         print(e);

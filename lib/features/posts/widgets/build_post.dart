@@ -61,7 +61,7 @@ class buildPost extends StatelessWidget {
                     BodyThePostText(
                       post: post!,
                     ),
-                  BottomPost(
+                  bottomPost(
                     context,
                     post!,
                   ),
