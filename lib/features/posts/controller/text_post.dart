@@ -7,7 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constant.dart';
 // import 'package:http/http.dart' as http;
 
-final uploadTextProvider = Provider.autoDispose<TextPost>((ref) {
+// final uploadTextProvider = Provider.autoDispose<TextPost>((ref) {
+//   return TextPost();
+// });
+final uploadTextProvider = StateProvider<TextPost>((ref) {
   return TextPost();
 });
 final uploadFilePppp = FutureProvider.autoDispose((ref) async {
@@ -65,18 +68,9 @@ class TextPost {
         }),
       );
       data.clear();
-      // final response = await http.post(
-      //   Uri.parse('${ApiUrl}posts/store'.toString()),
-      //   body: data,
-      //   headers: {
-      //     'Authorization': 'Bearer ${prefs.getString('token')}',
-      //     "Accept": "application/json"
-      //   },
-      // );
-      print('ok');
-      print(response.data);
       if (response.statusCode == 200) {
-        Navigator.pop(context);
+        // ignore: use_build_context_synchronously
+        Navigator.maybePop(context);
       }
     } catch (e) {
       if (kDebugMode) {

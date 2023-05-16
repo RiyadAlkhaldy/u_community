@@ -1,13 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_community/core/enums/user_enum.dart';
+import 'package:u_community/features/posts/screens/layout/post_layout.dart';
 import '../../../core/utils/loader.dart';
 import '../../../main.dart';
 import '../../user/repository/repository_get_user_by_id.dart';
 import '../../user/screen/view_any_user_screen.dart';
 import '../../../models/post_model.dart';
+import '../repository/repository_colloge_posts.dart';
 import '../repository/repository_posts.dart';
+import '../repository/repository_section_posts.dart';
+import '../screens/edit_text_post_screen.dart';
 import 'body_the_post_image.dart';
 import 'body_the_post_text.dart';
 import 'body_the_post_video.dart';
@@ -78,7 +83,7 @@ class buildPost extends StatelessWidget {
 class HeaderThePost extends ConsumerWidget {
   final Posts post;
   final bool amIInviewSinglePost;
-  HeaderThePost({
+  const HeaderThePost({
     Key? key,
     required this.post,
     required this.amIInviewSinglePost,
@@ -184,7 +189,8 @@ class HeaderThePost extends ConsumerWidget {
                         fontSize: 16,
                         color: Colors.black.withOpacity(0.5),
                       )),
-          trailing: PostProfileImage(context, ref),
+          //profile the user post
+          trailing: postProfileImage(context, ref),
         ),
       ],
     );
@@ -201,7 +207,7 @@ class HeaderThePost extends ConsumerWidget {
               child: ListView(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shrinkWrap: true,
-                  children: ['Delete']
+                  children: ['Delete', 'Edit']
                       .map(
                         (e) => InkWell(
                             child: Container(
@@ -220,10 +226,7 @@ class HeaderThePost extends ConsumerWidget {
                               child: Text(e),
                             ),
                             onTap: () {
-                              ref
-                                  .read(postsProvider.notifier)
-                                  .deletePost(post.id);
-                              Navigator.of(context).pop();
+                              tapDeleteOrEdit(ref, e, context);
                             }),
                       )
                       .toList()),
@@ -235,25 +238,16 @@ class HeaderThePost extends ConsumerWidget {
     );
   }
 
-  Container PostProfileImage(BuildContext context, WidgetRef ref) {
+  Container postProfileImage(BuildContext context, WidgetRef ref) {
     return Container(
       width: 50.0,
       height: 50.0,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black45,
-            offset: Offset(0, 2),
-            blurRadius: 6.0,
-          ),
-        ],
-      ),
+      decoration: boxDocration(),
       child: CircleAvatar(
         child: InkWell(
           onTap: () {
+            // on click the profile of the user will be open his Account .
             ref.read(getUserIDFromUIProvider.notifier).state = post.user.id;
-
             Navigator.pushNamed(context, ViewAnyUserScreen.routeName,
                 arguments: post.user);
           },
@@ -270,5 +264,38 @@ class HeaderThePost extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  BoxDecoration boxDocration() {
+    return const BoxDecoration(
+      shape: BoxShape.circle,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black45,
+          offset: Offset(0, 2),
+          blurRadius: 6.0,
+        ),
+      ],
+    );
+  }
+
+  void tapDeleteOrEdit(WidgetRef ref, e, BuildContext context) {
+    if (kDebugMode) {
+      print(e);
+    }
+    if (e == 'Delete') {
+      if (ref.watch(currentIndexPagePost) == 0) {
+        ref.read(postsProvider.notifier).deletePost(post.id);
+      }
+      if (ref.watch(currentIndexPagePost) == 1) {
+        ref.read(collogePostsProvider.notifier).deletePost(post.id);
+      } else {
+        ref.read(sectionPostsProvider.notifier).deletePost(post.id);
+      }
+      Navigator.of(context).maybePop();
+    } else if (e == 'Edit') {
+      ref.read(postStateProvider.notifier).state = post;
+      Navigator.pushNamed(context, EditTextPostScreen.routeName);
+    }
   }
 }

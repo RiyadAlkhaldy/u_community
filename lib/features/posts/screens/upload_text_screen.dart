@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,26 +12,33 @@ final selectedVal = StateProvider<int>((ref) => 1);
 
 // _selectedVal
 class UploadTextScreen extends ConsumerStatefulWidget {
-  UploadTextScreen({super.key});
+  const UploadTextScreen({super.key});
   static const String routeName = 'upload-text-screen';
 
   ConsumerState<UploadTextScreen> createState() => _UploadTextScreenState();
 }
 
 class _UploadTextScreenState extends ConsumerState<UploadTextScreen> {
+  Future<void> textPostUpload() async {
+    isGoing = true;
+    setState(() {});
+    await ref.read(uploadTextProvider).textPost(
+        content: textEditingController.text.trim().toString(),
+        context: context);
+    isGoing = false;
+    setState(() {});
+  }
+
   TextEditingController textEditingController = TextEditingController();
   List<Colloge> colloges = [];
-  var _selectedVal;
-  // String? _data;
   bool initial = true;
   bool allows = false;
-
+  bool isGoing = false;
   @override
   @override
   Widget build(BuildContext context) {
     if (initial) {
       // ref.read(allwoProvidr.notifier).state = false;
-
       ref.read(authProvider).getAllColloges(context).then((value) async {
         await ref.watch(getUserProviderfromSharedPrefernces).then((map) async {
           ref.read(allwoProvidr.notifier).state = false;
@@ -38,6 +47,8 @@ class _UploadTextScreenState extends ConsumerState<UploadTextScreen> {
             allows = true;
             // ref.read(allwoProvidr.notifier).state = true;
             colloges = value!.toList();
+            initial = false;
+
             ref.read(selectedVal.notifier).state = colloges.first.id!;
             setState(() {});
           }
@@ -79,12 +90,7 @@ class _UploadTextScreenState extends ConsumerState<UploadTextScreen> {
                     backgroundcolor: Colors.blue.withOpacity(0.5),
                     text: "Post",
                     textColor: Colors.white,
-                    onTap: () async {
-                      TextPost().textPost(
-                          content: textEditingController.text.trim().toString(),
-                          context: context,
-                          colloge_id: ref.watch(selectedVal).toString());
-                    },
+                    onTap: textPostUpload,
                   ),
                 ],
               ),
@@ -118,12 +124,10 @@ class _UploadTextScreenState extends ConsumerState<UploadTextScreen> {
           }).toList(),
           value: rf.watch(selectedVal),
           onChanged: (value) {
-            // setState(() {
-            // _selectedVal = value;
             rf.read(selectedVal.notifier).state = value!;
-            // collogeIdcontroller.text. = value;
-            print(value);
-            // });
+            if (kDebugMode) {
+              print(value);
+            }
           }),
     );
   }

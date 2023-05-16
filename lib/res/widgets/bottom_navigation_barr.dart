@@ -1,9 +1,8 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../features/posts/screens/upload_file_screen.dart';
-import '../../features/posts/screens/upload_text_screen copy.dart';
+import '../../features/posts/screens/upload_text_screen.dart';
 import 'show_modal_bottom_sheet_post.dart';
 
 class BottomNavigationBarr extends StatelessWidget {

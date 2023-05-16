@@ -7,7 +7,7 @@ import '../../../models/colloge_model.dart';
 import '../../auth/repository/auth_repository.dart';
 import '../../video/orientation/portrait_player_widget.dart';
 import '../controller/upload_file.dart';
-import 'upload_text_screen copy.dart';
+import 'upload_text_screen.dart';
 
 class UploadFileScreen extends ConsumerStatefulWidget {
   // const UploadFileScreen({super.key});

@@ -7,8 +7,9 @@ import 'features/auth/Screens/registration.dart';
 import 'features/auth/screens/message_auth_teacher.dart';
 import 'features/auth/screens/message_to_teacher_temp_screen.dart';
 import 'features/auth/screens/student_register.dart';
+import 'features/posts/screens/edit_text_post_screen.dart';
 import 'features/posts/screens/upload_file_screen.dart';
-import 'features/posts/screens/upload_text_screen copy.dart';
+import 'features/posts/screens/upload_text_screen.dart';
 import 'features/setting/screens/reset_email_screen.dart';
 import 'features/setting/screens/reset_password_screen.dart';
 import 'features/setting/screens/teachers_registerations_screen.dart';
@@ -63,7 +64,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         builder: (context) => const MessageToTeacherTempScreen(),
       );
     case ViewAnyUserScreen.routeName:
-    
       User user = settings.arguments as User;
       return MaterialPageRoute(
         builder: (context) => ViewAnyUserScreen(
@@ -82,7 +82,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => const ResetPasswordScreen(),
       );
-
+    case EditTextPostScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const EditTextPostScreen(),
+      );
+// EditTextPostScreen
     // case MobileChatScreen.routeName:
     //   final arguments = settings.arguments as Map<String, dynamic>;
     //   final name = arguments['name'];

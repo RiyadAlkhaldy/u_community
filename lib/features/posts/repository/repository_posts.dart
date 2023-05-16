@@ -84,7 +84,9 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
           if (post.id != post_id) post,
       ];
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -161,5 +163,54 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
     state = [...posts];
 
     print('update the post number ${currentPost}');
+  }
+
+  Future<Posts?> editPost(Posts currentPost, String? content, collogeId,
+      BuildContext context, WidgetRef ref) async {
+    if (kDebugMode) {
+      print('edit post $currentPost');
+    }
+    SharedPreferences prefs = await _prefs;
+    Response response;
+    Map<String, dynamic> data = {};
+    if (content == null) {
+      data = {
+        'post_id': currentPost.id,
+        'user_id': prefs.getString(UserEnum.id.type),
+        'colloge_id': collogeId
+      };
+    } else {
+      data = {
+        'post_id': currentPost.id,
+        'content': content,
+        'user_id': prefs.getString(UserEnum.id.type),
+        'colloge_id': collogeId
+      };
+    }
+    try {
+      response = await dio.post('${ApiUrl}posts/edit/',
+          options: Options(headers: {
+            'authorization': 'Bearer ${prefs.getString(UserEnum.token.type)}',
+            "Accept": "application/json"
+          }),
+          queryParameters: data);
+      if (kDebugMode) {
+        print('ok');
+        print(response.data);
+      }
+      final postEdited =
+          Posts.fromMap(response.data['posts'] as Map<String, dynamic>);
+      state = [
+        for (var post in state)
+          if (post.id != currentPost.id) post else postEdited,
+      ];
+      return postEdited;
+
+      // ignore: use_build_context_synchronously
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 }

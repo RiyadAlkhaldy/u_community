@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'features/auth/repository/auth_repository.dart';
 import 'features/posts/screens/layout/post_layout.dart';
 import 'features/setting/screens/setting_screen.dart';
-import 'features/video/orientation/portrait_landscape_player_page.dart';
-import 'main.dart';
 import 'res/widgets/bottom_navigation_barr.dart';
 
 final currentIndexPage = StateProvider((ref) => 1);

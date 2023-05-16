@@ -144,7 +144,7 @@ class UploadFileReposetitory {
           fileKey: "file",
           method: "POST",
           fileName: path!.name,
-          maxChunkSize: 5000000000,
+          maxChunkSize: 50000000,
           path: url,
           fileSize: path!.size,
           // fileDataStream: paths!.single.readStream!,

@@ -68,5 +68,3 @@ class ResponseUserPosts {
   @override
   int get hashCode => status.hashCode ^ message.hashCode ^ posts.hashCode;
 }
-
- 
