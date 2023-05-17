@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:u_community/core/enums/user_enum.dart';
+import 'package:u_community/features/posts/screens/layout/post_layout%20_admin.dart';
 import 'features/posts/screens/layout/post_layout.dart';
 import 'features/setting/screens/setting_screen.dart';
+import 'main.dart';
 import 'res/widgets/bottom_navigation_barr.dart';
 
 final currentIndexPage = StateProvider((ref) => 1);
+final currentIndexTabBarPagePost = StateProvider<int>((ref) => 0);
 final pProvider = StateProvider((ref) {
-  return PostLayout();
+  final typeUser = int.parse(ref.watch(dataUserAuthentecationProvider)![UserEnum.typeUser.type]);
+  return typeUser >=2? PostLayoutAdmin(): PostLayout();
 });
 
 class MobileLayoutScreen extends ConsumerStatefulWidget {

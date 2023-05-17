@@ -27,7 +27,7 @@ class _AdminRegisterState extends ConsumerState<AdminRegister> {
     setState(() {});
 
     final fmSt = formState.currentState;
-    if (!fmSt!.validate()) {
+    if (fmSt!.validate()) {
       try {
         print('auth');
         isGoing = true;

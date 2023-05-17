@@ -7,22 +7,25 @@ import '../all_colloge_posts_screen.dart';
 import '../all_post_screen.dart';
 import '../all_section_posts_screen.dart';
 
-class PostLayout extends ConsumerStatefulWidget {
-  PostLayout({Key? key}) : super(key: key);
+// final currentIndexPagePost = StateProvider<int>((ref) => 0);
+
+class PostLayoutAdmin extends ConsumerStatefulWidget {
+  PostLayoutAdmin({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<PostLayout> createState() => _MobileLayoutScreenState();
+  ConsumerState<PostLayoutAdmin> createState() => _MobileLayoutScreenState();
 }
 
-class _MobileLayoutScreenState extends ConsumerState<PostLayout>
+class _MobileLayoutScreenState extends ConsumerState<PostLayoutAdmin>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   late TabController tabBarController;
   //! notifications firebase
   @override
   void initState() {
     super.initState();
-    tabBarController = TabController(length: 3, vsync: this);
+    tabBarController = TabController(length: 2, vsync: this);
     WidgetsBinding.instance.addObserver(this);
+    // WidgetsBinding.instance.addObserver(this);
   }
 
   // @override
@@ -116,7 +119,7 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
             children: [
               AllPostScreen(),
               AllCollogePostsScreen(),
-              AllSectionPostsScreen(),
+              // AllSectionPostsScreen(),
             ],
           ),
         ),
@@ -178,9 +181,9 @@ class _MobileLayoutScreenState extends ConsumerState<PostLayout>
         Tab(
           text: 'Colloge Posts',
         ),
-        Tab(
-          text: 'Section Posts',
-        ),
+        // Tab(
+        //   text: 'Section Posts',
+        // ),
       ],
     );
   }

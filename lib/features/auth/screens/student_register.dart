@@ -22,9 +22,9 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
   TextEditingController univIdController = TextEditingController();
   TextEditingController IDNUmber = TextEditingController();
   bool isGoing = false;
-  register() async {
+  Future<void> register() async {
     final fmSt = formState.currentState;
-    if (!fmSt!.validate()) {
+    if (fmSt!.validate()) {
       print('auth');
 
       await ref.read(authProvider).registerStudent(
@@ -37,61 +37,59 @@ class _StudentRegisterState extends ConsumerState<StudentRegister> {
       if (kDebugMode) {
         print('no auth');
       }
-      showSnackBar(context: context, content: 'content');
+      // showSnackBar(context: context, content: 'content');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Form(
-        autovalidateMode: AutovalidateMode.always,
-        key: formState,
-        child: Column(
-          children: [
-            TextFieldCustom(
-              validator: (input) =>
-                  input!.isValidEmail() ? null : "Check your syntax email ",
-              hintText: 'Email',
-              labelText: 'Email',
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            TextFieldCustom(
-              hintText: 'University ID',
-              labelText: 'University ID',
-              controller: univIdController,
-              validator: (val) => validInputAuth(val, 15, 3),
-              keyboardType: TextInputType.number,
-            ),
-            TextFieldCustom(
-              hintText: 'ID Number',
-              labelText: 'ID number',
-              controller: IDNUmber,
-              validator: (val) => validInputAuth(val, 30, 6),
-              keyboardType: TextInputType.number,
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 20),
-              margin: EdgeInsets.symmetric(horizontal: 8),
-              child: !isGoing
-                  ? registerOrLoginOrResetPasswordButton(
-                      text: 'تسجيل',
-                      context: context,
-                      onTap: () {
-                        isGoing = true;
-                        setState(() {});
-                        register();
-                        isGoing = false;
-                        setState(() {});
-                      })
-                  : const CircularProgressIndicator(
-                      strokeWidth: 20,
-                      color: Colors.blue,
-                    ),
-            ),
-          ],
-        ),
+    return Form(
+      autovalidateMode: AutovalidateMode.always,
+      key: formState,
+      child: Column(
+        children: [
+          TextFieldCustom(
+            validator: (input) =>
+                input!.isValidEmail() ? null : "Check your syntax email ",
+            hintText: 'Email',
+            labelText: 'Email',
+            controller: emailController,
+            keyboardType: TextInputType.emailAddress,
+          ),
+          TextFieldCustom(
+            hintText: 'University ID',
+            labelText: 'University ID',
+            controller: univIdController,
+            validator: (val) => validInputAuth(val, 15, 5),
+            keyboardType: TextInputType.number,
+          ),
+          TextFieldCustom(
+            hintText: 'ID Number',
+            labelText: 'ID number',
+            controller: IDNUmber,
+            validator: (val) => validInputAuth(val, 30, 6),
+            keyboardType: TextInputType.number,
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 20),
+            margin: EdgeInsets.symmetric(horizontal: 8),
+            child: !isGoing
+                ? registerOrLoginOrResetPasswordButton(
+                    text: 'تسجيل',
+                    context: context,
+                    onTap: () async {
+                      isGoing = true;
+                      setState(() {});
+                      await register();
+                      isGoing = false;
+                      setState(() {});
+                    })
+                : const CircularProgressIndicator(
+                    strokeWidth: 20,
+                    color: Colors.blue,
+                  ),
+          ),
+        ],
       ),
     );
   }

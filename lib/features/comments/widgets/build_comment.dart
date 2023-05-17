@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_community/core/enums/user_enum.dart';
 import 'package:u_community/core/utils/utils.dart';
-
 import '../../../core/utils/loader.dart';
 import '../../../main.dart';
+import '../../../mobile_layout_screen.dart';
 import '../../auth/repository/auth_repository.dart';
 import '../../posts/repository/repository_colloge_posts.dart';
 import '../../setting/screens/setting_screen.dart';
@@ -14,7 +14,6 @@ import '../../../models/comment_model.dart';
 import '../repository/repository_comments.dart';
 import '../../posts/repository/repository_posts.dart';
 import '../../posts/repository/repository_section_posts.dart';
-import '../../posts/screens/layout/post_layout.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 Widget buildComment(int index, BuildContext context, Comment comment) {
@@ -36,7 +35,7 @@ Widget buildComment(int index, BuildContext context, Comment comment) {
           ),
           child: CircleAvatar(
               child: ClipOval(
-            child: comment.user!.img != null
+            child: comment.user!.img!.isNotEmpty
                 ? CachedNetworkImage(
                     // imageUrl: widget.imagePath,
                     imageUrl: comment.user!.img!,
@@ -54,13 +53,6 @@ Widget buildComment(int index, BuildContext context, Comment comment) {
                     width: 108,
                     height: 108,
                   ),
-
-            //  Image(
-            //   height: 50.0,
-            //   width: 50.0,
-            //   image: AssetImage(comments[index].authorImageUrl),
-            //   fit: BoxFit.cover,
-            // ),
           )),
         ),
         title: comment.user!.name.isEmpty
@@ -170,7 +162,8 @@ Future<dynamic> showModalBottomAcceptDelete(
                             ref
                                 .read(commentsProvider.notifier)
                                 .deleteComment(comment.id!);
-                            int pagePostType = ref.watch(currentIndexPagePost);
+                            int pagePostType =
+                                ref.watch(currentIndexTabBarPagePost);
                             if (pagePostType == 0) {
                               // final currentPost = ref.watch(postStateProvider);
                               // currentPost!.copyWith(

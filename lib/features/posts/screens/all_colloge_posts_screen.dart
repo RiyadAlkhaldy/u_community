@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-// import '../controller/posts_controlller.dart';
 import '../../../core/utils/loader.dart';
+import '../../../mobile_layout_screen.dart';
 import '../../../models/post_model.dart';
 import '../repository/repository_colloge_posts.dart';
 import '../widgets/build_post.dart';
-import 'layout/post_layout.dart';
-// import '../repository/repository_posts.dart';
 
 class AllCollogePostsScreen extends ConsumerStatefulWidget {
   AllCollogePostsScreen({
@@ -24,7 +20,7 @@ class _PostScreenState extends ConsumerState<AllCollogePostsScreen> {
   bool inital = true;
   @override
   void initState() {
-    ref.read(currentIndexPagePost.notifier).state = 1;
+    ref.read(currentIndexTabBarPagePost.notifier).state = 1;
     super.initState();
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:u_community/core/utils/utils.dart';
 
 import '../../../core/constant.dart';
 // import 'package:http/http.dart' as http;
@@ -33,50 +34,54 @@ class TextPost {
     String? sectionId = prefs.getString('section_id');
     Map<String, dynamic> data;
     // print(sectionId! != null);
-    if (sectionId != null && sectionId.length <= 2) {
-      data = {
-        'content': content,
-        'type': 1,
-        'user_id': prefs.getString('id'),
-        'section_id': sectionId,
-        'colloge_id': int.parse(prefs.getString('type')!) >= 3
-            ? colloge_id
-            : prefs.getString('colloge_id'),
-      };
-    } else {
-      data = {
-        'content': content,
-        'type': 1,
-        'user_id': prefs.getString('id'),
-        'colloge_id': int.parse(prefs.getString('type')!) >= 3
-            ? colloge_id
-            : prefs.getString('colloge_id'),
-      };
-    }
+    if (content.isNotEmpty) {
+      if (sectionId != null && sectionId.length <= 2) {
+        data = {
+          'content': content,
+          'type': 1,
+          'user_id': prefs.getString('id'),
+          'section_id': sectionId,
+          'colloge_id': int.parse(prefs.getString('type')!) >= 3
+              ? colloge_id
+              : prefs.getString('colloge_id'),
+        };
+      } else {
+        data = {
+          'content': content,
+          'type': 1,
+          'user_id': prefs.getString('id'),
+          'colloge_id': int.parse(prefs.getString('type')!) >= 3
+              ? colloge_id
+              : prefs.getString('colloge_id'),
+        };
+      }
 
-    if (kDebugMode) {
-      print(data);
-    }
-    try {
-      Response response;
-      response = await dio.post(
-        '${ApiUrl}posts/create/'.toString(),
-        queryParameters: data,
-        options: Options(headers: {
-          'Authorization': 'Bearer ${prefs.getString('token')}',
-          "Accept": "application/json"
-        }),
-      );
-      data.clear();
-      if (response.statusCode == 200) {
-        // ignore: use_build_context_synchronously
-        Navigator.maybePop(context);
-      }
-    } catch (e) {
       if (kDebugMode) {
-        print('the errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrror  $e');
+        print(data);
       }
+      try {
+        Response response;
+        response = await dio.post(
+          '${ApiUrl}posts/create/'.toString(),
+          queryParameters: data,
+          options: Options(headers: {
+            'Authorization': 'Bearer ${prefs.getString('token')}',
+            "Accept": "application/json"
+          }),
+        );
+        data.clear();
+        if (response.statusCode == 200) {
+          // ignore: use_build_context_synchronously
+          Navigator.maybePop(context);
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('the errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrror  $e');
+        }
+      }
+    } else {
+      // ignore: use_build_context_synchronously
+      showSnackBar(context: context, content: 'the content is empty ');
     }
-    // ignore: use_build_context_synchronously
   }
 }

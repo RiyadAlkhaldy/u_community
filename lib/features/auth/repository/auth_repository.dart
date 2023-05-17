@@ -110,7 +110,7 @@ class AuthRepository {
       if (_checkIfUserRegsterBefore(response, context)) {
         if (kDebugMode) print('It is regisger before');
       }
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && response.data['status'] == 'success') {
         if (kDebugMode) {
           print('ok');
           print(response.data);
@@ -146,9 +146,13 @@ class AuthRepository {
           (route) => false,
         );
       }
+      if (response.statusCode == 200 && response.data['status'] == 'error') {
+        // ignore: use_build_context_synchronously
+        showSnackBar(context: context, content: response.data['message']);
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      showSnackBar(context: context, content: e.toString());
+
       if (kDebugMode) print(e.toString());
     }
   }
@@ -237,7 +241,8 @@ class AuthRepository {
           print('ok');
           print(response.data);
         }
-        userResponseLogin = UserResponseLogin.fromMap(response.data);
+        userResponseLogin =
+            UserResponseLogin.fromMap(response.data as Map<String, dynamic>);
         if (kDebugMode) {
           print(
               'tokennnnnnnnnnnnnnnnnnnnnnnnnnnnn${userResponseLogin.authorisation.token}');
@@ -368,10 +373,10 @@ class AuthRepository {
         showSnackBar(context: context, content: response.data.toString());
       }
       // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(
+      Navigator.pushNamedAndRemoveUntil(
         context,
         MyApp.routeName,
-        // (route) => false,
+        (route) => false,
       );
     } catch (e) {
       // ignore: use_build_context_synchronously

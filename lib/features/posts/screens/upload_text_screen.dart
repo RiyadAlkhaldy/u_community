@@ -20,41 +20,56 @@ class UploadTextScreen extends ConsumerStatefulWidget {
 
 class _UploadTextScreenState extends ConsumerState<UploadTextScreen> {
   Future<void> textPostUpload() async {
-    isGoing = true;
-    setState(() {});
-    await ref.read(uploadTextProvider).textPost(
-        content: textEditingController.text.trim().toString(),
-        context: context);
-    isGoing = false;
-    setState(() {});
+    if (formState.currentState!.validate()) {
+      isGoing = true;
+      setState(() {});
+      await ref.read(uploadTextProvider).textPost(
+          content: textEditingController.text.trim().toString(),
+          colloge_id: ref.watch(selectedVal).toString(),
+          context: context);
+      isGoing = false;
+      setState(() {});
+    }
   }
 
   TextEditingController textEditingController = TextEditingController();
+  GlobalKey<FormState> formState = GlobalKey<FormState>();
   List<Colloge> colloges = [];
   bool initial = true;
   bool allows = false;
   bool isGoing = false;
   @override
+  void dispose() {
+    super.dispose();
+    textEditingController.dispose();
+    ref.watch(uploadTextProvider.notifier).dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(authProvider).getAllColloges(context).then((value) async {
+      await ref.watch(getUserProviderfromSharedPrefernces).then((map) async {
+        ref.read(allwoProvidr.notifier).state = false;
+
+        if (int.parse(map['type']) >= 3) {
+          allows = true;
+          // ref.read(allwoProvidr.notifier).state = true;
+          colloges = value!.toList();
+          initial = false;
+
+          ref.read(selectedVal.notifier).state = colloges.first.id!;
+          setState(() {});
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (initial) {
-      // ref.read(allwoProvidr.notifier).state = false;
-      ref.read(authProvider).getAllColloges(context).then((value) async {
-        await ref.watch(getUserProviderfromSharedPrefernces).then((map) async {
-          ref.read(allwoProvidr.notifier).state = false;
-
-          if (int.parse(map['type']) >= 3) {
-            allows = true;
-            // ref.read(allwoProvidr.notifier).state = true;
-            colloges = value!.toList();
-            initial = false;
-
-            ref.read(selectedVal.notifier).state = colloges.first.id!;
-            setState(() {});
-          }
-        });
-      });
-    }
+    // if (initial) {
+    //   // ref.read(allwoProvidr.notifier).state = false;
+    // }
 
     return Scaffold(
       body: SafeArea(
@@ -77,11 +92,19 @@ class _UploadTextScreenState extends ConsumerState<UploadTextScreen> {
                         return dropDownListColloges(rf);
                       },
                     ),
-                  TextFormField(
-                    controller: textEditingController,
-                    maxLines: 10,
-                    decoration:
-                        const InputDecoration(border: OutlineInputBorder()),
+                  Form(
+                    key: formState,
+                    child: TextFormField(
+                      controller: textEditingController,
+                      maxLines: 10,
+                      decoration:
+                          const InputDecoration(border: OutlineInputBorder()),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'set inputs ';
+                        }
+                      },
+                    ),
                   ),
                   const SizedBox(
                     height: 50,

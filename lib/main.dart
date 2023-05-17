@@ -1,17 +1,13 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:u_community/themes.dart';
-
 import 'core/enums/user_enum.dart';
 import 'features/auth/Screens/launch.dart';
-import 'features/auth/Screens/login.dart';
 import 'features/auth/repository/auth_repository.dart';
 import 'features/setting/screens/header_setting_screen.dart';
-import 'features/setting/screens/reset_password_screen.dart';
 import 'mobile_layout_screen.dart';
 import 'route.dart';
 
@@ -47,8 +43,8 @@ void main() async {
   await Settings.init(cacheProvider: SharePreferenceCache());
   // final auth = AuthRepository();
   // auth.websok();
-  print('hi');
   runApp(ProviderScope(child: MyApp()));
+  
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -80,13 +76,10 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // print('initial =================== $initial');
-
     if (initial == true) {
       SharedPreferences.getInstance().then((value) async {
         //!this for clear all dara in SharedPreferences .
         // value.clear();
-
         final userId = value.getString('id');
         token = value.getString('token');
         if (userId != null && userId.isNotEmpty) {
@@ -118,8 +111,9 @@ class _MyAppState extends ConsumerState<MyApp> {
                 title: 'Flutter Demo',
                 theme: isDarkMode ? MyThemes.darkTheme : MyThemes.darkTheme,
                 // home: SettingScreen(),
-                home:
-                    token == null ? const StartScreen() : MobileLayoutScreen(),
+                home: token == null
+                    ? const StartScreen()
+                    : const MobileLayoutScreen(),
                 // home: ResetPasswordScreen(),
               ));
     }

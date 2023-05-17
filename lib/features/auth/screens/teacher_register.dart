@@ -25,7 +25,7 @@ class _AdminRegisterState extends ConsumerState<TeacherRegister> {
   bool isGoing = false;
   register(_) async {
     final fmSt = formState.currentState;
-    if (!fmSt!.validate()) {
+    if (fmSt!.validate()) {
       print('auth');
       isGoing = true;
 

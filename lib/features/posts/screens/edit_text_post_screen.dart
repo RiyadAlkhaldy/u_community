@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_community/features/posts/repository/repository_colloge_posts.dart';
 import 'package:u_community/features/posts/repository/repository_section_posts.dart';
+import '../../../mobile_layout_screen.dart';
 import '../../../models/colloge_model.dart' as colloge;
 import '../../../models/post_model.dart';
 import '../../auth/repository/auth_repository.dart';
 import '../repository/repository_posts.dart';
-import 'layout/post_layout.dart';
 
 final allwoProvidr = StateProvider<bool>((ref) => false);
 final selectedVal = StateProvider<int>((ref) => 1);
@@ -26,7 +26,7 @@ class _UploadTextScreenState extends ConsumerState<EditTextPostScreen> {
     isGoing = true;
     setState(() {});
     Posts? postEdited;
-    if (ref.watch(currentIndexPagePost) == 0) {
+    if (ref.watch(currentIndexTabBarPagePost) == 0) {
       postEdited = await ref.read(postsProvider.notifier).editPost(
           post,
           textEditingController.text.trim(),
@@ -35,7 +35,7 @@ class _UploadTextScreenState extends ConsumerState<EditTextPostScreen> {
           ref);
 
       Navigator.maybePop(context);
-    } else if (ref.watch(currentIndexPagePost) == 1) {
+    } else if (ref.watch(currentIndexTabBarPagePost) == 1) {
       postEdited = await ref.read(collogePostsProvider.notifier).editPost(
           post,
           textEditingController.text.trim(),

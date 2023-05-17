@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_community/features/video/screens/basics/network_player_widget.dart';
 import '../../../core/utils/loader.dart';
+import '../../../mobile_layout_screen.dart';
 import '../../user/repository/repository_user.dart';
 import '../../video/orientation/portrait_landscape_player_page.dart';
 import '../../../models/post_model.dart';
@@ -83,7 +84,7 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
                           if (widget.post.type == 3)
                             LimitedBox(
                                 maxWidth: double.infinity,
-                                maxHeight: 400,
+                                // maxHeight: 400,
                                 child: PortraitLandscapePlayerPage(
                                   post: widget.post,
                                   index: 1,
@@ -218,7 +219,7 @@ class _ViewPostScreenState extends ConsumerState<ViewPostScreen> {
 
                           if (addCommentController.text.trim().isNotEmpty) {
                             final tabBarIndexPagePost =
-                                ref.watch(currentIndexPagePost);
+                                ref.watch(currentIndexTabBarPagePost);
                             //add the comment
                             await ref
                                 .read(commentsProvider.notifier)
@@ -572,11 +573,12 @@ Widget Bottom_Post(BuildContext context, Posts post, [WidgetRef? ref]) {
                           print('Like post');
                           final amILike = post.amILike;
                           final numberLikes = post.likeCount;
-                          if (ref!.watch(currentIndexPagePost) == 0) {
+                          if (ref!.watch(currentIndexTabBarPagePost) == 0) {
                             ref
                                 .read(postsProvider.notifier)
                                 .addLikeOrUndo(post, context);
-                          } else if (ref.watch(currentIndexPagePost) == 1) {
+                          } else if (ref.watch(currentIndexTabBarPagePost) ==
+                              1) {
                             ref
                                 .read(collogePostsProvider.notifier)
                                 .addLikeOrUndo(post, context);

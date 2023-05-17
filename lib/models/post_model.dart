@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:u_community/features/posts/models/post_model_pagentation.dart';
 
+import '../core/constant.dart';
+
 class ResponsePosts {
   ResponsePosts({
     required this.status,
@@ -163,7 +165,7 @@ class Posts {
       id: map['id'] as int,
       content: map['content'] == null ? null : map['content'] as String,
       type: map['type'] as int,
-      url: map['url'] != null ? map['url'] as String : null,
+      url: map['url'] != null ? '$Url${map['url']}' : null,
       userId: map['user_id'] as int,
       sectionId: map['section_id'],
       collogeId: map['colloge_id'],

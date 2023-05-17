@@ -50,7 +50,8 @@ class RepositoryPosts extends StateNotifier<List<Posts>> {
       print('ok');
       print(response.data);
     }
-    ResponsePosts res = ResponsePosts.fromMap(response.data);
+    ResponsePosts res =
+        ResponsePosts.fromMap(response.data as Map<String, dynamic>);
     List<Posts> posts = res.posts.map((e) => e).toList();
 
     state = [...posts];

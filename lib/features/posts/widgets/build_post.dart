@@ -6,6 +6,7 @@ import 'package:u_community/core/enums/user_enum.dart';
 import 'package:u_community/features/posts/screens/layout/post_layout.dart';
 import '../../../core/utils/loader.dart';
 import '../../../main.dart';
+import '../../../mobile_layout_screen.dart';
 import '../../user/repository/repository_get_user_by_id.dart';
 import '../../user/screen/view_any_user_screen.dart';
 import '../../../models/post_model.dart';
@@ -98,7 +99,7 @@ class HeaderThePost extends ConsumerWidget {
       children: [
         ListTile(
           trailing: post.colloge != null
-              ? post.section == null
+              ? post.section == null && post.user.type! > 3
                   ? InkWell(
                       onTap: () {},
                       child: Text(
@@ -284,10 +285,10 @@ class HeaderThePost extends ConsumerWidget {
       print(e);
     }
     if (e == 'Delete') {
-      if (ref.watch(currentIndexPagePost) == 0) {
+      if (ref.watch(currentIndexTabBarPagePost) == 0) {
         ref.read(postsProvider.notifier).deletePost(post.id);
       }
-      if (ref.watch(currentIndexPagePost) == 1) {
+      if (ref.watch(currentIndexTabBarPagePost) == 1) {
         ref.read(collogePostsProvider.notifier).deletePost(post.id);
       } else {
         ref.read(sectionPostsProvider.notifier).deletePost(post.id);

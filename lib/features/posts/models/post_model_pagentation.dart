@@ -14,7 +14,6 @@ class ResponsePostsPagentaion {
     required this.message,
     required this.data,
   });
-  
 
   ResponsePostsPagentaion copyWith({
     String? status,
@@ -40,25 +39,27 @@ class ResponsePostsPagentaion {
     return ResponsePostsPagentaion(
       status: map['status'] as String,
       message: map['message'] as String,
-      data: Data.fromMap(map['posts'] as Map<String,dynamic>),
+      data: Data.fromMap(map['posts'] as Map<String, dynamic>),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory ResponsePostsPagentaion.fromJson(String source) => ResponsePostsPagentaion.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ResponsePostsPagentaion.fromJson(String source) =>
+      ResponsePostsPagentaion.fromMap(
+          json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'ResponsePostsPagentaion(status: $status, message: $message, data: $data)';
+  String toString() =>
+      'ResponsePostsPagentaion(status: $status, message: $message, data: $data)';
 
   @override
   bool operator ==(covariant ResponsePostsPagentaion other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.status == status &&
-      other.message == message &&
-      other.data == data;
+
+    return other.status == status &&
+        other.message == message &&
+        other.data == data;
   }
 
   @override
@@ -293,7 +294,6 @@ class Links {
   @override
   int get hashCode => url.hashCode ^ label.hashCode ^ active.hashCode;
 }
- 
 
 class Colloge {
   final int id;
@@ -400,22 +400,26 @@ class Section {
 class User {
   final int id;
   final String name;
-  String? img;
+  final String? img;
+  final int? type;
   User({
     required this.id,
     required this.name,
     this.img,
+    this.type,
   });
 
   User copyWith({
     int? id,
     String? name,
     String? img,
+    int? type,
   }) {
     return User(
       id: id ?? this.id,
       name: name ?? this.name,
       img: img ?? this.img,
+      type: type ?? this.type,
     );
   }
 
@@ -424,6 +428,7 @@ class User {
       'id': id,
       'name': name,
       'img': img,
+      'type': type,
     };
   }
 
@@ -432,6 +437,7 @@ class User {
       id: map['id'] as int,
       name: map['name'] as String,
       img: map['img'] ?? '',
+      type: map['type'] as int,
     );
   }
 
@@ -441,17 +447,21 @@ class User {
       User.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'User(id: $id, name: $name, img: $img)';
+  String toString() => 'User(id: $id, name: $name, img: $img, type: $type)';
 
   @override
   bool operator ==(covariant User other) {
     if (identical(this, other)) return true;
 
-    return other.id == id && other.name == name && other.img == img;
+    return other.id == id &&
+        other.name == name &&
+        other.img == img &&
+        other.type == type;
   }
 
   @override
-  int get hashCode => id.hashCode ^ name.hashCode ^ img.hashCode;
+  int get hashCode =>
+      id.hashCode ^ name.hashCode ^ img.hashCode ^ type.hashCode;
 }
 
 // class Post {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/utils/loader.dart';
+import '../../../mobile_layout_screen.dart';
 import '../repository/repository_section_posts.dart';
 import '../widgets/build_post.dart';
-import 'layout/post_layout.dart';
 
 class AllSectionPostsScreen extends ConsumerStatefulWidget {
-    AllSectionPostsScreen({
+  AllSectionPostsScreen({
     super.key,
   });
 
@@ -19,7 +19,7 @@ class _PostScreenState extends ConsumerState<AllSectionPostsScreen> {
   bool inital = true;
   @override
   void initState() {
-    ref.read(currentIndexPagePost.notifier).state = 2;
+    ref.read(currentIndexTabBarPagePost.notifier).state = 2;
     super.initState();
   }
 

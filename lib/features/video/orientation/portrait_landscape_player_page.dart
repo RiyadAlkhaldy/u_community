@@ -1,11 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
-import 'package:wakelock/wakelock.dart';
 
 import '../../../models/post_model.dart';
-import 'video_player_both_widget.dart'; 
+import 'video_player_both_widget.dart';
 
 class PortraitLandscapePlayerPage extends StatefulWidget {
   final int index;

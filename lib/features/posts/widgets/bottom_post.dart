@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../mobile_layout_screen.dart';
 import '../../../models/post_model.dart';
 import '../repository/repository_colloge_posts.dart';
 import '../repository/repository_posts.dart';
@@ -32,11 +33,12 @@ Widget bottomPost(BuildContext context, Posts post) {
                           iconSize: 30.0,
                           onPressed: () {
                             print('Like post');
-                            if (ref.watch(currentIndexPagePost) == 0) {
+                            if (ref.watch(currentIndexTabBarPagePost) == 0) {
                               ref
                                   .read(postsProvider.notifier)
                                   .addLikeOrUndo(post, context);
-                            } else if (ref.watch(currentIndexPagePost) == 1) {
+                            } else if (ref.watch(currentIndexTabBarPagePost) ==
+                                1) {
                               ref
                                   .read(collogePostsProvider.notifier)
                                   .addLikeOrUndo(post, context);

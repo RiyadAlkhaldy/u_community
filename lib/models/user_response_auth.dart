@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../core/constant.dart';
 import 'post_model.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
@@ -183,7 +184,7 @@ class User {
       name: map['name'] as String,
       email: map['email'] as String,
       emailVerifiedAt: map['emailVerified_at'],
-      img: map['img'],
+      img: map['img'] != null ? '$Url${map['img']}' : null,
       status: map['status'],
       universityId: map['university_id'],
       idNumber: map['id_number'],

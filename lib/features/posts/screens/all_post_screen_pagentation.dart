@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // import '../controller/posts_controlller.dart';
 import '../../../core/utils/loader.dart';
+import '../../../mobile_layout_screen.dart';
 import '../../../models/post_model.dart';
 import '../repository/repository_posts_pagentation.dart';
 import '../widgets/build_post.dart';
-import 'layout/post_layout.dart';
 
 class AllPostScreenPagentation extends ConsumerStatefulWidget {
   AllPostScreenPagentation({
@@ -30,8 +30,7 @@ class _PostScreenState extends ConsumerState<AllPostScreenPagentation> {
     @override
     void initState() {
       // scrollController.notifyListeners();
-      // TODO: implement initState
-      ref.read(currentIndexPagePost.notifier).state = 0;
+      ref.read(currentIndexTabBarPagePost.notifier).state = 0;
       super.initState();
     }
 
@@ -54,8 +53,6 @@ class _PostScreenState extends ConsumerState<AllPostScreenPagentation> {
         ),
         SliverList(
           delegate: SliverChildListDelegate([
-            
-
             dataLoaded == true
                 ? Column(
                     children: ref

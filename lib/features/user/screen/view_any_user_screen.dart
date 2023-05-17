@@ -307,11 +307,9 @@ class _ProfileImageWidgetState extends ConsumerState<ProfileImageTheUser> {
         child: ClipOval(
           child: Material(
             color: Colors.transparent,
-            child: ref
-                .watch(userModelProvider  )
-                .when(
+            child: ref.watch(userModelProvider).when(
                   data: (data) {
-                    if (data!.img == null) {
+                    if (data!.img!.isEmpty) {
                       return Image.asset(
                         'assets/images/user1.png',
                         width: 108,
@@ -330,7 +328,7 @@ class _ProfileImageWidgetState extends ConsumerState<ProfileImageTheUser> {
                     } else {
                       return CachedNetworkImage(
                         // imageUrl: widget.imagePath,
-                        imageUrl: data!.img!,
+                        imageUrl: data.img!,
                         placeholder: (context, img) => const Loader(),
                         fit: BoxFit.cover,
                         width: 108,

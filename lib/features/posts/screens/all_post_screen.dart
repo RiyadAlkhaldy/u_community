@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// import '../controller/posts_controlller.dart';
 import '../../../core/utils/loader.dart';
+import '../../../mobile_layout_screen.dart';
 import '../repository/repository_posts.dart';
 import '../widgets/build_post.dart';
-import 'layout/post_layout.dart';
 
 class AllPostScreen extends ConsumerStatefulWidget {
   AllPostScreen({
@@ -31,7 +29,7 @@ class _PostScreenState extends ConsumerState<AllPostScreen> {
   // final posts =
   @override
   void initState() {
-    ref.read(currentIndexPagePost.notifier).state =0 ;
+    ref.read(currentIndexTabBarPagePost.notifier).state = 0;
     super.initState();
   }
 
